@@ -1,8 +1,6 @@
 # AllocData
 
-Data Model for Financial Applications
-
-At present, those applications include FINporter and FlowAllocator.
+An open data model for financial applications, typically those used by the do-it-yourself investor.
 
 ## Entities
 
@@ -163,6 +161,12 @@ public protocol AllocBase: Codable {
     static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row]
 }
 ```
+
+## Applications using AllocData
+
+* [FINporter](https://github.com/openalloc/FINporter)  - a library and command-line tool to transform various specialized formats to the standardized schema of AllocData
+
+* [FlowAllocator](https://flowallocator.app) - a new portfolio rebalancing tool for macOS
 
 ## License
 
