@@ -51,7 +51,7 @@ public extension AllocBase {
     }
 
     static func parseBool(_ rawVal: String?) -> Bool? {
-        guard let val = rawVal else { return nil }
+        guard let val = rawVal?.lowercased() else { return nil }
         return Bool(val)
     }
 

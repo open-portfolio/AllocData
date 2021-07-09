@@ -23,13 +23,11 @@ let package = Package(
         .library(name: "AllocData", targets: ["AllocData"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
     ],
     targets: [
         .target(
             name: "AllocData",
             dependencies: [
-                .product(name: "Logging", package: "swift-log")
             ],
             path: "Sources"
         ),

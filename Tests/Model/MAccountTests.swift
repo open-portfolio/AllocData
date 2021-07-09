@@ -99,4 +99,26 @@ class MAccountTests: XCTestCase {
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)
     }
+    
+    func testDecodeUpperBool() throws {
+        let rawRows: [MAccount.RawRow] = [[
+            "accountID": "a",
+            "title": "b",
+            "isActive": "TRUE",
+            "isTaxable": "TRUE",
+            "canTrade": "TRUE",
+        ]]
+        var rejected = [MAccount.Row]()
+        let actual = try MAccount.decode(rawRows, rejectedRows: &rejected)
+        let expected: MAccount.Row = [
+            "accountID": "a",
+            "title": "b",
+            "isActive": true,
+            "isTaxable": true,
+            "canTrade": true,
+        ]
+        XCTAssertTrue(rejected.isEmpty)
+        XCTAssertEqual([expected], actual)
+    }
+
 }

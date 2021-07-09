@@ -114,4 +114,46 @@ final class ParserHelpersTests: XCTestCase {
         let actual = MCap.parsePercent("-90.3")
         XCTAssertEqual(expected, actual)
     }
+    
+    func testParseBoolBlank() throws {
+        let actual = MCap.parseBool("   ")
+        XCTAssertNil(actual)
+    }
+
+    func testParseBoolEmpty() throws {
+        let actual = MCap.parseBool("")
+        XCTAssertNil(actual)
+    }
+
+    func testParseFalseLower() throws {
+        let actual = MCap.parseBool("false")!
+        XCTAssertFalse(actual)
+    }
+    
+    func testParseFalseMixed() throws {
+        let actual = MCap.parseBool("False")!
+        XCTAssertFalse(actual)
+    }
+
+    func testParseFalseUpper() throws {
+        let actual = MCap.parseBool("FALSE")!
+        XCTAssertFalse(actual)
+    }
+
+    func testParseTrueLower() throws {
+        let actual = MCap.parseBool("true")!
+        XCTAssertTrue(actual)
+    }
+    
+    func testParseTrueMixed() throws {
+        let actual = MCap.parseBool("True")!
+        XCTAssertTrue(actual)
+    }
+
+    func testParseTrueUpper() throws {
+        let actual = MCap.parseBool("TRUE")!
+        XCTAssertTrue(actual)
+    }
+
 }
+
