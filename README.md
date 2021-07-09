@@ -180,9 +180,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ## Contributing
 
-You can fork this project to further its development. Submit pull requests for inclusion. Your contribution must be under the same license.
+Contributions are welcome. You are encouraged to submit pull requests to fix bugs, improve documentation, or offer new features. 
 
-Please ensure your contribution has adequate test coverage.
+The pull request need not be a production-ready feature. It can be a draft of proposed changes, or simply a test to show that expected behavior is buggy. Discussion on the pull request can proceed from there.
 
-Contributions are at will. Project owner(s) may reject for any reason. Accepted contributions may be later withdrawn, such as due to legal threats.
-
+Contributions should ultimately have adequate test coverage. See tests for current entities to see what coverage is expected.
