@@ -1,6 +1,6 @@
 # AllocData
 
-An open data model for financial applications, typically those used by the do-it-yourself investor.
+<img align="right" src="https://github.com/openalloc/AllocData/blob/main/Images/logo.png" width="100" height="100"/>An open data model for financial applications, typically those used by the do-it-yourself investor.
 
 ## Entities
 
@@ -182,6 +182,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 Contributions are welcome. You are encouraged to submit pull requests to fix bugs, improve documentation, or offer new features. 
 
-The pull request need not be a production-ready feature. It can be a draft of proposed changes, or simply a test to show that expected behavior is buggy. Discussion on the pull request can proceed from there.
+The pull request need not be a production-ready feature or fix. It can be a draft of proposed changes, or simply a test to show that expected behavior is buggy. Discussion on the pull request can proceed from there.
 
 Contributions should ultimately have adequate test coverage. See tests for current entities to see what coverage is expected.

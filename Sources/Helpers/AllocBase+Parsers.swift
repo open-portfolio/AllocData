@@ -60,7 +60,7 @@ public extension AllocBase {
     // Rounded by Int(rawPercent * precision) / precision
     // Result divided by 100
     // -90.3% to -0.903
-    // 1,000.3% to 10.03
+    // 1,000.3% to 10.003
     static func parsePercent(_ percentStr: String?, precision: Double = 100) -> Double? {
         guard let val = parseDouble(percentStr) else { return nil }
         return Double(Int(val * precision)) / (precision * 100)
