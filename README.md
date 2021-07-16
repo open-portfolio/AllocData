@@ -4,7 +4,7 @@
 
 ## Entities
 
-Presently nine(9) entities are defined in the _AllocData_ data model, each with their own schema.
+The following entities are defined in the _AllocData_ data model.
 
 ### MAccount
 
