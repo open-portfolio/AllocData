@@ -158,7 +158,7 @@ Each row of the Sale table describes a liquidation of a position, such as for a 
 | saleLotID | string | true | true | The lot of the position, if any. |
 | amount | double | true | false | The amount in dollars to liquidate from this position. |
 | shareCount | double | false | false | Estimated number of shares to liquidate from this position. |
-| liquidateAll | bool | false | false | If true, the entire position should be liquidated. |
+| liquidateAll | bool | false | false | If true, the entire position can be liquidated. |
 
 ## API
 
