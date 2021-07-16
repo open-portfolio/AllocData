@@ -42,7 +42,7 @@ public struct MSale: Hashable & AllocBase {
         AllocAttribute(CodingKeys.lotID, .string, isRequired: true, isKey: true, "The lot of the position, if any."),
         AllocAttribute(CodingKeys.amount, .double, isRequired: true, isKey: false, "The amount in dollars to liquidate from this position."),
         AllocAttribute(CodingKeys.shareCount, .double, isRequired: false, isKey: false, "Estimated number of shares to liquidate from this position."),
-        AllocAttribute(CodingKeys.liquidateAll, .bool, isRequired: false, isKey: false, "If true, the entire position should be liquidated."),
+        AllocAttribute(CodingKeys.liquidateAll, .bool, isRequired: false, isKey: false, "If true, the entire position can be liquidated."),
     ]
 
     public init(accountID: String,
