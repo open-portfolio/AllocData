@@ -133,6 +133,33 @@ relationship between Securities.
 | trackerID | string | true | true | The name of the tracking index. |
 | title | string | false | false | The title of the tracking index. |
 
+### MPurchase
+
+This is the ‘openalloc/purchase’ schema.
+
+Each row of the Purchase table describes an acquisition of a position, such as for a rebalance.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| purchaseAccountID | string | true | true | The account to host the position. |
+| purchaseAssetID | string | true | true | The asset class of the position to acquire. |
+| amount | double | true | false | The amount in dollars to acquire. |
+
+### MSale
+
+This is the ‘openalloc/sale’ schema.
+
+Each row of the Sale table describes a liquidation of a position, such as for a rebalance.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| saleAccountID | string | true | true | The account hosting the position. |
+| saleSecurityID | string | true | true | The security of the position. |
+| saleLotID | string | true | true | The lot of the position, if any. |
+| amount | double | true | false | The amount in dollars to liquidate from this position. |
+| shareCount | double | false | false | Estimated number of shares to liquidate from this position. |
+| liquidateAll | bool | false | false | If true, the entire position should be liquidated. |
+
 ## API
 
 Entities in the data model all conform to AllocBase protocol.
