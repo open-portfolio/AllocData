@@ -133,11 +133,23 @@ relationship between Securities.
 | trackerID | string | true | true | The name of the tracking index. |
 | title | string | false | false | The title of the tracking index. |
 
-### MPurchase
+### MRebalanceAllocation
 
-This is the ‘openalloc/purchase’ schema.
+This is the ‘openalloc/rebalance/allocation’ schema.
 
-Each row of the Purchase table describes an acquisition of a position, such as for a rebalance.
+Each row of the RebalanceAllocation table describes an allocation that drives a rebalance.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| allocationAccountID | string | true | true | The account to which the asset is allocated. |
+| allocationAssetID | string | true | true | The asset class of the allocation. |
+| amount | double | true | false | The amount in dollars allocated. |
+
+### MRebalancePurchase
+
+This is the ‘openalloc/rebalance/purchase’ schema.
+
+Each row of the RebalancePurchase table describes an acquisition of a position to satisfy a rebalance.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
@@ -145,11 +157,11 @@ Each row of the Purchase table describes an acquisition of a position, such as f
 | purchaseAssetID | string | true | true | The asset class of the position to acquire. |
 | amount | double | true | false | The amount in dollars to acquire. |
 
-### MSale
+### MRebalanceSale
 
-This is the ‘openalloc/sale’ schema.
+This is the ‘openalloc/rebalance/sale’ schema.
 
-Each row of the Sale table describes a liquidation of a position, such as for a rebalance.
+Each row of the RebalanceSale table describes a liquidation of a position to satisfy a rebalance.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |

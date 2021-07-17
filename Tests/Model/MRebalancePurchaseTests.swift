@@ -1,5 +1,5 @@
 //
-//  MPurchaseTests.swift
+//  MRebalancePurchaseTests.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -18,17 +18,17 @@
 @testable import AllocData
 import XCTest
 
-class MPurchaseTests: XCTestCase {
+class MRebalancePurchaseTests: XCTestCase {
 
     func testSchema() {
-        let expected = AllocSchema.allocPurchase
-        let actual = MPurchase.schema
+        let expected = AllocSchema.allocRebalancePurchase
+        let actual = MRebalancePurchase.schema
         XCTAssertEqual(expected, actual)
     }
 
     func testInit() {
-        let expected = MPurchase(accountID: "1", assetID: "Bond", amount: 5)
-        var actual = MPurchase(accountID: "1", assetID: "Bond", amount: 3)
+        let expected = MRebalancePurchase(accountID: "1", assetID: "Bond", amount: 5)
+        var actual = MRebalancePurchase(accountID: "1", assetID: "Bond", amount: 3)
         XCTAssertEqual("1", actual.accountID)
         XCTAssertEqual("Bond", actual.assetID)
         XCTAssertEqual(3, actual.amount)
@@ -37,50 +37,50 @@ class MPurchaseTests: XCTestCase {
     }
 
     func testInitFromFINrow() throws {
-        let expected = MPurchase(accountID: "1", assetID: "Bond", amount: 3)
-        let actual = try MPurchase(from: [
-            MPurchase.CodingKeys.accountID.rawValue: "1",
-            MPurchase.CodingKeys.assetID.rawValue: "Bond",
-            MPurchase.CodingKeys.amount.rawValue: 3,
+        let expected = MRebalancePurchase(accountID: "1", assetID: "Bond", amount: 3)
+        let actual = try MRebalancePurchase(from: [
+            MRebalancePurchase.CodingKeys.accountID.rawValue: "1",
+            MRebalancePurchase.CodingKeys.assetID.rawValue: "Bond",
+            MRebalancePurchase.CodingKeys.amount.rawValue: 3,
         ])
         XCTAssertEqual(expected, actual)
     }
 
     func testUpdateFromFINrow() throws {
-        var actual = MPurchase(accountID: "1", assetID: "Bond", amount: 3)
-        let finRow: MPurchase.Row = [
-            MPurchase.CodingKeys.accountID.rawValue: "x", // IGNORED
-            MPurchase.CodingKeys.assetID.rawValue: "xx", // IGNORED
-            MPurchase.CodingKeys.amount.rawValue: 5,
+        var actual = MRebalancePurchase(accountID: "1", assetID: "Bond", amount: 3)
+        let finRow: MRebalancePurchase.Row = [
+            MRebalancePurchase.CodingKeys.accountID.rawValue: "x", // IGNORED
+            MRebalancePurchase.CodingKeys.assetID.rawValue: "xx", // IGNORED
+            MRebalancePurchase.CodingKeys.amount.rawValue: 5,
         ]
         try actual.update(from: finRow)
-        let expected = MPurchase(accountID: "1", assetID: "Bond", amount: 5)
+        let expected = MRebalancePurchase(accountID: "1", assetID: "Bond", amount: 5)
         XCTAssertEqual(expected, actual)
     }
 
     func testPrimaryKey() throws {
-        let element = MPurchase(accountID: " A-x?3 ", assetID: " -3B ! ", amount: 10)
+        let element = MRebalancePurchase(accountID: " A-x?3 ", assetID: " -3B ! ", amount: 10)
         let actual = element.primaryKey
         let expected = "a-x?3,-3b !"
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MPurchase.Row = ["purchaseAccountID": " A-x?3 ", "purchaseAssetID": " -3B ! "]
-        let actual = try MPurchase.getPrimaryKey(finRow)
+        let finRow: MRebalancePurchase.Row = ["purchaseAccountID": " A-x?3 ", "purchaseAssetID": " -3B ! "]
+        let actual = try MRebalancePurchase.getPrimaryKey(finRow)
         let expected = "a-x?3,-3b !"
         XCTAssertEqual(expected, actual)
     }
 
     func testDecode() throws {
-        let rawRows: [MPurchase.RawRow] = [[
+        let rawRows: [MRebalancePurchase.RawRow] = [[
             "purchaseAccountID": "1",
             "purchaseAssetID": "Bond",
             "amount": "4",
         ]]
-        var rejected = [MPurchase.Row]()
-        let actual = try MPurchase.decode(rawRows, rejectedRows: &rejected)
-        let expected: MPurchase.Row = [
+        var rejected = [MRebalancePurchase.Row]()
+        let actual = try MRebalancePurchase.decode(rawRows, rejectedRows: &rejected)
+        let expected: MRebalancePurchase.Row = [
             "purchaseAccountID": "1",
             "purchaseAssetID": "Bond",
             "amount": 4,

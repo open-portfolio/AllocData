@@ -1,5 +1,5 @@
 //
-//  MPurchase.swift
+//  MRebalanceAllocation.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -17,23 +17,23 @@
 
 import Foundation
 
-public struct MPurchase: Hashable & AllocBase {
+public struct MRebalanceAllocation: Hashable & AllocBase {
     public var accountID: String // key
     public var assetID: String // key
     public var amount: Double
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
-        case accountID = "purchaseAccountID"
-        case assetID = "purchaseAssetID"
+        case accountID = "allocationAccountID"
+        case assetID = "allocationAssetID"
         case amount
     }
 
-    public static var schema: AllocSchema { .allocPurchase }
+    public static var schema: AllocSchema { .allocRebalanceAllocation }
 
     public static var attributes: [AllocAttribute] = [
-        AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account to host the position."),
-        AllocAttribute(CodingKeys.assetID, .string, isRequired: true, isKey: true, "The asset class of the position to acquire."),
-        AllocAttribute(CodingKeys.amount, .double, isRequired: true, isKey: false, "The amount in dollars to acquire."),
+        AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account to which the asset is allocated."),
+        AllocAttribute(CodingKeys.assetID, .string, isRequired: true, isKey: true, "The asset class of the allocation."),
+        AllocAttribute(CodingKeys.amount, .double, isRequired: true, isKey: false, "The amount in dollars allocated."),
     ]
 
     public init(accountID: String,
@@ -53,23 +53,23 @@ public struct MPurchase: Hashable & AllocBase {
     }
 
     public init(from row: Row) throws {
-        guard let accountID_ = MPurchase.getStr(row, CodingKeys.accountID.rawValue)
+        guard let accountID_ = MRebalanceAllocation.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
         accountID = accountID_
 
-        guard let assetID_ = MPurchase.getStr(row, CodingKeys.assetID.rawValue)
+        guard let assetID_ = MRebalanceAllocation.getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.assetID.rawValue) }
         assetID = assetID_
 
-        amount = MPurchase.getDouble(row, CodingKeys.amount.rawValue) ?? 0
+        amount = MRebalanceAllocation.getDouble(row, CodingKeys.amount.rawValue) ?? 0
     }
 
     public mutating func update(from row: Row) throws {
-        if let val = MPurchase.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
+        if let val = MRebalanceAllocation.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
     }
 
     public var primaryKey: AllocKey {
-        MPurchase.keyify([accountID, assetID])
+        MRebalanceAllocation.keyify([accountID, assetID])
     }
 
     public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
@@ -77,12 +77,12 @@ public struct MPurchase: Hashable & AllocBase {
         let rawValue2 = CodingKeys.assetID.rawValue
         guard let accountID_ = getStr(row, rawValue1),
               let assetID_ = getStr(row, rawValue2)
-        else { throw AllocDataError.invalidPrimaryKey("Purchase") }
+        else { throw AllocDataError.invalidPrimaryKey("Allocation") }
         return keyify([accountID_, assetID_])
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
-        let ck = MPurchase.CodingKeys.self
+        let ck = MRebalanceAllocation.CodingKeys.self
 
         return rawRows.compactMap { row in
             // required values, without default values
@@ -108,7 +108,7 @@ public struct MPurchase: Hashable & AllocBase {
     }
 }
 
-extension MPurchase: CustomStringConvertible {
+extension MRebalanceAllocation: CustomStringConvertible {
     public var description: String {
         "accountID=\(accountID) assetID=\(assetID) amount=\(String(format: "%.2f", amount))"
     }

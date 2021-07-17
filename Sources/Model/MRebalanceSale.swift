@@ -17,7 +17,7 @@
 
 import Foundation
 
-public struct MSale: Hashable & AllocBase {
+public struct MRebalanceSale: Hashable & AllocBase {
     public var accountID: String // key
     public var securityID: String // key
     public var lotID: String // key
@@ -34,7 +34,7 @@ public struct MSale: Hashable & AllocBase {
         case liquidateAll
     }
 
-    public static var schema: AllocSchema { .allocSale }
+    public static var schema: AllocSchema { .allocRebalanceSale }
 
     public static var attributes: [AllocAttribute] = [
         AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account hosting the position."),
@@ -71,28 +71,28 @@ public struct MSale: Hashable & AllocBase {
     }
 
     public init(from row: Row) throws {
-        guard let accountID_ = MSale.getStr(row, CodingKeys.accountID.rawValue)
+        guard let accountID_ = MRebalanceSale.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
         accountID = accountID_
 
-        guard let securityID_ = MSale.getStr(row, CodingKeys.securityID.rawValue)
+        guard let securityID_ = MRebalanceSale.getStr(row, CodingKeys.securityID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.securityID.rawValue) }
         securityID = securityID_
 
-        lotID = MSale.getStr(row, CodingKeys.lotID.rawValue) ?? AllocNilKey
-        amount = MSale.getDouble(row, CodingKeys.amount.rawValue) ?? 0
-        shareCount = MSale.getDouble(row, CodingKeys.shareCount.rawValue)
-        liquidateAll = MSale.getBool(row, CodingKeys.liquidateAll.rawValue) ?? false
+        lotID = MRebalanceSale.getStr(row, CodingKeys.lotID.rawValue) ?? AllocNilKey
+        amount = MRebalanceSale.getDouble(row, CodingKeys.amount.rawValue) ?? 0
+        shareCount = MRebalanceSale.getDouble(row, CodingKeys.shareCount.rawValue)
+        liquidateAll = MRebalanceSale.getBool(row, CodingKeys.liquidateAll.rawValue) ?? false
     }
 
     public mutating func update(from row: Row) throws {
-        if let val = MSale.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
-        if let val = MSale.getDouble(row, CodingKeys.shareCount.rawValue) { shareCount = val }
-        if let val = MSale.getBool(row, CodingKeys.liquidateAll.rawValue) { liquidateAll = val }
+        if let val = MRebalanceSale.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
+        if let val = MRebalanceSale.getDouble(row, CodingKeys.shareCount.rawValue) { shareCount = val }
+        if let val = MRebalanceSale.getBool(row, CodingKeys.liquidateAll.rawValue) { liquidateAll = val }
     }
 
     public var primaryKey: AllocKey {
-        MSale.keyify([accountID, securityID, lotID])
+        MRebalanceSale.keyify([accountID, securityID, lotID])
     }
 
     public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
@@ -107,7 +107,7 @@ public struct MSale: Hashable & AllocBase {
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
-        let ck = MSale.CodingKeys.self
+        let ck = MRebalanceSale.CodingKeys.self
 
         return rawRows.compactMap { row in
             // required values, without default values
@@ -141,7 +141,7 @@ public struct MSale: Hashable & AllocBase {
     }
 }
 
-extension MSale: CustomStringConvertible {
+extension MRebalanceSale: CustomStringConvertible {
     public var description: String {
         "accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) amount=\(String(format: "%.2f", amount)) shareCount=\(String(describing: shareCount)) liquidateAll=\(liquidateAll)"
     }
