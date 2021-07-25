@@ -19,6 +19,7 @@ Each row of the Accounts table describes a unique account.
 | isActive | bool | false | false | Is the account active? |
 | isTaxable | bool | false | false | Is the account taxable? |
 | canTrade | bool | false | false | Can you trade securities in the account? |
+| accountStrategyID | string | false | false | The strategy associated with this account, if any. |
 
 ### MAllocation
 

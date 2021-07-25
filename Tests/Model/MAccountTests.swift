@@ -26,42 +26,46 @@ class MAccountTests: XCTestCase {
     }
 
     func testInit() {
-        let expected = MAccount(accountID: "a", title: "b", isActive: true, isTaxable: true, canTrade: true)
+        let expected = MAccount(accountID: "a", title: "b", isActive: true, isTaxable: true, canTrade: true, strategyID: "X")
         var actual = MAccount(accountID: "a")
         XCTAssertNil(actual.title)
         XCTAssertFalse(actual.isActive)
         XCTAssertFalse(actual.isTaxable)
         XCTAssertFalse(actual.canTrade)
+        XCTAssertNil(actual.strategyID)
         actual.title = "b"
         actual.isActive = true
         actual.isTaxable = true
         actual.canTrade = true
+        actual.strategyID = "X"
         XCTAssertEqual(expected, actual)
     }
 
     func testInitFromFINrow() throws {
-        let expected = MAccount(accountID: "a", title: "b", isActive: true, isTaxable: true, canTrade: true)
+        let expected = MAccount(accountID: "a", title: "b", isActive: true, isTaxable: true, canTrade: true, strategyID: "X")
         let actual = try MAccount(from: [
             MAccount.CodingKeys.accountID.rawValue: "a",
             MAccount.CodingKeys.title.rawValue: "b",
             MAccount.CodingKeys.isActive.rawValue: true,
             MAccount.CodingKeys.isTaxable.rawValue: true,
             MAccount.CodingKeys.canTrade.rawValue: true,
+            MAccount.CodingKeys.strategyID.rawValue: "X",
         ])
         XCTAssertEqual(expected, actual)
     }
 
     func testUpdateFromFINrow() throws {
-        var actual = MAccount(accountID: "a", title: "b", isActive: false, isTaxable: false, canTrade: false)
+        var actual = MAccount(accountID: "a", title: "b", isActive: false, isTaxable: false, canTrade: false, strategyID: "X")
         let finRow: MAccount.Row = [
             MAccount.CodingKeys.accountID.rawValue: "c", // IGNORED
             MAccount.CodingKeys.title.rawValue: "e",
             MAccount.CodingKeys.isActive.rawValue: true,
             MAccount.CodingKeys.isTaxable.rawValue: true,
             MAccount.CodingKeys.canTrade.rawValue: true,
+            MAccount.CodingKeys.strategyID.rawValue: "C",
         ]
         try actual.update(from: finRow)
-        let expected = MAccount(accountID: "a", title: "e", isActive: true, isTaxable: true, canTrade: true)
+        let expected = MAccount(accountID: "a", title: "e", isActive: true, isTaxable: true, canTrade: true, strategyID: "C")
         XCTAssertEqual(expected, actual)
     }
 
@@ -86,6 +90,7 @@ class MAccountTests: XCTestCase {
             "isActive": "true",
             "isTaxable": "true",
             "canTrade": "true",
+            "accountStrategyID": "X",
         ]]
         var rejected = [MAccount.Row]()
         let actual = try MAccount.decode(rawRows, rejectedRows: &rejected)
@@ -95,6 +100,7 @@ class MAccountTests: XCTestCase {
             "isActive": true,
             "isTaxable": true,
             "canTrade": true,
+            "accountStrategyID": "X",
         ]
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)
@@ -116,6 +122,7 @@ class MAccountTests: XCTestCase {
             "isActive": true,
             "isTaxable": true,
             "canTrade": true,
+            "accountStrategyID": nil,
         ]
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)

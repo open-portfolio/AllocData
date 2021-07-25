@@ -22,8 +22,8 @@ import XCTest
 
 final class TableSignatureTests: XCTestCase {
     func testGenerateSignature() throws {
-        let columns = ["A", "B", "C"]
-        let expected = Set(["a", "b", "c"])
+        let columns = ["A", "B ", " +C"]
+        let expected = Set(["a", "b", "+c"])
         let actual = AllocSchema.generateSignature(columns)
         XCTAssertEqual(expected, actual)
     }
