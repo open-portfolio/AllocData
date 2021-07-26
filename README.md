@@ -16,7 +16,7 @@ Each row of the Accounts table describes a unique account.
 | ---- | ---- | ---------- | ----- | -------- |
 | accountID | string | true | true | The account number of the account. |
 | title | string | false | false | The title of the account. |
-| isActive | bool | false | false | Is the account active? |
+| isActive | bool | false | false | Is the account active? (NOTE: no longer used by FlowAllocator) |
 | isTaxable | bool | false | false | Is the account taxable? |
 | canTrade | bool | false | false | Can you trade securities in the account? |
 | accountStrategyID | string | false | false | The strategy associated with this account, if any. |

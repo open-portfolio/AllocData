@@ -23,7 +23,7 @@ public struct MAccount: Hashable & AllocBase {
     public var isActive: Bool
     public var isTaxable: Bool
     public var canTrade: Bool
-    public var strategyID: String?
+    public var strategyID: String
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case accountID
@@ -81,7 +81,7 @@ public struct MAccount: Hashable & AllocBase {
         self.isActive = isActive ?? false
         self.isTaxable = isTaxable ?? false
         self.canTrade = canTrade ?? false
-        self.strategyID = strategyID
+        self.strategyID = strategyID ?? AllocNilKey
     }
 
     public init(from decoder: Decoder) throws {
@@ -91,7 +91,7 @@ public struct MAccount: Hashable & AllocBase {
         isActive = try c.decodeIfPresent(Bool.self, forKey: .isActive) ?? false
         isTaxable = try c.decodeIfPresent(Bool.self, forKey: .isTaxable) ?? false
         canTrade = try c.decodeIfPresent(Bool.self, forKey: .canTrade) ?? false
-        strategyID = try c.decodeIfPresent(String.self, forKey: .strategyID)
+        strategyID = try c.decodeIfPresent(String.self, forKey: .strategyID) ?? AllocNilKey
     }
 
     public init(from row: Row) throws {
@@ -103,7 +103,7 @@ public struct MAccount: Hashable & AllocBase {
         isActive = MAccount.getBool(row, CodingKeys.isActive.rawValue) ?? false
         isTaxable = MAccount.getBool(row, CodingKeys.isTaxable.rawValue) ?? false
         canTrade = MAccount.getBool(row, CodingKeys.canTrade.rawValue) ?? false
-        strategyID = MAccount.getStr(row, CodingKeys.strategyID.rawValue)
+        strategyID = MAccount.getStr(row, CodingKeys.strategyID.rawValue) ?? AllocNilKey
     }
 
     public mutating func update(from row: Row) throws {
@@ -158,6 +158,6 @@ public struct MAccount: Hashable & AllocBase {
 
 extension MAccount: CustomStringConvertible {
     public var description: String {
-        "accountID=\(accountID) title=\(String(describing: title)) isActive=\(String(describing: isActive)) isTaxable=\(String(describing: isTaxable)) canTrade=\(String(describing: canTrade)) strategyID=\(String(describing: strategyID))"
+        "accountID=\(accountID) title=\(String(describing: title)) isActive=\(String(describing: isActive)) isTaxable=\(String(describing: isTaxable)) canTrade=\(String(describing: canTrade)) strategyID=\(strategyID)"
     }
 }

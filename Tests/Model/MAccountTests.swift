@@ -32,7 +32,7 @@ class MAccountTests: XCTestCase {
         XCTAssertFalse(actual.isActive)
         XCTAssertFalse(actual.isTaxable)
         XCTAssertFalse(actual.canTrade)
-        XCTAssertNil(actual.strategyID)
+        XCTAssertEqual(AllocNilKey, actual.strategyID)
         actual.title = "b"
         actual.isActive = true
         actual.isTaxable = true
