@@ -17,7 +17,7 @@
 
 import Foundation
 
-extension AllocBase {
+public extension AllocBase {
     static func getStr(_ row: Row, _ key: String) -> String? {
         if let val = row[key] as? String {
             return val
