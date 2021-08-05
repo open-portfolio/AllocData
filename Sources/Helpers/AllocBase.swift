@@ -27,6 +27,9 @@ public protocol AllocBase: Codable {
     static var schema: AllocSchema { get }
     static var attributes: [AllocAttribute] { get }
 
+    // Note that key values should NOT be persisted. Their
+    // format and composition may vary across platforms and
+    // versions.
     var primaryKey: AllocKey { get }
 
     // create object from row
