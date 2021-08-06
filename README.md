@@ -182,7 +182,6 @@ Each row of the ValuationSnapshot table describes a valuation captured at a part
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
 | valuationSnapshotID | string | true | true | The unique valuation snapshot identifier. |
-| allocationAssetID | string | true | true | The asset class of the allocation. |
 | capturedAt | date | true | false | The timestamp when the snapshot was created. |
 
 ### MValuationPosition
