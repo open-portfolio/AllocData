@@ -19,6 +19,7 @@ import PackageDescription
 
 let package = Package(
     name: "AllocData",
+    platforms: [.macOS(.v10_12)],
     products: [
         .library(name: "AllocData", targets: ["AllocData"]),
     ],

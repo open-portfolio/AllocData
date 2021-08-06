@@ -17,6 +17,23 @@
 
 import Foundation
 
+// ISO8601DateFormatter requires macOS 10.12 or later.
+// It could conceivably be replaced with an implementation that is more broadly supported.
+fileprivate let isoDateFormatter = ISO8601DateFormatter()
+
+public extension AllocBase {
+    
+    static func parseDate(_ rawVal: String?) -> Date? {
+        guard let val = rawVal else { return nil }
+        return isoDateFormatter.date(from: val)
+    }
+    
+    static func unparseDate(_ dateVal: Date) -> String {
+        return isoDateFormatter.string(from: dateVal)
+    }
+}
+
+
 public extension AllocBase {
     static func parseUUID(_ rawVal: String?, trimCharacters _: CharacterSet = CharacterSet()) -> UUID? {
         guard let uuidString = parseString(rawVal) else { return nil }

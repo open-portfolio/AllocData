@@ -8,7 +8,7 @@ The following entities are defined in the _AllocData_ data model.
 
 ### MAccount
 
-This is the ‘openalloc/account’ schema.
+This is the `openalloc/account` schema.
 
 Each row of the Accounts table describes a unique account.
 
@@ -23,7 +23,7 @@ Each row of the Accounts table describes a unique account.
 
 ### MAllocation
 
-This is the ‘openalloc/allocation’ schema.
+This is the `openalloc/allocation` schema.
 
 Each row of the Allocations table describes a ‘slice’ of a strategy’s
 allocation pie.
@@ -37,7 +37,7 @@ allocation pie.
 
 ### MAsset
 
-This is the ‘openalloc/asset’ schema.
+This is the `openalloc/asset` schema.
 
 Each row of the Assets table describes a unique asset class.
 
@@ -52,7 +52,7 @@ It also establishes relations between assets.
 
 ### MCap
 
-This is the ‘openalloc/cap’ schema.
+This is the `openalloc/cap` schema.
 
 This table describes limits on allocation for an asset class within an
 account.
@@ -65,7 +65,7 @@ account.
 
 ### MHistory
 
-This is the ‘openalloc/history’ schema.
+This is the `openalloc/history` schema.
 
 A table of recent transaction history, including purchases and sales.
 
@@ -82,7 +82,7 @@ A table of recent transaction history, including purchases and sales.
 
 ### MHolding
 
-This is the ‘openalloc/holding’ schema.
+This is the `openalloc/holding` schema.
 
 A table where each row describes an individual position, with account,
 ticker, share count, share basis, etc.
@@ -98,7 +98,7 @@ ticker, share count, share basis, etc.
 
 ### MSecurity
 
-This is the ‘openalloc/security’ schema.
+This is the `openalloc/security` schema.
 
 Table where each row describes a unique security, with its ticker, asset
 class and latest price.
@@ -113,7 +113,7 @@ class and latest price.
 
 ### MStrategy
 
-This is the ‘openalloc/strategy’ schema.
+This is the `openalloc/strategy` schema.
 
 Each row of the Strategies table describes a single allocation strategy.
 
@@ -124,7 +124,7 @@ Each row of the Strategies table describes a single allocation strategy.
 
 ### MTracker
 
-This is the ‘openalloc/tracker’ schema.
+This is the `openalloc/tracker` schema.
 
 Each row of the Tracker table describes a many-to-many
 relationship between Securities.
@@ -136,7 +136,7 @@ relationship between Securities.
 
 ### MRebalanceAllocation
 
-This is the ‘openalloc/rebalance/allocation’ schema.
+This is the `openalloc/rebalance/allocation` schema.
 
 Each row of the RebalanceAllocation table describes an allocation that drives a rebalance.
 
@@ -148,7 +148,7 @@ Each row of the RebalanceAllocation table describes an allocation that drives a 
 
 ### MRebalancePurchase
 
-This is the ‘openalloc/rebalance/purchase’ schema.
+This is the `openalloc/rebalance/purchase` schema.
 
 Each row of the RebalancePurchase table describes an acquisition of a position to satisfy a rebalance.
 
@@ -160,7 +160,7 @@ Each row of the RebalancePurchase table describes an acquisition of a position t
 
 ### MRebalanceSale
 
-This is the ‘openalloc/rebalance/sale’ schema.
+This is the `openalloc/rebalance/sale` schema.
 
 Each row of the RebalanceSale table describes a liquidation of a position to satisfy a rebalance.
 
@@ -172,6 +172,50 @@ Each row of the RebalanceSale table describes a liquidation of a position to sat
 | amount | double | true | false | The amount in dollars to liquidate from this position. |
 | shareCount | double | false | false | Estimated number of shares to liquidate from this position. |
 | liquidateAll | bool | false | false | If true, the entire position can be liquidated. |
+
+### MValuationSnapshot
+
+This is the `openalloc/valuation/snapshot` schema.
+
+Each row of the ValuationSnapshot table describes a valuation captured at a particular time.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| valuationSnapshotID | string | true | true | The unique valuation snapshot identifier. |
+| allocationAssetID | string | true | true | The asset class of the allocation. |
+| capturedAt | date | true | false | The timestamp when the snapshot was created. |
+
+### MValuationPosition
+
+This is the `openalloc/valuation/position` schema.
+
+Each row of the ValuationPosition table describes a position/holding captured at a particular time.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| valuationPositionSnapshotID | string | true | true | The valuation snapshot ID for the position. |
+| valuationPositionAccountID | string | true | true | The account hosting the position. |
+| valuationPositionSecurityID | string | true | true | The security/ticker of the position. |
+| valuationPositionLotID | string | true | true | The lot of the position, if any. |
+| shareCount | double | true | false | The price paid per share of the security to establish position. |
+| shareBasis | double | true | false | The number of shares remaining in the position. |
+| sharePrice | double | true | false | The price per share at the snapshot. |
+| assetID | string | true | false | The asset class of the security. |
+
+### MValuationTransaction
+
+This is the `openalloc/valuation/transaction` schema.
+
+Each row of the ValuationTransaction table describes a transaction at a particular time. It is not explicitly bound to any ValuationSnapshot.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| valuationTransactionTransactedAt | date | true | true | The timestamp when this transaction occurred. |
+| valuationTransactionAccountID | string | true | true | The account transacted. |
+| valuationTransactionSecurityID | string | true | true | The security/ticker transacted. |
+| valuationTransactionLotID | string | true | true | The lot of the transacted, if any. |
+| shareCount | double | true | false | The number of shares transacted (-Sale, +Purchase). |
+| sharePrice | double | true | false | The price per share transacted. |
 
 ## API
 
