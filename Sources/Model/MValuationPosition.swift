@@ -18,7 +18,7 @@
 import Foundation
 
 public struct MValuationPosition: Hashable & AllocBase {
-    public var valuationSnapshotID: String // key
+    public var snapshotID: String // key
     public var accountID: String // key
     public var securityID: String // key
     public var lotID: String // key
@@ -29,7 +29,7 @@ public struct MValuationPosition: Hashable & AllocBase {
     public var assetID: String
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
-        case valuationSnapshotID = "valuationPositionSnapshotID"
+        case snapshotID = "valuationPositionSnapshotID"
         case accountID = "valuationPositionAccountID"
         case securityID = "valuationPositionSecurityID"
         case lotID = "valuationPositionLotID"
@@ -42,7 +42,7 @@ public struct MValuationPosition: Hashable & AllocBase {
     public static var schema: AllocSchema { .allocValuationPosition }
 
     public static var attributes: [AllocAttribute] = [
-        AllocAttribute(CodingKeys.valuationSnapshotID, .string, isRequired: true, isKey: true, "The valuation snapshot ID for the position."),
+        AllocAttribute(CodingKeys.snapshotID, .string, isRequired: true, isKey: true, "The valuation snapshot ID for the position."),
         AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account hosting the position."),
         AllocAttribute(CodingKeys.securityID, .string, isRequired: true, isKey: true, "The security/ticker of the position."),
         AllocAttribute(CodingKeys.lotID, .string, isRequired: true, isKey: true, "The lot of the position, if any."),
@@ -53,7 +53,7 @@ public struct MValuationPosition: Hashable & AllocBase {
     ]
 
     public init(
-        valuationSnapshotID: String,
+        snapshotID: String,
         accountID: String,
         securityID: String,
         lotID: String,
@@ -62,7 +62,7 @@ public struct MValuationPosition: Hashable & AllocBase {
         sharePrice: Double,
         assetID: String
     ) {
-        self.valuationSnapshotID = valuationSnapshotID
+        self.snapshotID = snapshotID
         self.accountID = accountID
         self.securityID = securityID
         self.lotID = lotID
@@ -74,7 +74,7 @@ public struct MValuationPosition: Hashable & AllocBase {
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
-        valuationSnapshotID = try c.decode(String.self, forKey: .valuationSnapshotID)
+        snapshotID = try c.decode(String.self, forKey: .snapshotID)
         accountID = try c.decode(String.self, forKey: .accountID)
         securityID = try c.decode(String.self, forKey: .securityID)
         lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? AllocNilKey
@@ -85,9 +85,9 @@ public struct MValuationPosition: Hashable & AllocBase {
     }
 
     public init(from row: Row) throws {
-        guard let valuationSnapshotID_ = MValuationPosition.getStr(row, CodingKeys.valuationSnapshotID.rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.valuationSnapshotID.rawValue) }
-        valuationSnapshotID = valuationSnapshotID_
+        guard let snapshotID_ = MValuationPosition.getStr(row, CodingKeys.snapshotID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.snapshotID.rawValue) }
+        snapshotID = snapshotID_
 
         guard let accountID_ = MValuationPosition.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
@@ -113,24 +113,24 @@ public struct MValuationPosition: Hashable & AllocBase {
     }
 
     public var primaryKey: AllocKey {
-        MValuationPosition.makePrimaryKey(valuationSnapshotID: valuationSnapshotID, accountID: accountID, securityID: securityID, lotID: lotID)
+        MValuationPosition.makePrimaryKey(snapshotID: snapshotID, accountID: accountID, securityID: securityID, lotID: lotID)
     }
 
-    public static func makePrimaryKey(valuationSnapshotID: String, accountID: String, securityID: String, lotID: String) -> AllocKey {
-        keyify([valuationSnapshotID, accountID, securityID, lotID])
+    public static func makePrimaryKey(snapshotID: String, accountID: String, securityID: String, lotID: String) -> AllocKey {
+        keyify([snapshotID, accountID, securityID, lotID])
     }
 
     public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
-        let rawValue0 = CodingKeys.valuationSnapshotID.rawValue
+        let rawValue0 = CodingKeys.snapshotID.rawValue
         let rawValue1 = CodingKeys.accountID.rawValue
         let rawValue2 = CodingKeys.securityID.rawValue
         let rawValue3 = CodingKeys.lotID.rawValue
-        guard let valuationSnapshotID_ = getStr(row, rawValue0),
+        guard let snapshotID_ = getStr(row, rawValue0),
               let accountID_ = getStr(row, rawValue1),
               let securityID_ = getStr(row, rawValue2),
               let lotID_ = getStr(row, rawValue3)
         else { throw AllocDataError.invalidPrimaryKey("Position") }
-        return makePrimaryKey(valuationSnapshotID: valuationSnapshotID_, accountID: accountID_, securityID: securityID_, lotID: lotID_)
+        return makePrimaryKey(snapshotID: snapshotID_, accountID: accountID_, securityID: securityID_, lotID: lotID_)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
@@ -138,7 +138,7 @@ public struct MValuationPosition: Hashable & AllocBase {
 
         return rawRows.compactMap { row in
             // required values, without default values
-            guard let valuationSnapshotID = parseString(row[ck.valuationSnapshotID.rawValue]),
+            guard let snapshotID = parseString(row[ck.snapshotID.rawValue]),
                   let accountID = parseString(row[ck.accountID.rawValue]),
                   accountID.count > 0,
                   let securityID = parseString(row[ck.securityID.rawValue]),
@@ -158,7 +158,7 @@ public struct MValuationPosition: Hashable & AllocBase {
             let assetID = parseString(row[ck.assetID.rawValue])
 
             return [
-                ck.valuationSnapshotID.rawValue: valuationSnapshotID,
+                ck.snapshotID.rawValue: snapshotID,
                 ck.accountID.rawValue: accountID,
                 ck.securityID.rawValue: securityID,
                 ck.lotID.rawValue: lotID,
@@ -173,6 +173,6 @@ public struct MValuationPosition: Hashable & AllocBase {
 
 extension MValuationPosition: CustomStringConvertible {
     public var description: String {
-       "valuationSnapshotID=\(valuationSnapshotID) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareBasis=\(shareBasis) shareCount=\(shareCount) sharePrice=\(sharePrice) assetID=\(assetID)"
+       "snapshotID=\(snapshotID) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareBasis=\(shareBasis) shareCount=\(shareCount) sharePrice=\(sharePrice) assetID=\(assetID)"
     }
 }

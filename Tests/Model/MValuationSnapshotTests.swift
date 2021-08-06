@@ -30,36 +30,36 @@ class MValuationSnapshotTests: XCTestCase {
     }
 
     func testInit() {
-        let expected = MValuationSnapshot(valuationSnapshotID: "XYZ", capturedAt: timestamp2)
-        var actual = MValuationSnapshot(valuationSnapshotID: "XYZ", capturedAt: timestamp)
-        XCTAssertEqual("XYZ", actual.valuationSnapshotID)
+        let expected = MValuationSnapshot(snapshotID: "XYZ", capturedAt: timestamp2)
+        var actual = MValuationSnapshot(snapshotID: "XYZ", capturedAt: timestamp)
+        XCTAssertEqual("XYZ", actual.snapshotID)
         XCTAssertEqual(timestamp, actual.capturedAt)
         actual.capturedAt = timestamp2
         XCTAssertEqual(expected, actual)
     }
 
     func testInitFromFINrow() throws {
-        let expected = MValuationSnapshot(valuationSnapshotID: "XYZ", capturedAt: timestamp)
+        let expected = MValuationSnapshot(snapshotID: "XYZ", capturedAt: timestamp)
         let actual = try MValuationSnapshot(from: [
-            MValuationSnapshot.CodingKeys.valuationSnapshotID.rawValue: "XYZ",
+            MValuationSnapshot.CodingKeys.snapshotID.rawValue: "XYZ",
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: timestamp,
         ])
         XCTAssertEqual(expected, actual)
     }
 
     func testUpdateFromFINrow() throws {
-        var actual = MValuationSnapshot(valuationSnapshotID: "XYZ", capturedAt: timestamp)
+        var actual = MValuationSnapshot(snapshotID: "XYZ", capturedAt: timestamp)
         let finRow: MValuationSnapshot.Row = [
-            MValuationSnapshot.CodingKeys.valuationSnapshotID.rawValue: "ABC",  // ignored
+            MValuationSnapshot.CodingKeys.snapshotID.rawValue: "ABC",  // ignored
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: timestamp2,
         ]
         try actual.update(from: finRow)
-        let expected = MValuationSnapshot(valuationSnapshotID: "XYZ", capturedAt: timestamp2)
+        let expected = MValuationSnapshot(snapshotID: "XYZ", capturedAt: timestamp2)
         XCTAssertEqual(expected, actual)
     }
 
     func testPrimaryKey() throws {
-        let element = MValuationSnapshot(valuationSnapshotID: "  XYZ  ", capturedAt: timestamp)
+        let element = MValuationSnapshot(snapshotID: "  XYZ  ", capturedAt: timestamp)
         let actual = element.primaryKey
         let expected = "xyz"
         XCTAssertEqual(expected, actual)
@@ -67,7 +67,7 @@ class MValuationSnapshotTests: XCTestCase {
 
     func testGetPrimaryKey() throws {
         let finRow: MValuationSnapshot.Row = [
-            MValuationSnapshot.CodingKeys.valuationSnapshotID.rawValue: "  ABC  ",
+            MValuationSnapshot.CodingKeys.snapshotID.rawValue: "  ABC  ",
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: timestamp,
         ]
         let actual = try MValuationSnapshot.getPrimaryKey(finRow)
@@ -81,13 +81,13 @@ class MValuationSnapshotTests: XCTestCase {
         //let parsedDate = parseYYYYMMDD(formattedDate)
         let parsedDate = formatter.date(from: formattedDate)
         let rawRows: [MValuationSnapshot.RawRow] = [[
-            MValuationSnapshot.CodingKeys.valuationSnapshotID.rawValue: "XYZ",
+            MValuationSnapshot.CodingKeys.snapshotID.rawValue: "XYZ",
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: formattedDate,
         ]]
         var rejected = [MValuationSnapshot.Row]()
         let actual = try MValuationSnapshot.decode(rawRows, rejectedRows: &rejected)
         let expected: MValuationSnapshot.Row = [
-            MValuationSnapshot.CodingKeys.valuationSnapshotID.rawValue: "XYZ",
+            MValuationSnapshot.CodingKeys.snapshotID.rawValue: "XYZ",
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: parsedDate,
         ]
         XCTAssertTrue(rejected.isEmpty)

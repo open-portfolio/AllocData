@@ -28,9 +28,9 @@ class MValuationPositionTests: XCTestCase {
     }
 
     func testInit() {
-        let beg = MValuationSnapshot(valuationSnapshotID: "B", capturedAt: timestamp)
-        let expected = MValuationPosition(valuationSnapshotID: beg.valuationSnapshotID, accountID: "1", securityID: "BND", lotID: "3", shareBasis: 24, shareCount: 23, sharePrice: 25, assetID: "ITGov")
-        var actual = MValuationPosition(valuationSnapshotID: beg.valuationSnapshotID, accountID: "1", securityID: "BND", lotID: "3", shareBasis: 4, shareCount: 3, sharePrice: 5, assetID: "Bond")
+        let beg = MValuationSnapshot(snapshotID: "B", capturedAt: timestamp)
+        let expected = MValuationPosition(snapshotID: beg.snapshotID, accountID: "1", securityID: "BND", lotID: "3", shareBasis: 24, shareCount: 23, sharePrice: 25, assetID: "ITGov")
+        var actual = MValuationPosition(snapshotID: beg.snapshotID, accountID: "1", securityID: "BND", lotID: "3", shareBasis: 4, shareCount: 3, sharePrice: 5, assetID: "Bond")
         XCTAssertEqual("1", actual.accountID)
         XCTAssertEqual("BND", actual.securityID)
         XCTAssertEqual("3", actual.lotID)
@@ -46,10 +46,10 @@ class MValuationPositionTests: XCTestCase {
     }
 
     func testInitFromFINrow() throws {
-        let beg = MValuationSnapshot(valuationSnapshotID: "B", capturedAt: timestamp)
-        let expected = MValuationPosition(valuationSnapshotID: beg.valuationSnapshotID, accountID: "1", securityID: "BND", lotID: "3", shareBasis: 4, shareCount: 3, sharePrice: 5, assetID: "Bond")
+        let beg = MValuationSnapshot(snapshotID: "B", capturedAt: timestamp)
+        let expected = MValuationPosition(snapshotID: beg.snapshotID, accountID: "1", securityID: "BND", lotID: "3", shareBasis: 4, shareCount: 3, sharePrice: 5, assetID: "Bond")
         let actual = try MValuationPosition(from: [
-            MValuationPosition.CodingKeys.valuationSnapshotID.rawValue: "B",
+            MValuationPosition.CodingKeys.snapshotID.rawValue: "B",
             MValuationPosition.CodingKeys.accountID.rawValue: "1",
             MValuationPosition.CodingKeys.securityID.rawValue: "BND",
             MValuationPosition.CodingKeys.lotID.rawValue: "3",
@@ -62,10 +62,10 @@ class MValuationPositionTests: XCTestCase {
     }
 
     func testUpdateFromFINrow() throws {
-        let beg = MValuationSnapshot(valuationSnapshotID: "B", capturedAt: timestamp)
-        var actual = MValuationPosition(valuationSnapshotID: beg.valuationSnapshotID, accountID: "1", securityID: "BND", lotID: "3", shareBasis: 4, shareCount: 3, sharePrice: 5, assetID: "ITGov")
+        let beg = MValuationSnapshot(snapshotID: "B", capturedAt: timestamp)
+        var actual = MValuationPosition(snapshotID: beg.snapshotID, accountID: "1", securityID: "BND", lotID: "3", shareBasis: 4, shareCount: 3, sharePrice: 5, assetID: "ITGov")
         let finRow: MValuationPosition.Row = [
-            MValuationPosition.CodingKeys.valuationSnapshotID.rawValue: "Z", // IGNORED
+            MValuationPosition.CodingKeys.snapshotID.rawValue: "Z", // IGNORED
             MValuationPosition.CodingKeys.accountID.rawValue: "x", // IGNORED
             MValuationPosition.CodingKeys.securityID.rawValue: "xx", // IGNORED
             MValuationPosition.CodingKeys.lotID.rawValue: "xxx", // IGNORED
@@ -75,13 +75,13 @@ class MValuationPositionTests: XCTestCase {
             MValuationPosition.CodingKeys.assetID.rawValue: "Bond",
         ]
         try actual.update(from: finRow)
-        let expected = MValuationPosition(valuationSnapshotID: beg.valuationSnapshotID, accountID: "1", securityID: "BND", lotID: "3", shareBasis: 24, shareCount: 23, sharePrice: 25, assetID: "Bond")
+        let expected = MValuationPosition(snapshotID: beg.snapshotID, accountID: "1", securityID: "BND", lotID: "3", shareBasis: 24, shareCount: 23, sharePrice: 25, assetID: "Bond")
         XCTAssertEqual(expected, actual)
     }
 
     func testPrimaryKey() throws {
-        let beg = MValuationSnapshot(valuationSnapshotID: "B", capturedAt: timestamp)
-        let element = MValuationPosition(valuationSnapshotID: beg.valuationSnapshotID, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ", shareBasis: 4, shareCount: 3, sharePrice: 5, assetID: "Bond")
+        let beg = MValuationSnapshot(snapshotID: "B", capturedAt: timestamp)
+        let element = MValuationPosition(snapshotID: beg.snapshotID, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ", shareBasis: 4, shareCount: 3, sharePrice: 5, assetID: "Bond")
         let actual = element.primaryKey
         let expected = "b,a-x?3,-3b !,"
         XCTAssertEqual(expected, actual)

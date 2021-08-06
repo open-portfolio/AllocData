@@ -18,38 +18,38 @@
 import Foundation
 
 public struct MValuationSnapshot: Hashable & AllocBase {
-    public var valuationSnapshotID: String // key
+    public var snapshotID: String // key
     public var capturedAt: Date
     
     public enum CodingKeys: String, CodingKey, CaseIterable {
-        case valuationSnapshotID
+        case snapshotID = "valuationSnapshotID"
         case capturedAt
     }
 
     public static var schema: AllocSchema { .allocValuationSnapshot }
 
     public static var attributes: [AllocAttribute] = [
-        AllocAttribute(CodingKeys.valuationSnapshotID, .string, isRequired: true, isKey: true, "The unique valuation snapshot identifier."),
+        AllocAttribute(CodingKeys.snapshotID, .string, isRequired: true, isKey: true, "The unique valuation snapshot identifier."),
         AllocAttribute(CodingKeys.capturedAt, .date, isRequired: true, isKey: false, "The timestamp when the snapshot was created."),
     ]
 
     public init(
-        valuationSnapshotID: String,
+        snapshotID: String,
         capturedAt: Date) {
-        self.valuationSnapshotID = valuationSnapshotID
+        self.snapshotID = snapshotID
         self.capturedAt = capturedAt
     }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
-        valuationSnapshotID = try c.decode(String.self, forKey: .valuationSnapshotID)
+        snapshotID = try c.decode(String.self, forKey: .snapshotID)
         capturedAt = try c.decode(Date.self, forKey: .capturedAt)
     }
 
     public init(from row: Row) throws {
-        guard let valuationSnapshotID_ = MValuationSnapshot.getStr(row, CodingKeys.valuationSnapshotID.rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.valuationSnapshotID.rawValue) }
-        valuationSnapshotID = valuationSnapshotID_
+        guard let snapshotID_ = MValuationSnapshot.getStr(row, CodingKeys.snapshotID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.snapshotID.rawValue) }
+        snapshotID = snapshotID_
 
         guard let capturedAt_ = MValuationSnapshot.getDate(row, CodingKeys.capturedAt.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.capturedAt.rawValue) }
@@ -61,18 +61,18 @@ public struct MValuationSnapshot: Hashable & AllocBase {
     }
 
     public var primaryKey: AllocKey {
-        MValuationSnapshot.makePrimaryKey(valuationSnapshotID: valuationSnapshotID)
+        MValuationSnapshot.makePrimaryKey(snapshotID: snapshotID)
     }
 
-    public static func makePrimaryKey(valuationSnapshotID: String) -> AllocKey {
-        keyify(valuationSnapshotID)
+    public static func makePrimaryKey(snapshotID: String) -> AllocKey {
+        keyify(snapshotID)
     }
 
     public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
-        let rawValue0 = CodingKeys.valuationSnapshotID.rawValue
-        guard let valuationSnapshotID_ = getStr(row, rawValue0)
+        let rawValue0 = CodingKeys.snapshotID.rawValue
+        guard let snapshotID_ = getStr(row, rawValue0)
         else { throw AllocDataError.invalidPrimaryKey("Archive") }
-        return makePrimaryKey(valuationSnapshotID: valuationSnapshotID_)
+        return makePrimaryKey(snapshotID: snapshotID_)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
@@ -80,8 +80,8 @@ public struct MValuationSnapshot: Hashable & AllocBase {
 
         return rawRows.compactMap { row in
             // required values, without default values
-            guard let valuationSnapshotID = parseString(row[ck.valuationSnapshotID.rawValue]),
-                  valuationSnapshotID.count > 0,
+            guard let snapshotID = parseString(row[ck.snapshotID.rawValue]),
+                  snapshotID.count > 0,
                   let capturedAt = parseDate(row[ck.capturedAt.rawValue])
             else {
                 rejectedRows.append(row)
@@ -91,7 +91,7 @@ public struct MValuationSnapshot: Hashable & AllocBase {
             // optional values
 
             return [
-                ck.valuationSnapshotID.rawValue: valuationSnapshotID,
+                ck.snapshotID.rawValue: snapshotID,
                 ck.capturedAt.rawValue: capturedAt,
             ]
         }
@@ -101,6 +101,6 @@ public struct MValuationSnapshot: Hashable & AllocBase {
 extension MValuationSnapshot: CustomStringConvertible {
     public var description: String {
         let formattedDate = MValuationSnapshot.unparseDate(capturedAt)
-        return "valuationSnapshotID=\(valuationSnapshotID) capturedAt=\(formattedDate)"
+        return "snapshotID=\(snapshotID) capturedAt=\(formattedDate)"
     }
 }
