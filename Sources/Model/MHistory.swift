@@ -21,6 +21,7 @@ public struct MHistory: Hashable & AllocBase {
     public var transactionID: String
     public var accountID: String
     public var securityID: String
+    public var lotID: String
     public var shareCount: Double?
     public var sharePrice: Double?
     public var realizedGainShort: Double?
@@ -31,6 +32,7 @@ public struct MHistory: Hashable & AllocBase {
         case transactionID
         case accountID = "historyAccountID"
         case securityID = "historySecurityID"
+        case lotID = "historyLotID"
         case shareCount
         case sharePrice
         case realizedGainShort
@@ -44,6 +46,7 @@ public struct MHistory: Hashable & AllocBase {
         AllocAttribute(CodingKeys.transactionID, .string, isRequired: false, isKey: true, "Unique transaction identifier for the history record."),
         AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: false, "The account in which the transaction occurred."),
         AllocAttribute(CodingKeys.securityID, .string, isRequired: true, isKey: false, "The security involved in the transaction."),
+        AllocAttribute(CodingKeys.lotID, .string, isRequired: false, isKey: false, "The lot of the position involved in the transaction, if any."),
         AllocAttribute(CodingKeys.shareCount, .double, isRequired: false, isKey: false, "The number of shares transacted."),
         AllocAttribute(CodingKeys.sharePrice, .double, isRequired: false, isKey: false, "The price at which the share(s) transacted."),
         AllocAttribute(CodingKeys.realizedGainShort, .double, isRequired: false, isKey: false, "The total short-term realized gain (or loss) from a sale."),
@@ -66,6 +69,7 @@ public struct MHistory: Hashable & AllocBase {
     public init(transactionID: String? = nil,
                 accountID: String? = nil,
                 securityID: String? = nil,
+                lotID: String? = nil,
                 shareCount: Double? = nil,
                 sharePrice: Double? = nil,
                 realizedGainShort: Double? = nil,
@@ -75,6 +79,7 @@ public struct MHistory: Hashable & AllocBase {
         self.transactionID = transactionID ?? AllocNilKey
         self.accountID = accountID ?? AllocNilKey
         self.securityID = securityID ?? AllocNilKey
+        self.lotID = lotID ?? AllocNilKey
         self.shareCount = shareCount
         self.sharePrice = sharePrice
         self.realizedGainShort = realizedGainShort
@@ -87,6 +92,7 @@ public struct MHistory: Hashable & AllocBase {
         transactionID = try c.decodeIfPresent(String.self, forKey: .transactionID) ?? AllocNilKey
         accountID = try c.decodeIfPresent(String.self, forKey: .accountID) ?? AllocNilKey
         securityID = try c.decodeIfPresent(String.self, forKey: .securityID) ?? AllocNilKey
+        lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? AllocNilKey
         shareCount = try c.decodeIfPresent(Double.self, forKey: .shareCount)
         sharePrice = try c.decodeIfPresent(Double.self, forKey: .sharePrice)
         realizedGainShort = try c.decodeIfPresent(Double.self, forKey: .realizedGainShort)
@@ -101,6 +107,7 @@ public struct MHistory: Hashable & AllocBase {
 
         accountID = MHistory.getStr(row, CodingKeys.accountID.rawValue) ?? AllocNilKey
         securityID = MHistory.getStr(row, CodingKeys.securityID.rawValue) ?? AllocNilKey
+        lotID = MHolding.getStr(row, CodingKeys.lotID.rawValue) ?? AllocNilKey
         shareCount = MHistory.getDouble(row, CodingKeys.shareCount.rawValue)
         sharePrice = MHistory.getDouble(row, CodingKeys.sharePrice.rawValue)
         realizedGainShort = MHistory.getDouble(row, CodingKeys.realizedGainShort.rawValue)
@@ -112,6 +119,7 @@ public struct MHistory: Hashable & AllocBase {
         // IGNORE transactionID
         if let val = MHistory.getStr(row, CodingKeys.accountID.rawValue) { accountID = val }
         if let val = MHistory.getStr(row, CodingKeys.securityID.rawValue) { securityID = val }
+        if let val = MHistory.getStr(row, CodingKeys.lotID.rawValue) { lotID = val }
         if let val = MHistory.getDouble(row, CodingKeys.shareCount.rawValue) { shareCount = val }
         if let val = MHistory.getDouble(row, CodingKeys.sharePrice.rawValue) { sharePrice = val }
         if let val = MHistory.getDouble(row, CodingKeys.realizedGainShort.rawValue) { realizedGainShort = val }
@@ -141,6 +149,7 @@ public struct MHistory: Hashable & AllocBase {
             let transactionID = parseString(row[ck.transactionID.rawValue])
             let accountID = parseString(row[ck.accountID.rawValue])
             let securityID = parseString(row[ck.securityID.rawValue])
+            let lotID = parseString(row[ck.lotID.rawValue])
             let shareCount = parseDouble(row[ck.shareCount.rawValue])
             let sharePrice = parseDouble(row[ck.sharePrice.rawValue])
             let realizedGainShort = parseDouble(row[ck.realizedGainShort.rawValue])
@@ -151,6 +160,7 @@ public struct MHistory: Hashable & AllocBase {
                 ck.transactionID.rawValue: transactionID,
                 ck.accountID.rawValue: accountID,
                 ck.securityID.rawValue: securityID,
+                ck.lotID.rawValue: lotID,
                 ck.shareCount.rawValue: shareCount,
                 ck.sharePrice.rawValue: sharePrice,
                 ck.realizedGainShort.rawValue: realizedGainShort,
@@ -163,6 +173,6 @@ public struct MHistory: Hashable & AllocBase {
 
 extension MHistory: CustomStringConvertible {
     public var description: String {
-        "transactionID=\(transactionID) accountID=\(accountID) securityID=\(securityID) shareCount=\(String(describing: shareCount)) sharePrice=\(String(describing: sharePrice)) realizedGainShort=\(String(describing: realizedGainShort)) realizedGainLong=\(String(describing: realizedGainLong)) transactedAt=\(String(describing: transactedAt))"
+        "transactionID=\(transactionID) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(String(describing: shareCount)) sharePrice=\(String(describing: sharePrice)) realizedGainShort=\(String(describing: realizedGainShort)) realizedGainLong=\(String(describing: realizedGainLong)) transactedAt=\(String(describing: transactedAt))"
     }
 }

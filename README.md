@@ -74,6 +74,7 @@ A table of recent transaction history, including purchases and sales.
 | transactionID | string | false | true | Unique transaction identifier for the history record. |
 | historyAccountID | string | true | false | The account in which the transaction occurred. |
 | historySecurityID | string | true | false | The security involved in the transaction. |
+| historyLotID | string | false | false | The lot of the position involved in the transaction, if any. |
 | shareCount | double | false | false | The number of shares transacted. |
 | sharePrice | double | false | false | The price at which the share(s) transacted. |
 | realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |

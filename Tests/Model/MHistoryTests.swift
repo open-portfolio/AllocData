@@ -28,11 +28,12 @@ class MHistoryTests: XCTestCase {
     }
 
     func testInit() {
-        let expected = MHistory(transactionID: "1", accountID: "a", securityID: "s", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, transactedAt: timestamp)
-        var actual = MHistory(transactionID: "1", accountID: "a", securityID: "s")
+        let expected = MHistory(transactionID: "1", accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, transactedAt: timestamp)
+        var actual = MHistory(transactionID: "1", accountID: "a", securityID: "s", lotID: "x")
         XCTAssertEqual("1", actual.transactionID)
         XCTAssertEqual("a", actual.accountID)
         XCTAssertEqual("s", actual.securityID)
+        XCTAssertEqual("x", actual.lotID)
         XCTAssertNil(actual.shareCount)
         XCTAssertNil(actual.sharePrice)
         XCTAssertNil(actual.realizedGainShort)
@@ -47,11 +48,12 @@ class MHistoryTests: XCTestCase {
     }
 
     func testInitFromFINrow() throws {
-        let expected = MHistory(transactionID: "1", accountID: "a", securityID: "s", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, transactedAt: timestamp)
+        let expected = MHistory(transactionID: "1", accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, transactedAt: timestamp)
         let actual = try MHistory(from: [
             MHistory.CodingKeys.transactionID.rawValue: "1",
             MHistory.CodingKeys.accountID.rawValue: "a",
             MHistory.CodingKeys.securityID.rawValue: "s",
+            MHistory.CodingKeys.lotID.rawValue: "x",
             MHistory.CodingKeys.shareCount.rawValue: 3,
             MHistory.CodingKeys.sharePrice.rawValue: 4,
             MHistory.CodingKeys.realizedGainShort.rawValue: 5,
@@ -62,11 +64,12 @@ class MHistoryTests: XCTestCase {
     }
 
     func testUpdateFromFINrow() throws {
-        var actual = MHistory(transactionID: "1", accountID: "a", securityID: "s", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, transactedAt: timestamp)
+        var actual = MHistory(transactionID: "1", accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, transactedAt: timestamp)
         let finRow: MHistory.Row = [
             MHistory.CodingKeys.transactionID.rawValue: "x", // IGNORED
-            MHistory.CodingKeys.accountID.rawValue: "b", // IGNORED
-            MHistory.CodingKeys.securityID.rawValue: "c", // IGNORED
+            MHistory.CodingKeys.accountID.rawValue: "b",
+            MHistory.CodingKeys.securityID.rawValue: "c",
+            MHistory.CodingKeys.lotID.rawValue: "z",
             MHistory.CodingKeys.shareCount.rawValue: 7,
             MHistory.CodingKeys.sharePrice.rawValue: 8,
             MHistory.CodingKeys.realizedGainShort.rawValue: 9,
@@ -74,7 +77,7 @@ class MHistoryTests: XCTestCase {
             MHistory.CodingKeys.transactedAt.rawValue: timestamp + 1,
         ]
         try actual.update(from: finRow)
-        let expected = MHistory(transactionID: "1", accountID: "b", securityID: "c", shareCount: 7, sharePrice: 8, realizedGainShort: 9, realizedGainLong: 10, transactedAt: timestamp + 1)
+        let expected = MHistory(transactionID: "1", accountID: "b", securityID: "c", lotID: "z", shareCount: 7, sharePrice: 8, realizedGainShort: 9, realizedGainLong: 10, transactedAt: timestamp + 1)
         XCTAssertEqual(expected, actual)
     }
 
@@ -101,6 +104,7 @@ class MHistoryTests: XCTestCase {
             "transactionID": "1",
             "historyAccountID": "a",
             "historySecurityID": "s",
+            "historyLotID": "x",
             "shareCount": "3",
             "sharePrice": "4",
             "realizedGainShort": "5",
@@ -113,6 +117,7 @@ class MHistoryTests: XCTestCase {
             "transactionID": "1",
             "historyAccountID": "a",
             "historySecurityID": "s",
+            "historyLotID": "x",
             "shareCount": 3,
             "sharePrice": 4,
             "realizedGainShort": 5,
