@@ -217,6 +217,19 @@ Each row of the ValuationTransaction table describes a transaction at a particul
 | shareCount | double | true | false | The number of shares transacted (-Sale, +Purchase). |
 | sharePrice | double | true | false | The price per share transacted. |
 
+### MSourceMeta
+
+This is the `openalloc/meta/source` schema.
+
+Each row of the SourceMeta table describes an import or transformation of source data. It can also include extracted data, such as the published export date found within.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| sourceMetaID | string | true | true | The unique ID of the source meta record. |
+| url | string | false | false | The source URL, if any. |
+| importerID | string | false | false | The id of the importer/transformer, if any. |
+| exportedAt | date | false | false | The published export date of the source data, if any. |
+
 ## API
 
 Entities in the data model all conform to AllocBase protocol.

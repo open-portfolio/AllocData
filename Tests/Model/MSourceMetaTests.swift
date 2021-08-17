@@ -1,5 +1,5 @@
 //
-//  MPropertyTests.swift
+//  MSourceMetaTests.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -18,7 +18,7 @@
 @testable import AllocData
 import XCTest
 
-class MPropertyTests: XCTestCase {
+class MSourceMetaTests: XCTestCase {
     lazy var timestamp = Date()
 
     func testSchema() {
@@ -28,35 +28,39 @@ class MPropertyTests: XCTestCase {
     }
 
     func testInit() {
-        let expected = MSourceMeta(sourceMetaID: "1", url: URL(string: "http://blah.com"), exportedAt: timestamp + 1)
+        let expected = MSourceMeta(sourceMetaID: "1", url: URL(string: "http://blah.com"), importerID: "blech", exportedAt: timestamp + 1)
         var actual = MSourceMeta(sourceMetaID: "1")
         XCTAssertEqual("1", actual.sourceMetaID)
         XCTAssertNil(actual.url)
+        XCTAssertNil(actual.importerID)
         XCTAssertNil(actual.exportedAt)
         actual.url = URL(string: "http://blah.com")
+        actual.importerID = "blech"
         actual.exportedAt = timestamp + 1
         XCTAssertEqual(expected, actual)
     }
 
     func testInitFromFINrow() throws {
-        let expected = MSourceMeta(sourceMetaID: "1", url: URL(string: "http://blah.com"), exportedAt: timestamp)
+        let expected = MSourceMeta(sourceMetaID: "1", url: URL(string: "http://blah.com"), importerID: "blech", exportedAt: timestamp)
         let actual = try MSourceMeta(from: [
             MSourceMeta.CodingKeys.sourceMetaID.rawValue: "1",
             MSourceMeta.CodingKeys.url.rawValue: URL(string: "http://blah.com"),
+            MSourceMeta.CodingKeys.importerID.rawValue: "blech",
             MSourceMeta.CodingKeys.exportedAt.rawValue: timestamp,
         ])
         XCTAssertEqual(expected, actual)
     }
 
     func testUpdateFromFINrow() throws {
-        var actual = MSourceMeta(sourceMetaID: "1", url: URL(string: "http://blah.com"), exportedAt: timestamp)
+        var actual = MSourceMeta(sourceMetaID: "1", url: URL(string: "http://blah.com"), importerID: "blech", exportedAt: timestamp)
         let finRow: MSourceMeta.Row = [
             MSourceMeta.CodingKeys.sourceMetaID.rawValue: "x", // IGNORED
             MSourceMeta.CodingKeys.url.rawValue: URL(string: "http://blort.com"),
+            MSourceMeta.CodingKeys.importerID.rawValue: "bloop",
             MSourceMeta.CodingKeys.exportedAt.rawValue: timestamp + 1,
         ]
         try actual.update(from: finRow)
-        let expected = MSourceMeta(sourceMetaID: "1", url: URL(string: "http://blort.com"), exportedAt: timestamp + 1)
+        let expected = MSourceMeta(sourceMetaID: "1", url: URL(string: "http://blort.com"), importerID: "bloop", exportedAt: timestamp + 1)
         XCTAssertEqual(expected, actual)
     }
 
@@ -80,6 +84,7 @@ class MPropertyTests: XCTestCase {
         let rawRows: [MSourceMeta.RawRow] = [[
             "sourceMetaID": "1",
             "url": "http://blah.com",
+            "importerID": "blech",
             "exportedAt": YYYYMMDD,
         ]]
         var rejected = [MSourceMeta.Row]()
@@ -87,6 +92,7 @@ class MPropertyTests: XCTestCase {
         let expected: MSourceMeta.Row = [
             "sourceMetaID": "1",
             "url": URL(string: "http://blah.com"),
+            "importerID": "blech",
             "exportedAt": YYYYMMDDts,
         ]
         XCTAssertTrue(rejected.isEmpty)

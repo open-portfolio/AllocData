@@ -18,7 +18,6 @@
 import Foundation
 
 public enum AllocSchema: String, CaseIterable {
-    case allocMetaSource = "openalloc/meta/source"
     case allocStrategy = "openalloc/strategy"
     case allocAllocation = "openalloc/allocation"
     case allocAsset = "openalloc/asset"
@@ -34,12 +33,11 @@ public enum AllocSchema: String, CaseIterable {
     case allocValuationSnapshot = "openalloc/valuation/snapshot"
     case allocValuationPosition = "openalloc/valuation/position"
     case allocValuationTransaction = "openalloc/valuation/transaction"
+    case allocMetaSource = "openalloc/meta/source"
     // add other supported tabular schema cases here
 
     public var attributes: [AllocAttribute] {
         switch self {
-        case .allocMetaSource:
-            return MSourceMeta.attributes
         case .allocStrategy:
             return MStrategy.attributes
         case .allocAllocation:
@@ -70,6 +68,8 @@ public enum AllocSchema: String, CaseIterable {
             return MValuationPosition.attributes
         case .allocValuationTransaction:
             return MValuationTransaction.attributes
+        case .allocMetaSource:
+            return MSourceMeta.attributes
         }
     }
 }

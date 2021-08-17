@@ -20,11 +20,13 @@ import Foundation
 public struct MSourceMeta: Hashable & AllocBase {
     public var sourceMetaID: String // key
     public var url: URL?
+    public var importerID: String?
     public var exportedAt: Date?
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case sourceMetaID
         case url
+        case importerID
         case exportedAt
     }
 
@@ -32,16 +34,19 @@ public struct MSourceMeta: Hashable & AllocBase {
 
     public static var attributes: [AllocAttribute] = [
         AllocAttribute(CodingKeys.sourceMetaID, .string, isRequired: true, isKey: true, "The unique ID of the source meta record."),
-        AllocAttribute(CodingKeys.url, .string, isRequired: true, isKey: false, "The source URL, if any."),
+        AllocAttribute(CodingKeys.url, .string, isRequired: false, isKey: false, "The source URL, if any."),
+        AllocAttribute(CodingKeys.importerID, .string, isRequired: false, isKey: false, "The id of the importer/transformer, if any."),
         AllocAttribute(CodingKeys.exportedAt, .date, isRequired: false, isKey: false, "The published export date of the source data, if any."),
     ]
 
     public init(sourceMetaID: String,
                 url: URL? = nil,
+                importerID: String? = nil,
                 exportedAt: Date? = nil)
     {
         self.sourceMetaID = sourceMetaID
         self.url = url
+        self.importerID = importerID
         self.exportedAt = exportedAt
     }
 
@@ -49,6 +54,7 @@ public struct MSourceMeta: Hashable & AllocBase {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         sourceMetaID = try c.decode(String.self, forKey: .sourceMetaID)
         url = try c.decodeIfPresent(URL.self, forKey: .url)
+        importerID = try c.decodeIfPresent(String.self, forKey: .importerID)
         exportedAt = try c.decodeIfPresent(Date.self, forKey: .exportedAt)
     }
 
@@ -58,11 +64,13 @@ public struct MSourceMeta: Hashable & AllocBase {
         sourceMetaID = sourceMetaID_
 
         url = MSourceMeta.getURL(row, CodingKeys.url.rawValue)
+        importerID = MSourceMeta.getStr(row, CodingKeys.importerID.rawValue)
         exportedAt = MSourceMeta.getDate(row, CodingKeys.exportedAt.rawValue)
     }
 
     public mutating func update(from row: Row) throws {
         if let val = MSourceMeta.getURL(row, CodingKeys.url.rawValue) { url = val }
+        if let val = MSourceMeta.getStr(row, CodingKeys.importerID.rawValue) { importerID = val }
         if let val = MSourceMeta.getDate(row, CodingKeys.exportedAt.rawValue) { exportedAt = val }
     }
 
@@ -90,11 +98,13 @@ public struct MSourceMeta: Hashable & AllocBase {
 
             // optional values
             let url = parseURL(row[ck.url.rawValue])
+            let importerID = parseString(row[ck.importerID.rawValue])
             let exportedAt = parseYYYYMMDD(row[ck.exportedAt.rawValue], separator: "-")
 
             return [
                 ck.sourceMetaID.rawValue: sourceMetaID,
                 ck.url.rawValue: url,
+                ck.importerID.rawValue: importerID,
                 ck.exportedAt.rawValue: exportedAt,
             ]
         }
@@ -103,6 +113,6 @@ public struct MSourceMeta: Hashable & AllocBase {
 
 extension MSourceMeta: CustomStringConvertible {
     public var description: String {
-        "sourceMetaID=\(sourceMetaID) url=\(String(describing: url)) exportedAt=\(String(describing: exportedAt))"
+        "sourceMetaID=\(sourceMetaID) url=\(String(describing: url)) importerID=\(String(describing: importerID)) exportedAt=\(String(describing: exportedAt))"
     }
 }
