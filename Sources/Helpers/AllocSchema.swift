@@ -18,6 +18,7 @@
 import Foundation
 
 public enum AllocSchema: String, CaseIterable {
+    case allocMetaSource = "openalloc/meta/source"
     case allocStrategy = "openalloc/strategy"
     case allocAllocation = "openalloc/allocation"
     case allocAsset = "openalloc/asset"
@@ -37,6 +38,8 @@ public enum AllocSchema: String, CaseIterable {
 
     public var attributes: [AllocAttribute] {
         switch self {
+        case .allocMetaSource:
+            return MSourceMeta.attributes
         case .allocStrategy:
             return MStrategy.attributes
         case .allocAllocation:

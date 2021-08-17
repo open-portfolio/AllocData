@@ -50,4 +50,9 @@ public extension AllocBase {
         guard let val = row[key] as? Date else { return nil }
         return val
     }
+    
+    static func getURL(_ row: Row, _ key: String) -> URL? {
+        guard let val = row[key] as? URL else { return nil }
+        return val
+    }
 }

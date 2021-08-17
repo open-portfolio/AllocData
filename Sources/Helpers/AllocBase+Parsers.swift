@@ -39,6 +39,11 @@ public extension AllocBase {
         guard let uuidString = parseString(rawVal) else { return nil }
         return UUID(uuidString: uuidString)
     }
+    
+    static func parseURL(_ rawVal: String?, trimCharacters _: CharacterSet = CharacterSet()) -> URL? {
+        guard let urlString = parseString(rawVal) else { return nil }
+        return URL(string: urlString)
+    }
 
     // Trim and parse string. Return nil if blank.
     static func parseString(_ rawVal: String?, trimCharacters: CharacterSet = CharacterSet()) -> String? {
