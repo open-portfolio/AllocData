@@ -216,6 +216,7 @@ Each row of the ValuationTransaction table describes a transaction at a particul
 | valuationTransactionLotID | string | true | true | The lot of the transacted, if any. |
 | shareCount | double | true | false | The number of shares transacted (-Sale, +Purchase). |
 | sharePrice | double | true | false | The price per share transacted. |
+| isGenerated | bool | true | false | If true, this record was created to reconcile share counts. |
 
 ### MSourceMeta
 
