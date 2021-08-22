@@ -154,7 +154,9 @@ public struct MHistory: Hashable & AllocBase {
             let sharePrice = parseDouble(row[ck.sharePrice.rawValue])
             let realizedGainShort = parseDouble(row[ck.realizedGainShort.rawValue])
             let realizedGainLong = parseDouble(row[ck.realizedGainLong.rawValue])
-            let transactedAt = parseYYYYMMDD(row[ck.transactedAt.rawValue], separator: "-")
+            
+            let rawTransactedAt = row[ck.transactedAt.rawValue]
+            let transactedAt = MHistory.parseDate(rawTransactedAt)
 
             return [
                 ck.transactionID.rawValue: transactionID,

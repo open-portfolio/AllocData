@@ -20,6 +20,7 @@ import XCTest
 
 class MSourceMetaTests: XCTestCase {
     lazy var timestamp = Date()
+    lazy var df = ISO8601DateFormatter()
 
     func testSchema() {
         let expected = AllocSchema.allocMetaSource
@@ -79,8 +80,8 @@ class MSourceMetaTests: XCTestCase {
     }
 
     func testDecode() throws {
-        let YYYYMMDD = Date.formatYYYYMMDD(timestamp) ?? ""
-        let YYYYMMDDts = MSourceMeta.parseYYYYMMDD(YYYYMMDD)
+        let YYYYMMDD = df.string(from: timestamp)
+        let YYYYMMDDts = df.date(from: YYYYMMDD)
         let rawRows: [MSourceMeta.RawRow] = [[
             "sourceMetaID": "1",
             "url": "http://blah.com",

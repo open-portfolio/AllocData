@@ -126,7 +126,9 @@ public struct MHolding: Hashable & AllocBase {
             // optional values
             let shareCount = parseDouble(row[ck.shareCount.rawValue])
             let shareBasis = parseDouble(row[ck.shareBasis.rawValue])
-            let acquiredAt = parseYYYYMMDD(row[ck.acquiredAt.rawValue], separator: "-")
+            
+            let rawAcquiredAt = row[ck.acquiredAt.rawValue]
+            let acquiredAt = MHolding.parseDate(rawAcquiredAt)
 
             return [
                 ck.accountID.rawValue: accountID,

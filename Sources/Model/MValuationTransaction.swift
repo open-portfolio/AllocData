@@ -25,7 +25,7 @@ public struct MValuationTransaction: Hashable & AllocBase {
 
     public var shareCount: Double
     public var sharePrice: Double
-    public var isGenerated: Bool
+    public var refTransactionID: String?
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case transactedAt = "valuationTransactionTransactedAt"
@@ -34,7 +34,7 @@ public struct MValuationTransaction: Hashable & AllocBase {
         case lotID = "valuationTransactionLotID"
         case shareCount
         case sharePrice
-        case isGenerated
+        case refTransactionID
     }
 
     public static var schema: AllocSchema { .allocValuationTransaction }
@@ -46,7 +46,7 @@ public struct MValuationTransaction: Hashable & AllocBase {
         AllocAttribute(CodingKeys.lotID, .string, isRequired: true, isKey: true, "The lot of the transacted, if any."),
         AllocAttribute(CodingKeys.shareCount, .double, isRequired: true, isKey: false, "The number of shares transacted (-Sale, +Purchase)."),
         AllocAttribute(CodingKeys.sharePrice, .double, isRequired: true, isKey: false, "The price per share transacted."),
-        AllocAttribute(CodingKeys.isGenerated, .bool, isRequired: true, isKey: false, "If true, this record was created to reconcile share counts."),
+        AllocAttribute(CodingKeys.refTransactionID, .string, isRequired: false, isKey: false, "The history transaction ID, if any."),
     ]
 
     public init(
@@ -56,7 +56,7 @@ public struct MValuationTransaction: Hashable & AllocBase {
         lotID: String,
         shareCount: Double,
         sharePrice: Double,
-        isGenerated: Bool
+        refTransactionID: String? = nil
     ) {
         self.transactedAt = transactedAt
         self.accountID = accountID
@@ -64,7 +64,7 @@ public struct MValuationTransaction: Hashable & AllocBase {
         self.lotID = lotID
         self.shareCount = shareCount
         self.sharePrice = sharePrice
-        self.isGenerated = isGenerated
+        self.refTransactionID = refTransactionID
     }
 
     public init(from decoder: Decoder) throws {
@@ -75,7 +75,7 @@ public struct MValuationTransaction: Hashable & AllocBase {
         lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? AllocNilKey
         shareCount = try c.decode(Double.self, forKey: .shareCount)
         sharePrice = try c.decode(Double.self, forKey: .sharePrice)
-        isGenerated = try c.decode(Bool.self, forKey: .isGenerated)
+        refTransactionID = try c.decodeIfPresent(String.self, forKey: .refTransactionID)
     }
 
     public init(from row: Row) throws {
@@ -95,13 +95,13 @@ public struct MValuationTransaction: Hashable & AllocBase {
 
         shareCount = MValuationPosition.getDouble(row, CodingKeys.shareCount.rawValue) ?? 0
         sharePrice = MValuationPosition.getDouble(row, CodingKeys.sharePrice.rawValue) ?? 0
-        isGenerated = MValuationPosition.getBool(row, CodingKeys.isGenerated.rawValue) ?? false
+        refTransactionID = MValuationPosition.getStr(row, CodingKeys.refTransactionID.rawValue)
     }
 
     public mutating func update(from row: Row) throws {
         if let val = MValuationPosition.getDouble(row, CodingKeys.shareCount.rawValue) { shareCount = val }
         if let val = MValuationPosition.getDouble(row, CodingKeys.sharePrice.rawValue) { sharePrice = val }
-        if let val = MValuationPosition.getBool(row, CodingKeys.isGenerated.rawValue) { isGenerated = val }
+        if let val = MValuationPosition.getStr(row, CodingKeys.refTransactionID.rawValue) { refTransactionID = val }
     }
 
     public var primaryKey: AllocKey {
@@ -154,7 +154,7 @@ public struct MValuationTransaction: Hashable & AllocBase {
             // optional values
             let shareCount = parseDouble(row[ck.shareCount.rawValue])
             let sharePrice = parseDouble(row[ck.sharePrice.rawValue])
-            let isGenerated = parseBool(row[ck.isGenerated.rawValue])
+            let refTransactionID = parseString(row[ck.refTransactionID.rawValue])
 
             return [
                 ck.transactedAt.rawValue: transactedAt,
@@ -163,7 +163,7 @@ public struct MValuationTransaction: Hashable & AllocBase {
                 ck.lotID.rawValue: lotID,
                 ck.shareCount.rawValue: shareCount,
                 ck.sharePrice.rawValue: sharePrice,
-                ck.isGenerated.rawValue: isGenerated,
+                ck.refTransactionID.rawValue: refTransactionID,
             ]
         }
     }
@@ -172,6 +172,6 @@ public struct MValuationTransaction: Hashable & AllocBase {
 extension MValuationTransaction: CustomStringConvertible {
     public var description: String {
         let formattedDate = MValuationSnapshot.unparseDate(transactedAt)
-        return "transactedAt=\(formattedDate) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(shareCount) sharePrice=\(sharePrice) isGenerated=\(String(isGenerated))"
+        return "transactedAt=\(formattedDate) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(shareCount) sharePrice=\(sharePrice) refTransactionID=\(String(describing: refTransactionID))"
     }
 }

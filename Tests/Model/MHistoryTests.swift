@@ -20,6 +20,7 @@ import XCTest
 
 class MHistoryTests: XCTestCase {
     lazy var timestamp = Date()
+    lazy var df = ISO8601DateFormatter()
 
     func testSchema() {
         let expected = AllocSchema.allocHistory
@@ -98,8 +99,8 @@ class MHistoryTests: XCTestCase {
     }
 
     func testDecode() throws {
-        let YYYYMMDD = Date.formatYYYYMMDD(timestamp) ?? ""
-        let YYYYMMDDts = MHistory.parseYYYYMMDD(YYYYMMDD)
+        let YYYYMMDD = df.string(from: timestamp)
+        let YYYYMMDDts = df.date(from: YYYYMMDD)
         let rawRows: [MHistory.RawRow] = [[
             "transactionID": "1",
             "historyAccountID": "a",

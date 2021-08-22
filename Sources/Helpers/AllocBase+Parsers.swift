@@ -87,36 +87,4 @@ public extension AllocBase {
         guard let val = parseDouble(percentStr) else { return nil }
         return Double(Int(val * precision)) / (precision * 100)
     }
-
-    // YYYY-MM-DD date parser
-    static func parseYYYYMMDD(_ dateStr: String?, separator: Character = "-") -> Date? {
-        guard let components = dateStr?.trimmingCharacters(in: .whitespaces).split(separator: separator),
-              components.count == 3,
-              components[0].count == 4,
-              components[1].count == 2,
-              components[2].count == 2,
-              let year = Int(components[0]),
-              let month = Int(components[1]),
-              let day = Int(components[2]),
-              let date = DateComponents(calendar: .current, year: year, month: month, day: day).date
-        else { return nil }
-
-        return date
-    }
-
-    // MM/DD/YYYY date parser
-    static func parseMMDDYYYY(_ dateStr: String?, separator: Character = "-") -> Date? {
-        guard let components = dateStr?.trimmingCharacters(in: .whitespaces).split(separator: separator),
-              components.count == 3,
-              components[0].count == 2,
-              components[1].count == 2,
-              components[2].count == 4,
-              let year = Int(components[2]),
-              let month = Int(components[0]),
-              let day = Int(components[1]),
-              let date = DateComponents(calendar: .current, year: year, month: month, day: day).date
-        else { return nil }
-
-        return date
-    }
 }

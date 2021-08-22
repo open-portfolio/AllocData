@@ -20,6 +20,7 @@ import XCTest
 
 class MHoldingTests: XCTestCase {
     lazy var timestamp = Date()
+    lazy var df = ISO8601DateFormatter()
 
     func testSchema() {
         let expected = AllocSchema.allocHolding
@@ -85,8 +86,8 @@ class MHoldingTests: XCTestCase {
     }
 
     func testDecode() throws {
-        let YYYYMMDD = Date.formatYYYYMMDD(timestamp) ?? ""
-        let YYYYMMDDts = MHolding.parseYYYYMMDD(YYYYMMDD)
+        let YYYYMMDD = df.string(from: timestamp)
+        let YYYYMMDDts = df.date(from: YYYYMMDD)
         let rawRows: [MHolding.RawRow] = [[
             "holdingAccountID": "1",
             "holdingSecurityID": "BND",

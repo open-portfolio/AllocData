@@ -99,7 +99,10 @@ public struct MSourceMeta: Hashable & AllocBase {
             // optional values
             let url = parseURL(row[ck.url.rawValue])
             let importerID = parseString(row[ck.importerID.rawValue])
-            let exportedAt = parseYYYYMMDD(row[ck.exportedAt.rawValue], separator: "-")
+            
+            let rawExportedAt = row[ck.exportedAt.rawValue]
+            let exportedAt = MSourceMeta.parseDate(rawExportedAt)
+
 
             return [
                 ck.sourceMetaID.rawValue: sourceMetaID,

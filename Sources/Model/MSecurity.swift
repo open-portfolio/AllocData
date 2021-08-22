@@ -108,8 +108,10 @@ public struct MSecurity: Hashable & AllocBase {
             // optional values
             let assetID = parseString(row[ck.assetID.rawValue])
             let sharePrice = parseDouble(row[ck.sharePrice.rawValue])
-            let updatedAt = parseYYYYMMDD(row[ck.updatedAt.rawValue])
             let trackerID = parseString(row[ck.trackerID.rawValue])
+
+            let rawUpdatedAt = row[ck.updatedAt.rawValue]
+            let updatedAt = MSecurity.parseDate(rawUpdatedAt)
 
             return [
                 ck.securityID.rawValue: securityID,

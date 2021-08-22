@@ -20,6 +20,7 @@ import XCTest
 
 class MSecurityTests: XCTestCase {
     lazy var timestamp = Date()
+    lazy var df = ISO8601DateFormatter()
 
     func testSchema() {
         let expected = AllocSchema.allocSecurity
@@ -82,8 +83,8 @@ class MSecurityTests: XCTestCase {
     }
 
     func testDecode() throws {
-        let YYYYMMDD = Date.formatYYYYMMDD(timestamp) ?? ""
-        let YYYYMMDDts = MSecurity.parseYYYYMMDD(YYYYMMDD)
+        let YYYYMMDD = df.string(from: timestamp)
+        let YYYYMMDDts = df.date(from: YYYYMMDD)
         let rawRows: [MSecurity.RawRow] = [[
             "securityID": "BND",
             "securityAssetID": "Bond",
