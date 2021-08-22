@@ -231,6 +231,12 @@ Each row of the SourceMeta table describes an import or transformation of source
 | importerID | string | false | false | The id of the importer/transformer, if any. |
 | exportedAt | date | false | false | The published export date of the source data, if any. |
 
+## Data Formats
+
+### Dates
+
+In delimited text files, the dates should be in the ISO 8601 / RFC 3339 format (e.g., "2012-12-31T19:00:00Z").
+
 ## API
 
 Entities in the data model all conform to AllocBase protocol.

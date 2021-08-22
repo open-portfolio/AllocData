@@ -155,5 +155,18 @@ final class ParserHelpersTests: XCTestCase {
         XCTAssertTrue(actual)
     }
 
+    func testParseISOdate() throws {
+        let df = ISO8601DateFormatter()
+        let expected = df.date(from: "2012-12-31T19:00:00Z")
+        let actual = MHistory.parseDate("2012-12-31T19:00:00Z")!
+        XCTAssertEqual(expected, actual)
+    }
+    
+    func testParsePartialISOdate() throws {
+        let df = ISO8601DateFormatter()
+        let expected = df.date(from: "2012-12-31T00:00:00Z")
+        let actual = MHistory.parseDate("2012-12-31")!
+        XCTAssertEqual(expected, actual)
+    }
 }
 

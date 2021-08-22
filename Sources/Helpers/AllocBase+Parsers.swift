@@ -25,7 +25,7 @@ public extension AllocBase {
     
     static func parseDate(_ rawVal: String?) -> Date? {
         guard let val = rawVal else { return nil }
-        return isoDateFormatter.date(from: val)
+        return isoDateFormatter.date(from: val) ?? isoDateFormatter.date(from: "\(val)T00:00:00Z")
     }
     
     static func unparseDate(_ dateVal: Date) -> String {
