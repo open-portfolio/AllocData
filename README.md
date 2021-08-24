@@ -202,6 +202,19 @@ Each row of the ValuationPosition table describes a position/holding captured at
 | sharePrice | double | true | false | The price per share at the snapshot. |
 | assetID | string | true | false | The asset class of the security. |
 
+### MValuationCashflow
+
+This is the `openalloc/valuation/cashflow` schema.
+
+Each row of the ValuationCashflow table describes a cash flow at a particular time. It is not explicitly bound to any ValuationSnapshot.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| valuationCashflowTransactedAt | date | true | true | The timestamp when this flow occurred. |
+| valuationCashflowAccountID | string | true | true | The account in which the flow occurred. |
+| valuationCashflowAssetID | string | true | true | The asset class flowed. |
+| marketValue | double | true | false | The market value of the flow (-Sale, +Purchase). |
+
 ### MValuationTransaction
 
 This is the `openalloc/valuation/transaction` schema.
