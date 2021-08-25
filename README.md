@@ -189,18 +189,15 @@ Each row of the ValuationSnapshot table describes a valuation captured at a part
 
 This is the `openalloc/valuation/position` schema.
 
-Each row of the ValuationPosition table describes a position/holding captured at a particular time.
+Each row of the ValuationPosition table describes a position captured at a particular time. It may represent multiple holdings of an account for an asset class.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
 | valuationPositionSnapshotID | string | true | true | The valuation snapshot ID for the position. |
 | valuationPositionAccountID | string | true | true | The account hosting the position. |
-| valuationPositionSecurityID | string | true | true | The security/ticker of the position. |
-| valuationPositionLotID | string | true | true | The lot of the position, if any. |
-| shareCount | double | true | false | The price paid per share of the security to establish position. |
-| shareBasis | double | true | false | The number of shares remaining in the position. |
-| sharePrice | double | true | false | The price per share at the snapshot. |
-| assetID | string | true | false | The asset class of the security. |
+| valuationPositionAssetID | string | true | true | The asset class of the position. |
+| totalBasis | double | true | false | The price paid to establish position. |
+| marketValue | double | true | false | The market value of the position. |
 
 ### MValuationCashflow
 
@@ -215,18 +212,18 @@ Each row of the ValuationCashflow table describes a cash flow at a particular ti
 | valuationCashflowAssetID | string | true | true | The asset class flowed. |
 | marketValue | double | true | false | The market value of the flow (-Sale, +Purchase). |
 
-### MValuationTransaction
+### MValuationHistory
 
-This is the `openalloc/valuation/transaction` schema.
+This is the `openalloc/valuation/history` schema.
 
-Each row of the ValuationTransaction table describes a transaction at a particular time. It is not explicitly bound to any ValuationSnapshot.
+Each row of the ValuationHistory table describes a transaction at a particular time. It is not explicitly bound to any ValuationSnapshot.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
-| valuationTransactionTransactedAt | date | true | true | The timestamp when this transaction occurred. |
-| valuationTransactionAccountID | string | true | true | The account transacted. |
-| valuationTransactionSecurityID | string | true | true | The security/ticker transacted. |
-| valuationTransactionLotID | string | true | true | The lot of the transacted, if any. |
+| valuationHistoryTransactedAt | date | true | true | The timestamp when this transaction occurred. |
+| valuationHistoryAccountID | string | true | true | The account transacted. |
+| valuationHistorySecurityID | string | true | true | The security/ticker transacted. |
+| valuationHistoryLotID | string | true | true | The lot of the transacted, if any. |
 | shareCount | double | true | false | The number of shares transacted (-Sale, +Purchase). |
 | sharePrice | double | true | false | The price per share transacted. |
 | refTransactionID | string | false | false | The history transaction ID, if any. |

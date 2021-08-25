@@ -20,23 +20,17 @@ import Foundation
 public struct MValuationPosition: Hashable & AllocBase {
     public var snapshotID: String // key
     public var accountID: String // key
-    public var securityID: String // key
-    public var lotID: String // key
+    public var assetID: String // key
 
-    public var shareBasis: Double
-    public var shareCount: Double
-    public var sharePrice: Double
-    public var assetID: String
+    public var totalBasis: Double
+    public var marketValue: Double
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case snapshotID = "valuationPositionSnapshotID"
         case accountID = "valuationPositionAccountID"
-        case securityID = "valuationPositionSecurityID"
-        case lotID = "valuationPositionLotID"
-        case shareCount
-        case shareBasis
-        case sharePrice
-        case assetID
+        case assetID = "valuationPositionAssetID"
+        case totalBasis
+        case marketValue
     }
 
     public static var schema: AllocSchema { .allocValuationPosition }
@@ -44,44 +38,32 @@ public struct MValuationPosition: Hashable & AllocBase {
     public static var attributes: [AllocAttribute] = [
         AllocAttribute(CodingKeys.snapshotID, .string, isRequired: true, isKey: true, "The valuation snapshot ID for the position."),
         AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account hosting the position."),
-        AllocAttribute(CodingKeys.securityID, .string, isRequired: true, isKey: true, "The security/ticker of the position."),
-        AllocAttribute(CodingKeys.lotID, .string, isRequired: true, isKey: true, "The lot of the position, if any."),
-        AllocAttribute(CodingKeys.shareBasis, .double, isRequired: true, isKey: false, "The price paid per share of the security to establish position."),
-        AllocAttribute(CodingKeys.shareCount, .double, isRequired: true, isKey: false, "The number of shares remaining in the position."),
-        AllocAttribute(CodingKeys.sharePrice, .double, isRequired: true, isKey: false, "The price per share at the snapshot."),
-        AllocAttribute(CodingKeys.assetID, .string, isRequired: true, isKey: false, "The asset class of the security."),
+        AllocAttribute(CodingKeys.assetID, .string, isRequired: true, isKey: true, "The asset class of the position."),
+        AllocAttribute(CodingKeys.totalBasis, .double, isRequired: true, isKey: false, "The price paid to establish position."),
+        AllocAttribute(CodingKeys.marketValue, .double, isRequired: true, isKey: false, "The market value of the position."),
     ]
 
     public init(
         snapshotID: String,
         accountID: String,
-        securityID: String,
-        lotID: String,
-        shareBasis: Double,
-        shareCount: Double,
-        sharePrice: Double,
-        assetID: String
+        assetID: String,
+        totalBasis: Double,
+        marketValue: Double
     ) {
         self.snapshotID = snapshotID
         self.accountID = accountID
-        self.securityID = securityID
-        self.lotID = lotID
-        self.shareBasis = shareBasis
-        self.shareCount = shareCount
-        self.sharePrice = sharePrice
         self.assetID = assetID
+        self.totalBasis = totalBasis
+        self.marketValue = marketValue
     }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         snapshotID = try c.decode(String.self, forKey: .snapshotID)
         accountID = try c.decode(String.self, forKey: .accountID)
-        securityID = try c.decode(String.self, forKey: .securityID)
-        lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? AllocNilKey
-        shareBasis = try c.decode(Double.self, forKey: .shareBasis)
-        shareCount = try c.decode(Double.self, forKey: .shareCount)
-        sharePrice = try c.decode(Double.self, forKey: .sharePrice)
         assetID = try c.decode(String.self, forKey: .assetID)
+        totalBasis = try c.decode(Double.self, forKey: .totalBasis)
+        marketValue = try c.decode(Double.self, forKey: .marketValue)
     }
 
     public init(from row: Row) throws {
@@ -93,44 +75,36 @@ public struct MValuationPosition: Hashable & AllocBase {
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
         accountID = accountID_
 
-        guard let securityID_ = MValuationPosition.getStr(row, CodingKeys.securityID.rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.securityID.rawValue) }
-        securityID = securityID_
+        guard let assetID_ = MValuationPosition.getStr(row, CodingKeys.assetID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.assetID.rawValue) }
+        assetID = assetID_
 
-        lotID = MValuationPosition.getStr(row, CodingKeys.lotID.rawValue) ?? AllocNilKey
-
-        shareBasis = MValuationPosition.getDouble(row, CodingKeys.shareBasis.rawValue) ?? 0
-        shareCount = MValuationPosition.getDouble(row, CodingKeys.shareCount.rawValue) ?? 0
-        sharePrice = MValuationPosition.getDouble(row, CodingKeys.sharePrice.rawValue) ?? 0
-        assetID = MValuationPosition.getStr(row, CodingKeys.assetID.rawValue) ?? AllocNilKey
+        totalBasis = MValuationPosition.getDouble(row, CodingKeys.totalBasis.rawValue) ?? 0
+        marketValue = MValuationPosition.getDouble(row, CodingKeys.marketValue.rawValue) ?? 0
     }
 
     public mutating func update(from row: Row) throws {
-        if let val = MValuationPosition.getDouble(row, CodingKeys.shareBasis.rawValue) { shareBasis = val }
-        if let val = MValuationPosition.getDouble(row, CodingKeys.shareCount.rawValue) { shareCount = val }
-        if let val = MValuationPosition.getDouble(row, CodingKeys.sharePrice.rawValue) { sharePrice = val }
-        if let val = MValuationPosition.getStr(row, CodingKeys.assetID.rawValue) { assetID = val }
+        if let val = MValuationPosition.getDouble(row, CodingKeys.totalBasis.rawValue) { totalBasis = val }
+        if let val = MValuationPosition.getDouble(row, CodingKeys.marketValue.rawValue) { marketValue = val }
     }
 
     public var primaryKey: AllocKey {
-        MValuationPosition.makePrimaryKey(snapshotID: snapshotID, accountID: accountID, securityID: securityID, lotID: lotID)
+        MValuationPosition.makePrimaryKey(snapshotID: snapshotID, accountID: accountID, assetID: assetID)
     }
 
-    public static func makePrimaryKey(snapshotID: String, accountID: String, securityID: String, lotID: String) -> AllocKey {
-        keyify([snapshotID, accountID, securityID, lotID])
+    public static func makePrimaryKey(snapshotID: String, accountID: String, assetID: String) -> AllocKey {
+        keyify([snapshotID, accountID, assetID])
     }
 
     public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
         let rawValue0 = CodingKeys.snapshotID.rawValue
         let rawValue1 = CodingKeys.accountID.rawValue
-        let rawValue2 = CodingKeys.securityID.rawValue
-        let rawValue3 = CodingKeys.lotID.rawValue
+        let rawValue2 = CodingKeys.assetID.rawValue
         guard let snapshotID_ = getStr(row, rawValue0),
               let accountID_ = getStr(row, rawValue1),
-              let securityID_ = getStr(row, rawValue2),
-              let lotID_ = getStr(row, rawValue3)
+              let assetID_ = getStr(row, rawValue2)
         else { throw AllocDataError.invalidPrimaryKey("Position") }
-        return makePrimaryKey(snapshotID: snapshotID_, accountID: accountID_, securityID: securityID_, lotID: lotID_)
+        return makePrimaryKey(snapshotID: snapshotID_, accountID: accountID_, assetID: assetID_)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
@@ -141,31 +115,23 @@ public struct MValuationPosition: Hashable & AllocBase {
             guard let snapshotID = parseString(row[ck.snapshotID.rawValue]),
                   let accountID = parseString(row[ck.accountID.rawValue]),
                   accountID.count > 0,
-                  let securityID = parseString(row[ck.securityID.rawValue]),
-                  securityID.count > 0
+                  let assetID = parseString(row[ck.assetID.rawValue]),
+                  assetID.count > 0
             else {
                 rejectedRows.append(row)
                 return nil
             }
 
-            // required, but with default value
-            let lotID = parseString(row[ck.lotID.rawValue]) ?? AllocNilKey
-
             // optional values
-            let shareBasis = parseDouble(row[ck.shareBasis.rawValue])
-            let shareCount = parseDouble(row[ck.shareCount.rawValue])
-            let sharePrice = parseDouble(row[ck.sharePrice.rawValue])
-            let assetID = parseString(row[ck.assetID.rawValue])
+            let totalBasis = parseDouble(row[ck.totalBasis.rawValue])
+            let marketValue = parseDouble(row[ck.marketValue.rawValue])
 
             return [
                 ck.snapshotID.rawValue: snapshotID,
                 ck.accountID.rawValue: accountID,
-                ck.securityID.rawValue: securityID,
-                ck.lotID.rawValue: lotID,
-                ck.shareBasis.rawValue: shareBasis,
-                ck.shareCount.rawValue: shareCount,
-                ck.sharePrice.rawValue: sharePrice,
                 ck.assetID.rawValue: assetID,
+                ck.totalBasis.rawValue: totalBasis,
+                ck.marketValue.rawValue: marketValue,
             ]
         }
     }
@@ -173,6 +139,6 @@ public struct MValuationPosition: Hashable & AllocBase {
 
 extension MValuationPosition: CustomStringConvertible {
     public var description: String {
-       "snapshotID=\(snapshotID) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareBasis=\(shareBasis) shareCount=\(shareCount) sharePrice=\(sharePrice) assetID=\(assetID)"
+       "snapshotID=\(snapshotID) accountID=\(accountID) assetID=\(assetID) totalBasis=\(totalBasis) marketValue=\(marketValue)"
     }
 }
