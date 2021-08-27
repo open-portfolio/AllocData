@@ -207,7 +207,6 @@ Each row of the valuation cashflow table describes a cash flow at a particular t
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
-| valuationCashflowID | string | true | true | The unique cash flow item identifier. |
 | valuationCashflowTransactedAt | date | true | true | The timestamp when this flow occurred. |
 | valuationCashflowAccountID | string | true | true | The account in which the flow occurred. |
 | valuationCashflowAssetID | string | true | true | The asset class flowed. |
@@ -217,11 +216,10 @@ Each row of the valuation cashflow table describes a cash flow at a particular t
 
 This is the `openalloc/valuation/history` schema.
 
-Each row of the valuation history table describes a history item that was consumed by the specified cashflow item. It is not explicitly bound to any valuation snapshot.
+Each row of the valuation history table describes a history item that was consumed by a cash flow item. It is not explicitly bound to any valuation snapshot.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
-| valuationHistoryCashflowID | string | true | true | The cash flow item that consumed this transaction. |
 | valuationHistoryTransactedAt | date | true | true | The timestamp when this transaction occurred. |
 | valuationHistoryAccountID | string | true | true | The account transacted. |
 | valuationHistorySecurityID | string | true | true | The security/ticker transacted. |

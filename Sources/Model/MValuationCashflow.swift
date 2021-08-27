@@ -18,39 +18,34 @@
 import Foundation
 
 public struct MValuationCashflow: Hashable & AllocBase {
-    public var cashflowID: String // key
-    
-    public var transactedAt: Date
-    public var accountID: String
-    public var assetID: String
+    public var transactedAt: Date // key
+    public var accountID: String // key
+    public var assetID: String // key
+
     public var marketValue: Double
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
-        case cashflowID = "valuationCashflowID"
-        case transactedAt
-        case accountID
-        case assetID
+        case transactedAt = "valuationCashflowTransactedAt"
+        case accountID = "valuationCashflowAccountID"
+        case assetID = "valuationCashflowAssetID"
         case marketValue
     }
 
     public static var schema: AllocSchema { .allocValuationCashflow }
 
     public static var attributes: [AllocAttribute] = [
-        AllocAttribute(CodingKeys.cashflowID, .string, isRequired: true, isKey: true, "The unique valuation cashflow identifier."),
-        AllocAttribute(CodingKeys.transactedAt, .date, isRequired: true, isKey: false, "The timestamp when this flow occurred."),
-        AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: false, "The account in which the flow occurred."),
-        AllocAttribute(CodingKeys.assetID, .string, isRequired: true, isKey: false, "The asset class flowed."),
+        AllocAttribute(CodingKeys.transactedAt, .date, isRequired: true, isKey: true, "The timestamp when this flow occurred."),
+        AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account in which the flow occurred."),
+        AllocAttribute(CodingKeys.assetID, .string, isRequired: true, isKey: true, "The asset class flowed."),
         AllocAttribute(CodingKeys.marketValue, .double, isRequired: true, isKey: false, "The market value of the flow (-Sale, +Purchase)."),
     ]
 
     public init(
-        cashflowID: String,
         transactedAt: Date,
         accountID: String,
         assetID: String,
         marketValue: Double
     ) {
-        self.cashflowID = cashflowID
         self.transactedAt = transactedAt
         self.accountID = accountID
         self.assetID = assetID
@@ -59,7 +54,6 @@ public struct MValuationCashflow: Hashable & AllocBase {
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
-        cashflowID = try c.decode(String.self, forKey: .cashflowID)
         transactedAt = try c.decode(Date.self, forKey: .transactedAt)
         accountID = try c.decode(String.self, forKey: .accountID)
         assetID = try c.decode(String.self, forKey: .assetID)
@@ -67,10 +61,6 @@ public struct MValuationCashflow: Hashable & AllocBase {
     }
 
     public init(from row: Row) throws {
-        guard let cashflowID_ = MValuationCashflow.getStr(row, CodingKeys.cashflowID.rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.cashflowID.rawValue) }
-        cashflowID = cashflowID_
-        
         guard let transactedAt_ = MValuationCashflow.getDate(row, CodingKeys.transactedAt.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.transactedAt.rawValue) }
         transactedAt = transactedAt_
@@ -91,28 +81,38 @@ public struct MValuationCashflow: Hashable & AllocBase {
     }
 
     public var primaryKey: AllocKey {
-        MValuationCashflow.makePrimaryKey(cashflowID: cashflowID)
+        MValuationCashflow.makePrimaryKey(transactedAt: transactedAt, accountID: accountID, assetID: assetID)
     }
 
-    public static func makePrimaryKey(cashflowID: String) -> AllocKey {
-        keyify(cashflowID)
+    public static func makePrimaryKey(transactedAt: Date, accountID: String, assetID: String) -> AllocKey {
+        
+        // NOTE: using time interval in composite key as ISO dates will vary.
+        // This implementation can change at ANY time and may differ per platform.
+        // Because of that AllocData keys should NOT be persisted in data files
+        // or across executions. If you need to store a date, use the ISO format.
+        
+        let refEpoch = transactedAt.timeIntervalSinceReferenceDate
+        let formattedDate = String(format: "%010.0f", refEpoch)
+        return keyify([formattedDate, accountID, assetID])
     }
 
     public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
-        let rawValue0 = CodingKeys.cashflowID.rawValue
-        guard let cashflowID_ = getStr(row, rawValue0)
-        else { throw AllocDataError.invalidPrimaryKey("Cash Flow") }
-        return makePrimaryKey(cashflowID: cashflowID_)
+        let rawValue0 = CodingKeys.transactedAt.rawValue
+        let rawValue1 = CodingKeys.accountID.rawValue
+        let rawValue2 = CodingKeys.assetID.rawValue
+        guard let transactedAt_ = getDate(row, rawValue0),
+              let accountID_ = getStr(row, rawValue1),
+              let assetID_ = getStr(row, rawValue2)
+        else { throw AllocDataError.invalidPrimaryKey("Position") }
+        return makePrimaryKey(transactedAt: transactedAt_, accountID: accountID_, assetID: assetID_)
     }
-    
+
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
         let ck = MValuationCashflow.CodingKeys.self
 
         return rawRows.compactMap { row in
             // required values, without default values
-            guard let cashflowID = parseString(row[ck.cashflowID.rawValue]),
-                  cashflowID.count > 0,
-                  let transactedAt = parseDate(row[ck.transactedAt.rawValue]),
+            guard let transactedAt = parseDate(row[ck.transactedAt.rawValue]),
                   let accountID = parseString(row[ck.accountID.rawValue]),
                   accountID.count > 0,
                   let assetID = parseString(row[ck.assetID.rawValue]),
@@ -126,7 +126,6 @@ public struct MValuationCashflow: Hashable & AllocBase {
             let marketValue = parseDouble(row[ck.marketValue.rawValue])
 
             return [
-                ck.cashflowID.rawValue: cashflowID,
                 ck.transactedAt.rawValue: transactedAt,
                 ck.accountID.rawValue: accountID,
                 ck.assetID.rawValue: assetID,
@@ -138,7 +137,7 @@ public struct MValuationCashflow: Hashable & AllocBase {
 
 extension MValuationCashflow: CustomStringConvertible {
     public var description: String {
-        let formattedDate = MValuationCashflow.unparseDate(transactedAt)
-        return "cashflowID=\(cashflowID) transactedAt=\(formattedDate) accountID=\(accountID) assetID=\(assetID) marketValue=\(marketValue)"
+        let formattedDate = MValuationSnapshot.unparseDate(transactedAt)
+        return "transactedAt=\(formattedDate) accountID=\(accountID) assetID=\(assetID) marketValue=\(marketValue)"
     }
 }

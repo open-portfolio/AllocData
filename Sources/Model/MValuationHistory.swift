@@ -18,7 +18,6 @@
 import Foundation
 
 public struct MValuationHistory: Hashable & AllocBase {
-    public var cashflowID: String // key
     public var transactedAt: Date // key
     public var accountID: String // key
     public var securityID: String // key
@@ -27,7 +26,6 @@ public struct MValuationHistory: Hashable & AllocBase {
     public var sharePrice: Double
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
-        case cashflowID = "valuationHistoryCashflowID"
         case transactedAt = "valuationHistoryTransactedAt"
         case accountID = "valuationHistoryAccountID"
         case securityID = "valuationHistorySecurityID"
@@ -39,7 +37,6 @@ public struct MValuationHistory: Hashable & AllocBase {
     public static var schema: AllocSchema { .allocValuationHistory }
 
     public static var attributes: [AllocAttribute] = [
-        AllocAttribute(CodingKeys.cashflowID, .string, isRequired: true, isKey: true, "The cashflow that consumed this transaction."),
         AllocAttribute(CodingKeys.transactedAt, .date, isRequired: true, isKey: true, "The timestamp when this transaction occurred."),
         AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account transacted."),
         AllocAttribute(CodingKeys.securityID, .string, isRequired: true, isKey: true, "The security/ticker transacted."),
@@ -49,7 +46,6 @@ public struct MValuationHistory: Hashable & AllocBase {
     ]
 
     public init(
-        cashflowID: String,
         transactedAt: Date,
         accountID: String,
         securityID: String,
@@ -57,7 +53,6 @@ public struct MValuationHistory: Hashable & AllocBase {
         shareCount: Double,
         sharePrice: Double
     ) {
-        self.cashflowID = cashflowID
         self.transactedAt = transactedAt
         self.accountID = accountID
         self.securityID = securityID
@@ -68,7 +63,6 @@ public struct MValuationHistory: Hashable & AllocBase {
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
-        cashflowID = try c.decode(String.self, forKey: .cashflowID)
         transactedAt = try c.decode(Date.self, forKey: .transactedAt)
         accountID = try c.decode(String.self, forKey: .accountID)
         securityID = try c.decode(String.self, forKey: .securityID)
@@ -78,10 +72,6 @@ public struct MValuationHistory: Hashable & AllocBase {
     }
 
     public init(from row: Row) throws {
-        guard let cashflowID_ = MValuationHistory.getStr(row, CodingKeys.cashflowID.rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.cashflowID.rawValue) }
-        cashflowID = cashflowID_
-
         guard let transactedAt_ = MValuationHistory.getDate(row, CodingKeys.transactedAt.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.transactedAt.rawValue) }
         transactedAt = transactedAt_
@@ -106,15 +96,13 @@ public struct MValuationHistory: Hashable & AllocBase {
     }
 
     public var primaryKey: AllocKey {
-        MValuationHistory.makePrimaryKey(cashflowID: cashflowID,
-                                         transactedAt: transactedAt,
+        MValuationHistory.makePrimaryKey(transactedAt: transactedAt,
                                          accountID: accountID,
                                          securityID: securityID,
                                          lotID: lotID)
     }
 
-    public static func makePrimaryKey(cashflowID: String,
-                                      transactedAt: Date,
+    public static func makePrimaryKey(transactedAt: Date,
                                       accountID: String,
                                       securityID: String,
                                       lotID: String) -> AllocKey {
@@ -126,23 +114,20 @@ public struct MValuationHistory: Hashable & AllocBase {
         
         let refEpoch = transactedAt.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
-        return keyify([cashflowID, formattedDate, accountID, securityID, lotID])
+        return keyify([formattedDate, accountID, securityID, lotID])
     }
 
     public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
-        let rawValue1 = CodingKeys.cashflowID.rawValue
-        let rawValue2 = CodingKeys.transactedAt.rawValue
-        let rawValue3 = CodingKeys.accountID.rawValue
-        let rawValue4 = CodingKeys.securityID.rawValue
-        let rawValue5 = CodingKeys.lotID.rawValue
-        guard let cashflowID_ = getStr(row, rawValue1),
-              let transactedAt_ = getDate(row, rawValue2),
-              let accountID_ = getStr(row, rawValue3),
-              let securityID_ = getStr(row, rawValue4),
-              let lotID_ = getStr(row, rawValue5)
+        let rawValue1 = CodingKeys.transactedAt.rawValue
+        let rawValue2 = CodingKeys.accountID.rawValue
+        let rawValue3 = CodingKeys.securityID.rawValue
+        let rawValue4 = CodingKeys.lotID.rawValue
+        guard let transactedAt_ = getDate(row, rawValue1),
+              let accountID_ = getStr(row, rawValue2),
+              let securityID_ = getStr(row, rawValue3),
+              let lotID_ = getStr(row, rawValue4)
         else { throw AllocDataError.invalidPrimaryKey("Valuation History") }
-        return makePrimaryKey(cashflowID: cashflowID_,
-                              transactedAt: transactedAt_,
+        return makePrimaryKey(transactedAt: transactedAt_,
                               accountID: accountID_,
                               securityID: securityID_,
                               lotID: lotID_)
@@ -153,9 +138,7 @@ public struct MValuationHistory: Hashable & AllocBase {
 
         return rawRows.compactMap { row in
             // required values, without default values
-            guard let cashflowID = parseString(row[ck.cashflowID.rawValue]),
-                  cashflowID.count > 0,
-                  let transactedAt = parseDate(row[ck.transactedAt.rawValue]),
+            guard let transactedAt = parseDate(row[ck.transactedAt.rawValue]),
                   let accountID = parseString(row[ck.accountID.rawValue]),
                   accountID.count > 0,
                   let securityID = parseString(row[ck.securityID.rawValue]),
@@ -173,7 +156,6 @@ public struct MValuationHistory: Hashable & AllocBase {
             let sharePrice = parseDouble(row[ck.sharePrice.rawValue])
         
             return [
-                ck.cashflowID.rawValue: cashflowID,
                 ck.transactedAt.rawValue: transactedAt,
                 ck.accountID.rawValue: accountID,
                 ck.securityID.rawValue: securityID,
@@ -188,6 +170,6 @@ public struct MValuationHistory: Hashable & AllocBase {
 extension MValuationHistory: CustomStringConvertible {
     public var description: String {
         let formattedDate = MValuationHistory.unparseDate(transactedAt)
-        return "cashflowID=\(cashflowID) transactedAt=\(formattedDate) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(shareCount) sharePrice=\(sharePrice)"
+        return "transactedAt=\(formattedDate) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(shareCount) sharePrice=\(sharePrice)"
     }
 }
