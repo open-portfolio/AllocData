@@ -29,8 +29,9 @@ class MValuationCashflowTests: XCTestCase {
     }
 
     func testInit() {
-        let expected = MValuationCashflow(transactedAt: timestamp, accountID: "1", assetID: "Bond", marketValue: 23)
-        var actual = MValuationCashflow(transactedAt: timestamp, accountID: "1", assetID: "Bond", marketValue: 3)
+        let expected = MValuationCashflow(cashflowID: "X", transactedAt: timestamp, accountID: "1", assetID: "Bond", marketValue: 23)
+        var actual = MValuationCashflow(cashflowID: "X", transactedAt: timestamp, accountID: "1", assetID: "Bond", marketValue: 3)
+        XCTAssertEqual("X", actual.cashflowID)
         XCTAssertEqual("1", actual.accountID)
         XCTAssertEqual("Bond", actual.assetID)
         XCTAssertEqual(3, actual.marketValue)
@@ -39,8 +40,9 @@ class MValuationCashflowTests: XCTestCase {
     }
 
     func testInitFromFINrow() throws {
-        let expected = MValuationCashflow(transactedAt: timestamp, accountID: "1", assetID: "Bond", marketValue: 3)
+        let expected = MValuationCashflow(cashflowID: "X", transactedAt: timestamp, accountID: "1", assetID: "Bond", marketValue: 3)
         let actual = try MValuationCashflow(from: [
+            MValuationCashflow.CodingKeys.cashflowID.rawValue: "X",
             MValuationCashflow.CodingKeys.transactedAt.rawValue: timestamp,
             MValuationCashflow.CodingKeys.accountID.rawValue: "1",
             MValuationCashflow.CodingKeys.assetID.rawValue: "Bond",
@@ -50,42 +52,35 @@ class MValuationCashflowTests: XCTestCase {
     }
 
     func testUpdateFromFINrow() throws {
-        var actual = MValuationCashflow(transactedAt: timestamp, accountID: "1", assetID: "Bond", marketValue: 3)
+        var actual = MValuationCashflow(cashflowID: "X", transactedAt: timestamp, accountID: "1", assetID: "Bond", marketValue: 3)
         let finRow: MValuationCashflow.Row = [
+            MValuationCashflow.CodingKeys.cashflowID.rawValue: "1", // IGNORED
             MValuationCashflow.CodingKeys.transactedAt.rawValue: timestamp + 1000, // IGNORED
             MValuationCashflow.CodingKeys.accountID.rawValue: "x", // IGNORED
             MValuationCashflow.CodingKeys.assetID.rawValue: "xx", // IGNORED
             MValuationCashflow.CodingKeys.marketValue.rawValue: 23,
         ]
         try actual.update(from: finRow)
-        let expected = MValuationCashflow(transactedAt: timestamp, accountID: "1", assetID: "Bond", marketValue: 23)
+        let expected = MValuationCashflow(cashflowID: "X", transactedAt: timestamp, accountID: "1", assetID: "Bond", marketValue: 23)
         XCTAssertEqual(expected, actual)
     }
 
     func testPrimaryKey() throws {
-        let element = MValuationCashflow(transactedAt: timestamp, accountID: " A-x?3 ", assetID: " -3B ! ", marketValue: 3)
-        //let formattedDate = generateYYYYMMDD2(timestamp) ?? ""
-        //let formattedDate = formatter.string(for: timestamp)!
-        let refEpoch = timestamp.timeIntervalSinceReferenceDate
-        let formattedDate = String(format: "%010.0f", refEpoch)
-        
+        let element = MValuationCashflow(cashflowID: "  X  ", transactedAt: timestamp, accountID: " A-x?3 ", assetID: " -3B ! ", marketValue: 3)
         let actual = element.primaryKey
-        let expected = "\(formattedDate),a-x?3,-3b !"
+        let expected = "x"
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
-        //let formattedDate = generateYYYYMMDD2(timestamp) ?? ""
-        //let formattedDate = formatter.string(for: timestamp)!
-        let refEpoch = timestamp.timeIntervalSinceReferenceDate
-        let formattedDate = String(format: "%010.0f", refEpoch)
         let finRow: MValuationCashflow.Row = [
-            "valuationCashflowTransactedAt": timestamp,
-            "valuationCashflowAccountID": " A-x?3 ",
-            "valuationCashflowAssetID": " -3B ! ",
+            "valuationCashflowID": "   X   ",
+            "transactedAt": timestamp,
+            "accountID": " A-x?3 ",
+            "assetID": " -3B ! ",
         ]
         let actual = try MValuationCashflow.getPrimaryKey(finRow)
-        let expected = "\(formattedDate),a-x?3,-3b !"
+        let expected = "x"
         XCTAssertEqual(expected, actual)
     }
 
@@ -93,17 +88,19 @@ class MValuationCashflowTests: XCTestCase {
         let formattedDate = formatter.string(for: timestamp)!
         let parsedDate = formatter.date(from: formattedDate)
         let rawRows: [MValuationCashflow.RawRow] = [[
-            "valuationCashflowTransactedAt": formattedDate,
-            "valuationCashflowAccountID": "1",
-            "valuationCashflowAssetID": "Bond",
+            "valuationCashflowID": "   X   ",
+            "transactedAt": formattedDate,
+            "accountID": "1",
+            "assetID": "Bond",
             "marketValue": "9",
         ]]
         var rejected = [MValuationCashflow.Row]()
         let actual = try MValuationCashflow.decode(rawRows, rejectedRows: &rejected)
         let expected: MValuationCashflow.Row = [
-            "valuationCashflowTransactedAt": parsedDate,
-            "valuationCashflowAccountID": "1",
-            "valuationCashflowAssetID": "Bond",
+            "valuationCashflowID": "X",
+            "transactedAt": parsedDate,
+            "accountID": "1",
+            "assetID": "Bond",
             "marketValue": 9,
         ]
         XCTAssertTrue(rejected.isEmpty)

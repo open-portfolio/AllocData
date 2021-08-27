@@ -189,7 +189,7 @@ Each row of the ValuationSnapshot table describes a valuation captured at a part
 
 This is the `openalloc/valuation/position` schema.
 
-Each row of the ValuationPosition table describes a position captured at a particular time. It may represent multiple holdings of an account for an asset class.
+Each row of the valuation position table describes a position captured at a particular time for a valuation snapshot. It can represent multiple holdings of an account for an asset class.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
@@ -203,10 +203,11 @@ Each row of the ValuationPosition table describes a position captured at a parti
 
 This is the `openalloc/valuation/cashflow` schema.
 
-Each row of the ValuationCashflow table describes a cash flow at a particular time. It is not explicitly bound to any ValuationSnapshot.
+Each row of the valuation cashflow table describes a cash flow at a particular time. It is not explicitly bound to any valuation snapshot. Typically, multiple history items are rolled up into a cash flow item.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
+| valuationCashflowID | string | true | true | The unique cash flow item identifier. |
 | valuationCashflowTransactedAt | date | true | true | The timestamp when this flow occurred. |
 | valuationCashflowAccountID | string | true | true | The account in which the flow occurred. |
 | valuationCashflowAssetID | string | true | true | The asset class flowed. |
@@ -216,17 +217,17 @@ Each row of the ValuationCashflow table describes a cash flow at a particular ti
 
 This is the `openalloc/valuation/history` schema.
 
-Each row of the ValuationHistory table describes a transaction at a particular time. It is not explicitly bound to any ValuationSnapshot.
+Each row of the valuation history table describes a history item that was consumed by the specified cashflow item. It is not explicitly bound to any valuation snapshot.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
+| valuationHistoryCashflowID | string | true | true | The cash flow item that consumed this transaction. |
 | valuationHistoryTransactedAt | date | true | true | The timestamp when this transaction occurred. |
 | valuationHistoryAccountID | string | true | true | The account transacted. |
 | valuationHistorySecurityID | string | true | true | The security/ticker transacted. |
 | valuationHistoryLotID | string | true | true | The lot of the transacted, if any. |
 | shareCount | double | true | false | The number of shares transacted (-Sale, +Purchase). |
 | sharePrice | double | true | false | The price per share transacted. |
-| refTransactionID | string | false | false | The history transaction ID, if any. |
 
 ### MSourceMeta
 
