@@ -212,11 +212,26 @@ Each row of the valuation cashflow table describes a cash flow at a particular t
 | valuationCashflowAssetID | string | true | true | The asset class flowed. |
 | amount | double | true | false | The amount of the flow (-Sale, +Purchase). |
 
+### MValuationHolding
+
+This is the `openalloc/valuation/holding` schema.
+
+A table where each row describes an individual holding of an existing snapshot. Typically retained in the short term for the purpose of reconciling transactions.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| valuationHoldingSnapshotID | string | true | true | The valuation snapshot ID for the position. |
+| valuationHoldingAccountID | string | true | true | The account hosting the position. |
+| valuationHoldingSecurityID | string | true | true | The security of the position. |
+| valuationHoldingLotID | string | true | true | The lot of the position, if any. |
+| shareCount | double | false | false | The number of shares held in the position. |
+| shareBasis | double | false | false | The price paid per share of the security. |
+
 ### MValuationHistory
 
 This is the `openalloc/valuation/history` schema.
 
-Each row of the valuation history table describes a history item that was consumed by a cash flow item. It is not explicitly bound to any valuation snapshot.
+Each row of the valuation history table describes a history item that was consumed by a cash flow item. It is not explicitly bound to any valuation snapshot. Typically retained in the short term for the purpose of reconciling transactions.å
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |

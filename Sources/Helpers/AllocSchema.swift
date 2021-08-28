@@ -33,6 +33,7 @@ public enum AllocSchema: String, CaseIterable {
     case allocValuationSnapshot = "openalloc/valuation/snapshot"
     case allocValuationPosition = "openalloc/valuation/position"
     case allocValuationHistory = "openalloc/valuation/history"
+    case allocValuationHolding = "openalloc/valuation/holding"
     case allocValuationCashflow = "openalloc/valuation/cashflow"
     case allocMetaSource = "openalloc/meta/source"
     // add other supported tabular schema cases here
@@ -69,6 +70,8 @@ public enum AllocSchema: String, CaseIterable {
             return MValuationPosition.attributes
         case .allocValuationHistory:
             return MValuationHistory.attributes
+        case .allocValuationHolding:
+            return MValuationHolding.attributes
         case .allocValuationCashflow:
             return MValuationCashflow.attributes
         case .allocMetaSource:
