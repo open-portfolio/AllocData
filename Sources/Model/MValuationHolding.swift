@@ -22,8 +22,8 @@ public struct MValuationHolding: Hashable & AllocBase {
     public var accountID: String // key
     public var securityID: String // key
     public var lotID: String // key
-    public var shareCount: Double?
-    public var shareBasis: Double?
+    public var shareCount: Double
+    public var shareBasis: Double
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case snapshotID = "valuationHoldingSnapshotID"
@@ -41,16 +41,16 @@ public struct MValuationHolding: Hashable & AllocBase {
         AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account hosting the position."),
         AllocAttribute(CodingKeys.securityID, .string, isRequired: true, isKey: true, "The security of the position."),
         AllocAttribute(CodingKeys.lotID, .string, isRequired: true, isKey: true, "The lot of the position, if any."),
-        AllocAttribute(CodingKeys.shareCount, .double, isRequired: false, isKey: false, "The number of shares held in the position."),
-        AllocAttribute(CodingKeys.shareBasis, .double, isRequired: false, isKey: false, "The price paid per share of the security."),
+        AllocAttribute(CodingKeys.shareCount, .double, isRequired: true, isKey: false, "The number of shares held in the position."),
+        AllocAttribute(CodingKeys.shareBasis, .double, isRequired: true, isKey: false, "The price paid per share of the security."),
     ]
 
     public init(snapshotID: String,
                 accountID: String,
                 securityID: String,
-                lotID: String,
-                shareCount: Double? = nil,
-                shareBasis: Double? = nil)
+                lotID: String = AllocNilKey,
+                shareCount: Double = 0,
+                shareBasis: Double = 0)
     {
         self.snapshotID = snapshotID
         self.accountID = accountID
@@ -66,8 +66,8 @@ public struct MValuationHolding: Hashable & AllocBase {
         accountID = try c.decode(String.self, forKey: .accountID)
         securityID = try c.decode(String.self, forKey: .securityID)
         lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? AllocNilKey
-        shareCount = try c.decodeIfPresent(Double.self, forKey: .shareCount)
-        shareBasis = try c.decodeIfPresent(Double.self, forKey: .shareBasis)
+        shareCount = try c.decode(Double.self, forKey: .shareCount)
+        shareBasis = try c.decode(Double.self, forKey: .shareBasis)
     }
 
     public init(from row: Row) throws {
@@ -84,8 +84,8 @@ public struct MValuationHolding: Hashable & AllocBase {
         securityID = securityID_
 
         lotID = MValuationHolding.getStr(row, CodingKeys.lotID.rawValue) ?? AllocNilKey
-        shareCount = MValuationHolding.getDouble(row, CodingKeys.shareCount.rawValue)
-        shareBasis = MValuationHolding.getDouble(row, CodingKeys.shareBasis.rawValue)
+        shareCount = MValuationHolding.getDouble(row, CodingKeys.shareCount.rawValue) ?? 0
+        shareBasis = MValuationHolding.getDouble(row, CodingKeys.shareBasis.rawValue) ?? 0
     }
 
     public mutating func update(from row: Row) throws {
@@ -147,6 +147,6 @@ public struct MValuationHolding: Hashable & AllocBase {
 
 extension MValuationHolding: CustomStringConvertible {
     public var description: String {
-        "snapshotID=\(snapshotID) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(String(describing: shareCount)) shareBasis=\(String(describing: shareBasis))"
+        "snapshotID=\(snapshotID) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(shareCount) shareBasis=\(shareBasis)"
     }
 }

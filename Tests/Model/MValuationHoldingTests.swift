@@ -30,13 +30,13 @@ class MValuationHoldingTests: XCTestCase {
 
     func testInit() {
         let expected = MValuationHolding(snapshotID: "X", accountID: "1", securityID: "BND", lotID: "3", shareCount: 3, shareBasis: 4)
-        var actual = MValuationHolding(snapshotID: "X", accountID: "1", securityID: "BND", lotID: "3")
+        var actual = MValuationHolding(snapshotID: "X", accountID: "1", securityID: "BND", lotID: "3", shareCount: 9, shareBasis: 1)
         XCTAssertEqual("X", actual.snapshotID)
         XCTAssertEqual("1", actual.accountID)
         XCTAssertEqual("BND", actual.securityID)
         XCTAssertEqual("3", actual.lotID)
-        XCTAssertNil(actual.shareCount)
-        XCTAssertNil(actual.shareBasis)
+        XCTAssertEqual(9, actual.shareCount)
+        XCTAssertEqual(1, actual.shareBasis)
         actual.shareCount = 3
         actual.shareBasis = 4
         XCTAssertEqual(expected, actual)

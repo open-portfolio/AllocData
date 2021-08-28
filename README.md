@@ -225,8 +225,8 @@ A table where each row describes an individual holding of an existing snapshot. 
 | valuationHoldingAccountID | string | true | true | The account hosting the position. |
 | valuationHoldingSecurityID | string | true | true | The security of the position. |
 | valuationHoldingLotID | string | true | true | The lot of the position, if any. |
-| shareCount | double | false | false | The number of shares held in the position. |
-| shareBasis | double | false | false | The price paid per share of the security. |
+| shareCount | double | true | false | The number of shares held in the position. |
+| shareBasis | double | true | false | The price paid per share of the security. |
 
 ### MValuationHistory
 
