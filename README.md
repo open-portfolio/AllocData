@@ -210,7 +210,7 @@ Each row of the valuation cashflow table describes a cash flow at a particular t
 | valuationCashflowTransactedAt | date | true | true | The timestamp when this flow occurred. |
 | valuationCashflowAccountID | string | true | true | The account in which the flow occurred. |
 | valuationCashflowAssetID | string | true | true | The asset class flowed. |
-| marketValue | double | true | false | The market value of the flow (-Sale, +Purchase). |
+| amount | double | true | false | The amount of the flow (-Sale, +Purchase). |
 
 ### MValuationHistory
 

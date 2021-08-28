@@ -22,13 +22,13 @@ public struct MValuationCashflow: Hashable & AllocBase {
     public var accountID: String // key
     public var assetID: String // key
 
-    public var marketValue: Double
+    public var amount: Double
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case transactedAt = "valuationCashflowTransactedAt"
         case accountID = "valuationCashflowAccountID"
         case assetID = "valuationCashflowAssetID"
-        case marketValue
+        case amount
     }
 
     public static var schema: AllocSchema { .allocValuationCashflow }
@@ -37,19 +37,19 @@ public struct MValuationCashflow: Hashable & AllocBase {
         AllocAttribute(CodingKeys.transactedAt, .date, isRequired: true, isKey: true, "The timestamp when this flow occurred."),
         AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account in which the flow occurred."),
         AllocAttribute(CodingKeys.assetID, .string, isRequired: true, isKey: true, "The asset class flowed."),
-        AllocAttribute(CodingKeys.marketValue, .double, isRequired: true, isKey: false, "The market value of the flow (-Sale, +Purchase)."),
+        AllocAttribute(CodingKeys.amount, .double, isRequired: true, isKey: false, "The amount of the flow (-Sale, +Purchase)."),
     ]
 
     public init(
         transactedAt: Date,
         accountID: String,
         assetID: String,
-        marketValue: Double
+        amount: Double
     ) {
         self.transactedAt = transactedAt
         self.accountID = accountID
         self.assetID = assetID
-        self.marketValue = marketValue
+        self.amount = amount
     }
 
     public init(from decoder: Decoder) throws {
@@ -57,7 +57,7 @@ public struct MValuationCashflow: Hashable & AllocBase {
         transactedAt = try c.decode(Date.self, forKey: .transactedAt)
         accountID = try c.decode(String.self, forKey: .accountID)
         assetID = try c.decode(String.self, forKey: .assetID)
-        marketValue = try c.decode(Double.self, forKey: .marketValue)
+        amount = try c.decode(Double.self, forKey: .amount)
     }
 
     public init(from row: Row) throws {
@@ -73,11 +73,11 @@ public struct MValuationCashflow: Hashable & AllocBase {
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.assetID.rawValue) }
         assetID = assetID_
 
-        marketValue = MValuationPosition.getDouble(row, CodingKeys.marketValue.rawValue) ?? 0
+        amount = MValuationPosition.getDouble(row, CodingKeys.amount.rawValue) ?? 0
     }
 
     public mutating func update(from row: Row) throws {
-        if let val = MValuationPosition.getDouble(row, CodingKeys.marketValue.rawValue) { marketValue = val }
+        if let val = MValuationPosition.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
     }
 
     public var primaryKey: AllocKey {
@@ -123,13 +123,13 @@ public struct MValuationCashflow: Hashable & AllocBase {
             }
 
             // optional values
-            let marketValue = parseDouble(row[ck.marketValue.rawValue])
+            let amount = parseDouble(row[ck.amount.rawValue])
 
             return [
                 ck.transactedAt.rawValue: transactedAt,
                 ck.accountID.rawValue: accountID,
                 ck.assetID.rawValue: assetID,
-                ck.marketValue.rawValue: marketValue,
+                ck.amount.rawValue: amount,
             ]
         }
     }
@@ -138,6 +138,6 @@ public struct MValuationCashflow: Hashable & AllocBase {
 extension MValuationCashflow: CustomStringConvertible {
     public var description: String {
         let formattedDate = MValuationSnapshot.unparseDate(transactedAt)
-        return "transactedAt=\(formattedDate) accountID=\(accountID) assetID=\(assetID) marketValue=\(marketValue)"
+        return "transactedAt=\(formattedDate) accountID=\(accountID) assetID=\(assetID) amount=\(amount)"
     }
 }
