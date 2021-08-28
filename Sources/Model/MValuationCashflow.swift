@@ -23,12 +23,14 @@ public struct MValuationCashflow: Hashable & AllocBase {
     public var assetID: String // key
 
     public var amount: Double
+    public var reconciled: Bool
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case transactedAt = "valuationCashflowTransactedAt"
         case accountID = "valuationCashflowAccountID"
         case assetID = "valuationCashflowAssetID"
         case amount
+        case reconciled
     }
 
     public static var schema: AllocSchema { .allocValuationCashflow }
@@ -38,18 +40,21 @@ public struct MValuationCashflow: Hashable & AllocBase {
         AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account in which the flow occurred."),
         AllocAttribute(CodingKeys.assetID, .string, isRequired: true, isKey: true, "The asset class flowed."),
         AllocAttribute(CodingKeys.amount, .double, isRequired: true, isKey: false, "The amount of the flow (-Sale, +Purchase)."),
+        AllocAttribute(CodingKeys.reconciled, .bool, isRequired: true, isKey: false, "If record was created to reconcile transactions."),
     ]
 
     public init(
         transactedAt: Date,
         accountID: String,
         assetID: String,
-        amount: Double
+        amount: Double,
+        reconciled: Bool
     ) {
         self.transactedAt = transactedAt
         self.accountID = accountID
         self.assetID = assetID
         self.amount = amount
+        self.reconciled = reconciled
     }
 
     public init(from decoder: Decoder) throws {
@@ -58,6 +63,7 @@ public struct MValuationCashflow: Hashable & AllocBase {
         accountID = try c.decode(String.self, forKey: .accountID)
         assetID = try c.decode(String.self, forKey: .assetID)
         amount = try c.decode(Double.self, forKey: .amount)
+        reconciled = try c.decode(Bool.self, forKey: .reconciled)
     }
 
     public init(from row: Row) throws {
@@ -74,10 +80,12 @@ public struct MValuationCashflow: Hashable & AllocBase {
         assetID = assetID_
 
         amount = MValuationPosition.getDouble(row, CodingKeys.amount.rawValue) ?? 0
+        reconciled = MValuationPosition.getBool(row, CodingKeys.reconciled.rawValue) ?? false
     }
 
     public mutating func update(from row: Row) throws {
         if let val = MValuationPosition.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
+        if let val = MValuationPosition.getBool(row, CodingKeys.reconciled.rawValue) { reconciled = val }
     }
 
     public var primaryKey: AllocKey {
@@ -124,12 +132,14 @@ public struct MValuationCashflow: Hashable & AllocBase {
 
             // optional values
             let amount = parseDouble(row[ck.amount.rawValue])
+            let reconciled = parseBool(row[ck.reconciled.rawValue])
 
             return [
                 ck.transactedAt.rawValue: transactedAt,
                 ck.accountID.rawValue: accountID,
                 ck.assetID.rawValue: assetID,
                 ck.amount.rawValue: amount,
+                ck.reconciled.rawValue: reconciled,
             ]
         }
     }
@@ -138,6 +148,6 @@ public struct MValuationCashflow: Hashable & AllocBase {
 extension MValuationCashflow: CustomStringConvertible {
     public var description: String {
         let formattedDate = MValuationSnapshot.unparseDate(transactedAt)
-        return "transactedAt=\(formattedDate) accountID=\(accountID) assetID=\(assetID) amount=\(amount)"
+        return "transactedAt=\(formattedDate) accountID=\(accountID) assetID=\(assetID) amount=\(amount) reconciled=\(reconciled)"
     }
 }
