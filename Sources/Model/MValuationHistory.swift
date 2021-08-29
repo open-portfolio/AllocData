@@ -24,6 +24,7 @@ public struct MValuationHistory: Hashable & AllocBase {
     public var lotID: String // key
     public var shareCount: Double
     public var sharePrice: Double
+    public var transactionID: String
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case transactedAt = "valuationHistoryTransactedAt"
@@ -32,6 +33,7 @@ public struct MValuationHistory: Hashable & AllocBase {
         case lotID = "valuationHistoryLotID"
         case shareCount
         case sharePrice
+        case transactionID
     }
 
     public static var schema: AllocSchema { .allocValuationHistory }
@@ -43,15 +45,17 @@ public struct MValuationHistory: Hashable & AllocBase {
         AllocAttribute(CodingKeys.lotID, .string, isRequired: true, isKey: true, "The lot of the transacted, if any."),
         AllocAttribute(CodingKeys.shareCount, .double, isRequired: true, isKey: false, "The number of shares transacted (-Sale, +Purchase)."),
         AllocAttribute(CodingKeys.sharePrice, .double, isRequired: true, isKey: false, "The price per share transacted."),
+        AllocAttribute(CodingKeys.transactionID, .string, isRequired: true, isKey: false, "Transaction ID for the originating history record."),
     ]
 
     public init(
         transactedAt: Date,
         accountID: String,
         securityID: String,
-        lotID: String,
-        shareCount: Double,
-        sharePrice: Double
+        lotID: String = AllocNilKey,
+        shareCount: Double = 0,
+        sharePrice: Double = 0,
+        transactionID: String = AllocNilKey
     ) {
         self.transactedAt = transactedAt
         self.accountID = accountID
@@ -59,6 +63,7 @@ public struct MValuationHistory: Hashable & AllocBase {
         self.lotID = lotID
         self.shareCount = shareCount
         self.sharePrice = sharePrice
+        self.transactionID = transactionID
     }
 
     public init(from decoder: Decoder) throws {
@@ -69,6 +74,7 @@ public struct MValuationHistory: Hashable & AllocBase {
         lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? AllocNilKey
         shareCount = try c.decode(Double.self, forKey: .shareCount)
         sharePrice = try c.decode(Double.self, forKey: .sharePrice)
+        transactionID = try c.decodeIfPresent(String.self, forKey: .transactionID) ?? AllocNilKey
     }
 
     public init(from row: Row) throws {
@@ -88,11 +94,13 @@ public struct MValuationHistory: Hashable & AllocBase {
 
         shareCount = MValuationPosition.getDouble(row, CodingKeys.shareCount.rawValue) ?? 0
         sharePrice = MValuationPosition.getDouble(row, CodingKeys.sharePrice.rawValue) ?? 0
+        transactionID = MValuationPosition.getStr(row, CodingKeys.transactionID.rawValue) ?? AllocNilKey
     }
 
     public mutating func update(from row: Row) throws {
         if let val = MValuationPosition.getDouble(row, CodingKeys.shareCount.rawValue) { shareCount = val }
         if let val = MValuationPosition.getDouble(row, CodingKeys.sharePrice.rawValue) { sharePrice = val }
+        if let val = MValuationPosition.getStr(row, CodingKeys.transactionID.rawValue) { transactionID = val }
     }
 
     public var primaryKey: AllocKey {
@@ -154,6 +162,7 @@ public struct MValuationHistory: Hashable & AllocBase {
             // optional values
             let shareCount = parseDouble(row[ck.shareCount.rawValue])
             let sharePrice = parseDouble(row[ck.sharePrice.rawValue])
+            let transactionID = parseString(row[ck.transactionID.rawValue])
         
             return [
                 ck.transactedAt.rawValue: transactedAt,
@@ -162,6 +171,7 @@ public struct MValuationHistory: Hashable & AllocBase {
                 ck.lotID.rawValue: lotID,
                 ck.shareCount.rawValue: shareCount,
                 ck.sharePrice.rawValue: sharePrice,
+                ck.transactionID.rawValue: transactionID,
             ]
         }
     }
@@ -170,6 +180,6 @@ public struct MValuationHistory: Hashable & AllocBase {
 extension MValuationHistory: CustomStringConvertible {
     public var description: String {
         let formattedDate = MValuationHistory.unparseDate(transactedAt)
-        return "transactedAt=\(formattedDate) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(shareCount) sharePrice=\(sharePrice)"
+        return "transactedAt=\(formattedDate) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(shareCount) sharePrice=\(sharePrice) transactionID=\(transactionID)"
     }
 }

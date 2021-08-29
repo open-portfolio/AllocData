@@ -47,8 +47,8 @@ public struct MValuationCashflow: Hashable & AllocBase {
         transactedAt: Date,
         accountID: String,
         assetID: String,
-        amount: Double,
-        reconciled: Bool
+        amount: Double = 0,
+        reconciled: Bool = false
     ) {
         self.transactedAt = transactedAt
         self.accountID = accountID

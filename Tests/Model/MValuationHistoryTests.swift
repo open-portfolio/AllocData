@@ -29,20 +29,22 @@ class MValuationTransactionTests: XCTestCase {
     }
 
     func testInit() {
-        let expected = MValuationHistory(transactedAt: timestamp, accountID: "1", securityID: "BND", lotID: "3", shareCount: 23, sharePrice: 25)
-        var actual = MValuationHistory(transactedAt: timestamp, accountID: "1", securityID: "BND", lotID: "3", shareCount: 3, sharePrice: 5)
+        let expected = MValuationHistory(transactedAt: timestamp, accountID: "1", securityID: "BND", lotID: "3", shareCount: 23, sharePrice: 25, transactionID: "B")
+        var actual = MValuationHistory(transactedAt: timestamp, accountID: "1", securityID: "BND", lotID: "3", shareCount: 3, sharePrice: 5, transactionID: "A")
         XCTAssertEqual("1", actual.accountID)
         XCTAssertEqual("BND", actual.securityID)
         XCTAssertEqual("3", actual.lotID)
         XCTAssertEqual(3, actual.shareCount)
         XCTAssertEqual(5, actual.sharePrice)
+        XCTAssertEqual("A", actual.transactionID)
         actual.shareCount = 23
         actual.sharePrice = 25
+        actual.transactionID = "B"
         XCTAssertEqual(expected, actual)
     }
 
     func testInitFromFINrow() throws {
-        let expected = MValuationHistory(transactedAt: timestamp, accountID: "1", securityID: "BND", lotID: "3", shareCount: 3, sharePrice: 5)
+        let expected = MValuationHistory(transactedAt: timestamp, accountID: "1", securityID: "BND", lotID: "3", shareCount: 3, sharePrice: 5, transactionID: "B")
         let actual = try MValuationHistory(from: [
             MValuationHistory.CodingKeys.transactedAt.rawValue: timestamp,
             MValuationHistory.CodingKeys.accountID.rawValue: "1",
@@ -50,12 +52,13 @@ class MValuationTransactionTests: XCTestCase {
             MValuationHistory.CodingKeys.lotID.rawValue: "3",
             MValuationHistory.CodingKeys.shareCount.rawValue: 3,
             MValuationHistory.CodingKeys.sharePrice.rawValue: 5,
+            MValuationHistory.CodingKeys.transactionID.rawValue: "B",
         ])
         XCTAssertEqual(expected, actual)
     }
 
     func testUpdateFromFINrow() throws {
-        var actual = MValuationHistory(transactedAt: timestamp, accountID: "1", securityID: "BND", lotID: "3", shareCount: 3, sharePrice: 5)
+        var actual = MValuationHistory(transactedAt: timestamp, accountID: "1", securityID: "BND", lotID: "3", shareCount: 3, sharePrice: 5, transactionID: "A")
         let finRow: MValuationHistory.Row = [
             MValuationHistory.CodingKeys.transactedAt.rawValue: timestamp + 1000, // IGNORED
             MValuationHistory.CodingKeys.accountID.rawValue: "x", // IGNORED
@@ -63,9 +66,10 @@ class MValuationTransactionTests: XCTestCase {
             MValuationHistory.CodingKeys.lotID.rawValue: "xxx", // IGNORED
             MValuationHistory.CodingKeys.shareCount.rawValue: 23,
             MValuationHistory.CodingKeys.sharePrice.rawValue: 25,
+            MValuationHistory.CodingKeys.transactionID.rawValue: "B",
         ]
         try actual.update(from: finRow)
-        let expected = MValuationHistory(transactedAt: timestamp, accountID: "1", securityID: "BND", lotID: "3", shareCount: 23, sharePrice: 25)
+        let expected = MValuationHistory(transactedAt: timestamp, accountID: "1", securityID: "BND", lotID: "3", shareCount: 23, sharePrice: 25, transactionID: "B")
         XCTAssertEqual(expected, actual)
     }
 
@@ -102,6 +106,7 @@ class MValuationTransactionTests: XCTestCase {
             "valuationHistoryLotID": "3",
             "shareCount": "9",
             "sharePrice": "7",
+            "transactionID": "A",
         ]]
         var rejected = [MValuationHistory.Row]()
         let actual = try MValuationHistory.decode(rawRows, rejectedRows: &rejected)
@@ -112,6 +117,7 @@ class MValuationTransactionTests: XCTestCase {
             "valuationHistoryLotID": "3",
             "shareCount": 9,
             "sharePrice": 7,
+            "transactionID": "A",
         ]
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)

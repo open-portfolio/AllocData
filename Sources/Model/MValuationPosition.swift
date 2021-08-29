@@ -47,8 +47,8 @@ public struct MValuationPosition: Hashable & AllocBase {
         snapshotID: String,
         accountID: String,
         assetID: String,
-        totalBasis: Double,
-        marketValue: Double
+        totalBasis: Double = 0,
+        marketValue: Double = 0
     ) {
         self.snapshotID = snapshotID
         self.accountID = accountID

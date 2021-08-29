@@ -242,6 +242,7 @@ Each row of the valuation history table describes a history item that was consum
 | valuationHistoryLotID | string | true | true | The lot of the transacted, if any. |
 | shareCount | double | true | false | The number of shares transacted (-Sale, +Purchase). |
 | sharePrice | double | true | false | The price per share transacted. |
+| transactionID | string | true | false | Transaction ID for the originating history record. |
 
 ### MSourceMeta
 
