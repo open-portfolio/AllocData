@@ -211,38 +211,18 @@ Each row of the valuation cashflow table describes a cash flow at a particular t
 | valuationCashflowAccountID | string | true | true | The account in which the flow occurred. |
 | valuationCashflowAssetID | string | true | true | The asset class flowed. |
 | amount | double | true | false | The amount of the flow (-Sale, +Purchase). |
-| reconciled | bool | true | false | If record was created to reconcile transactions. |
 
-### MValuationHolding
+### MValuationAccount
 
-This is the `openalloc/valuation/holding` schema.
+This is the `openalloc/valuation/account` schema.
 
-A table where each row describes an individual holding of an existing snapshot. Typically retained in the short term for the purpose of reconciling transactions.
-
-| Name | Type | IsRequired | IsKey | Descript |
-| ---- | ---- | ---------- | ----- | -------- |
-| valuationHoldingSnapshotID | string | true | true | The valuation snapshot ID for the position. |
-| valuationHoldingAccountID | string | true | true | The account hosting the position. |
-| valuationHoldingSecurityID | string | true | true | The security of the position. |
-| valuationHoldingLotID | string | true | true | The lot of the position, if any. |
-| shareCount | double | true | false | The number of shares held in the position. |
-| shareBasis | double | true | false | The price paid per share of the security. |
-
-### MValuationHistory
-
-This is the `openalloc/valuation/history` schema.
-
-Each row of the valuation history table describes a history item that was consumed by a cash flow item. It is not explicitly bound to any valuation snapshot. Typically retained in the short term for the purpose of reconciling transactions.å
+Provides a historical record of strategy associations for accounts.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
-| valuationHistoryTransactedAt | date | true | true | The timestamp when this transaction occurred. |
-| valuationHistoryAccountID | string | true | true | The account transacted. |
-| valuationHistorySecurityID | string | true | true | The security/ticker transacted. |
-| valuationHistoryLotID | string | true | true | The lot of the transacted, if any. |
-| shareCount | double | true | false | The number of shares transacted (-Sale, +Purchase). |
-| sharePrice | double | true | false | The price per share transacted. |
-| transactionID | string | true | false | Transaction ID for the originating history record. |
+| valuationAccountSnapshotID | string | true | true | The valuation snapshot ID for the account. |
+| valuationAccountAccountID | string | true | true | The account identifier. |
+| strategyID | double | true | false | The strategy assignment for the account at the time. |
 
 ### MSourceMeta
 
