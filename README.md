@@ -63,24 +63,6 @@ account.
 | capAssetID | string | true | true | The asset in which the limit will be imposed. |
 | limitPct | double | false | false | Allocate no more than this fraction of the account's capacity to the asset. |
 
-### MHistory
-
-This is the `openalloc/history` schema.
-
-A table of recent transaction history, including purchases and sales.
-
-| Name | Type | IsRequired | IsKey | Descript |
-| ---- | ---- | ---------- | ----- | -------- |
-| transactionID | string | false | true | Unique transaction identifier for the history record. |
-| historyAccountID | string | true | false | The account in which the transaction occurred. |
-| historySecurityID | string | true | false | The security involved in the transaction. |
-| historyLotID | string | false | false | The lot of the position involved in the transaction, if any. |
-| shareCount | double | false | false | The number of shares transacted. |
-| sharePrice | double | false | false | The price at which the share(s) transacted. |
-| realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |
-| realizedGainLong | double | false | false | The total long-term realized gain (or loss) from a sale. |
-| transactedAt | date | false | false | The date of the transaction. |
-
 ### MHolding
 
 This is the `openalloc/holding` schema.
@@ -135,6 +117,26 @@ relationship between Securities.
 | trackerID | string | true | true | The name of the tracking index. |
 | title | string | false | false | The title of the tracking index. |
 
+### MTransaction **NEW**
+
+This is the `openalloc/transaction` schema.
+
+A table of recent transaction history, including purchases and sales.
+
+NOTE: this replaces the deprecated 'MHistory' entity.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| txnTransactedAt | date | true | true | The date of the transaction. |
+| txnAccountID | string | true | true | The account in which the transaction occurred. |
+| txnSecurityID | string | true | true | The security involved in the transaction. |
+| txnLotID | string | true | true | The lot of the position involved in the transaction (blank if none). |
+| shareCount | double | false | false | The number of shares transacted. |
+| sharePrice | double | false | false | The price at which the share(s) transacted. |
+| realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |
+| realizedGainLong | double | false | false | The total long-term realized gain (or loss) from a sale. |
+| transactionID | string | false | false | Unique transaction identifier for the history record. |
+
 ### MRebalanceAllocation
 
 This is the `openalloc/rebalance/allocation` schema.
@@ -174,7 +176,7 @@ Each row of the RebalanceSale table describes a liquidation of a position to sat
 | shareCount | double | false | false | Estimated number of shares to liquidate from this position. |
 | liquidateAll | bool | false | false | If true, the entire position can be liquidated. |
 
-### MValuationSnapshot
+### MValuationSnapshot **NEW**
 
 This is the `openalloc/valuation/snapshot` schema.
 
@@ -185,7 +187,7 @@ Each row of the ValuationSnapshot table describes a valuation captured at a part
 | valuationSnapshotID | string | true | true | The unique valuation snapshot identifier. |
 | capturedAt | date | true | false | The timestamp when the snapshot was created. |
 
-### MValuationPosition
+### MValuationPosition **NEW**
 
 This is the `openalloc/valuation/position` schema.
 
@@ -199,7 +201,7 @@ Each row of the valuation position table describes a position captured at a part
 | totalBasis | double | true | false | The price paid to establish position. |
 | marketValue | double | true | false | The market value of the position. |
 
-### MValuationCashflow
+### MValuationCashflow **NEW**
 
 This is the `openalloc/valuation/cashflow` schema.
 
@@ -213,7 +215,7 @@ Each row of the valuation cashflow table describes a cash flow at a particular t
 | amount | double | true | false | The amount of the flow (-Sale, +Purchase). |
 | reconciled | bool | true | false | If record was created to reconcile transactions. |
 
-### MValuationAccount
+### MValuationAccount **NEW**
 
 This is the `openalloc/valuation/account` schema.
 
@@ -237,6 +239,24 @@ Each row of the SourceMeta table describes an import or transformation of source
 | url | string | false | false | The source URL, if any. |
 | importerID | string | false | false | The id of the importer/transformer, if any. |
 | exportedAt | date | false | false | The published export date of the source data, if any. |
+
+### MHistory **DEPRECATED**
+
+This is the `openalloc/history` schema.
+
+A table of recent transaction history, including purchases and sales.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| transactionID | string | false | true | Unique transaction identifier for the history record. |
+| historyAccountID | string | true | false | The account in which the transaction occurred. |
+| historySecurityID | string | true | false | The security involved in the transaction. |
+| historyLotID | string | false | false | The lot of the position involved in the transaction, if any. |
+| shareCount | double | false | false | The number of shares transacted. |
+| sharePrice | double | false | false | The price at which the share(s) transacted. |
+| realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |
+| realizedGainLong | double | false | false | The total long-term realized gain (or loss) from a sale. |
+| transactedAt | date | false | false | The date of the transaction. |
 
 ## Data Formats
 

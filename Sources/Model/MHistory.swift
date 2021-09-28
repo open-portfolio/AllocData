@@ -17,6 +17,8 @@
 
 import Foundation
 
+// NOTE MHistory is DEPRECATED and will go away in next major release. It's been replaced by MTransaction.
+
 public struct MHistory: Hashable & AllocBase {
     public var transactionID: String
     public var accountID: String

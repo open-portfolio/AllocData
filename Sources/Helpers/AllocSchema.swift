@@ -24,7 +24,8 @@ public enum AllocSchema: String, CaseIterable {
     case allocHolding = "openalloc/holding"
     case allocAccount = "openalloc/account"
     case allocSecurity = "openalloc/security"
-    case allocHistory = "openalloc/history"
+    case allocTransaction = "openalloc/transaction"
+    case allocHistory = "openalloc/history" // DEPRECATED
     case allocCap = "openalloc/cap"
     case allocTracker = "openalloc/tracker"
     case allocRebalanceSale = "openalloc/rebalance/sale"
@@ -51,8 +52,10 @@ public enum AllocSchema: String, CaseIterable {
             return MAccount.attributes
         case .allocSecurity:
             return MSecurity.attributes
+        case .allocTransaction:
+            return MTransaction.attributes
         case .allocHistory:
-            return MHistory.attributes
+            return MHistory.attributes // DEPRECATED
         case .allocCap:
             return MCap.attributes
         case .allocTracker:

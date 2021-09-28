@@ -111,7 +111,7 @@ public struct MValuationCashflow: Hashable & AllocBase {
         guard let transactedAt_ = getDate(row, rawValue0),
               let accountID_ = getStr(row, rawValue1),
               let assetID_ = getStr(row, rawValue2)
-        else { throw AllocDataError.invalidPrimaryKey("Position") }
+        else { throw AllocDataError.invalidPrimaryKey("Cashflow") }
         return makePrimaryKey(transactedAt: transactedAt_, accountID: accountID_, assetID: assetID_)
     }
 
@@ -119,7 +119,7 @@ public struct MValuationCashflow: Hashable & AllocBase {
         let ck = MValuationCashflow.CodingKeys.self
 
         return rawRows.compactMap { row in
-            // required values, without default values
+            // required, without default values
             guard let transactedAt = parseDate(row[ck.transactedAt.rawValue]),
                   let accountID = parseString(row[ck.accountID.rawValue]),
                   accountID.count > 0,
@@ -130,6 +130,9 @@ public struct MValuationCashflow: Hashable & AllocBase {
                 return nil
             }
 
+            // required, with default value
+            // none
+            
             // optional values
             let amount = parseDouble(row[ck.amount.rawValue])
             let reconciled = parseBool(row[ck.reconciled.rawValue])
