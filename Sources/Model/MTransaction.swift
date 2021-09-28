@@ -22,22 +22,22 @@ public struct MTransaction: Hashable & AllocBase {
     public var accountID: String // key
     public var securityID: String // key
     public var lotID: String // key
-    public var shareCount: Double?
-    public var sharePrice: Double?
+    public var shareCount: Double // key
+    public var sharePrice: Double // key
+    public var transactionID: String // key
     public var realizedGainShort: Double?
     public var realizedGainLong: Double?
-    public var transactionID: String?
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case transactedAt = "txnTransactedAt"
         case accountID = "txnAccountID"
         case securityID = "txnSecurityID"
         case lotID = "txnLotID"
-        case shareCount
-        case sharePrice
+        case shareCount = "txnShareCount"
+        case sharePrice = "txnSharePrice"
+        case transactionID = "txnID"
         case realizedGainShort
         case realizedGainLong
-        case transactionID
     }
 
     public static var schema: AllocSchema { .allocTransaction }
@@ -47,32 +47,32 @@ public struct MTransaction: Hashable & AllocBase {
         AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account in which the transaction occurred."),
         AllocAttribute(CodingKeys.securityID, .string, isRequired: true, isKey: true, "The security involved in the transaction."),
         AllocAttribute(CodingKeys.lotID, .string, isRequired: true, isKey: true, "The lot of the position involved in the transaction (blank if none)."),
-        AllocAttribute(CodingKeys.shareCount, .double, isRequired: false, isKey: false, "The number of shares transacted."),
-        AllocAttribute(CodingKeys.sharePrice, .double, isRequired: false, isKey: false, "The price at which the share(s) transacted."),
+        AllocAttribute(CodingKeys.shareCount, .double, isRequired: true, isKey: true, "The number of shares transacted."),
+        AllocAttribute(CodingKeys.sharePrice, .double, isRequired: true, isKey: true, "The price at which the share(s) transacted."),
+        AllocAttribute(CodingKeys.transactionID, .string, isRequired: true, isKey: true, "Unique identifier for the transaction (blank if none)."),
         AllocAttribute(CodingKeys.realizedGainShort, .double, isRequired: false, isKey: false, "The total short-term realized gain (or loss) from a sale."),
         AllocAttribute(CodingKeys.realizedGainLong, .double, isRequired: false, isKey: false, "The total long-term realized gain (or loss) from a sale."),
-        AllocAttribute(CodingKeys.transactionID, .string, isRequired: false, isKey: false, "Unique identifier for the transaction, if any."),
     ]
 
-    public init(transactedAt: Date? = nil,
-                accountID: String? = nil,
-                securityID: String? = nil,
-                lotID: String? = nil,
-                shareCount: Double? = nil,
-                sharePrice: Double? = nil,
+    public init(transactedAt: Date,
+                accountID: String,
+                securityID: String,
+                lotID: String = AllocNilKey,
+                shareCount: Double = 0,
+                sharePrice: Double = 0,
+                transactionID: String = AllocNilKey,
                 realizedGainShort: Double? = nil,
-                realizedGainLong: Double? = nil,
-                transactionID: String? = nil)
+                realizedGainLong: Double? = nil)
     {
-        self.transactedAt = transactedAt ?? Date()
-        self.accountID = accountID ?? AllocNilKey
-        self.securityID = securityID ?? AllocNilKey
-        self.lotID = lotID ?? AllocNilKey
+        self.transactedAt = transactedAt
+        self.accountID = accountID
+        self.securityID = securityID
+        self.lotID = lotID
         self.shareCount = shareCount
         self.sharePrice = sharePrice
+        self.transactionID = transactionID
         self.realizedGainShort = realizedGainShort
         self.realizedGainLong = realizedGainLong
-        self.transactionID = transactionID
     }
 
     public init(from decoder: Decoder) throws {
@@ -81,11 +81,11 @@ public struct MTransaction: Hashable & AllocBase {
         accountID = try c.decodeIfPresent(String.self, forKey: .accountID) ?? AllocNilKey
         securityID = try c.decodeIfPresent(String.self, forKey: .securityID) ?? AllocNilKey
         lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? AllocNilKey
-        shareCount = try c.decodeIfPresent(Double.self, forKey: .shareCount)
-        sharePrice = try c.decodeIfPresent(Double.self, forKey: .sharePrice)
+        shareCount = try c.decodeIfPresent(Double.self, forKey: .shareCount) ?? 0
+        sharePrice = try c.decodeIfPresent(Double.self, forKey: .sharePrice) ?? 0
+        transactionID = try c.decodeIfPresent(String.self, forKey: .transactionID) ?? AllocNilKey
         realizedGainShort = try c.decodeIfPresent(Double.self, forKey: .realizedGainShort)
         realizedGainLong = try c.decodeIfPresent(Double.self, forKey: .realizedGainLong)
-        transactionID = try c.decodeIfPresent(String.self, forKey: .transactionID)
     }
 
     public init(from row: Row) throws {
@@ -102,37 +102,49 @@ public struct MTransaction: Hashable & AllocBase {
         securityID = securityID_
         
         lotID = MTransaction.getStr(row, CodingKeys.lotID.rawValue) ?? AllocNilKey
-        
-        shareCount = MTransaction.getDouble(row, CodingKeys.shareCount.rawValue)
-        sharePrice = MTransaction.getDouble(row, CodingKeys.sharePrice.rawValue)
+        shareCount = MTransaction.getDouble(row, CodingKeys.shareCount.rawValue) ?? 0
+        sharePrice = MTransaction.getDouble(row, CodingKeys.sharePrice.rawValue) ?? 0
+        transactionID = MTransaction.getStr(row, CodingKeys.transactionID.rawValue) ?? AllocNilKey
+
         realizedGainShort = MTransaction.getDouble(row, CodingKeys.realizedGainShort.rawValue)
         realizedGainLong = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue)
-        transactionID = MTransaction.getStr(row, CodingKeys.transactionID.rawValue)
     }
 
     public mutating func update(from row: Row) throws {
         // ignore composite key
-        if let val = MTransaction.getDouble(row, CodingKeys.shareCount.rawValue) { shareCount = val }
-        if let val = MTransaction.getDouble(row, CodingKeys.sharePrice.rawValue) { sharePrice = val }
         if let val = MTransaction.getDouble(row, CodingKeys.realizedGainShort.rawValue) { realizedGainShort = val }
         if let val = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue) { realizedGainLong = val }
-        if let val = MTransaction.getStr(row, CodingKeys.transactionID.rawValue) { transactionID = val }
     }
 
     public var primaryKey: AllocKey {
-        MTransaction.makePrimaryKey(transactedAt: transactedAt, accountID: accountID, securityID: securityID, lotID: lotID)
+        MTransaction.makePrimaryKey(transactedAt: transactedAt,
+                                    accountID: accountID,
+                                    securityID: securityID,
+                                    lotID: lotID,
+                                    shareCount: shareCount,
+                                    sharePrice: sharePrice,
+                                    transactionID: transactionID)
     }
 
-    public static func makePrimaryKey(transactedAt: Date, accountID: String, securityID: String, lotID: String) -> AllocKey {
+    public static func makePrimaryKey(transactedAt: Date,
+                                      accountID: String,
+                                      securityID: String,
+                                      lotID: String,
+                                      shareCount: Double,
+                                      sharePrice: Double,
+                                      transactionID: String) -> AllocKey {
         
         // NOTE: using time interval in composite key as ISO dates will vary.
+        
         // This implementation can change at ANY time and may differ per platform.
         // Because of that AllocData keys should NOT be persisted in data files
         // or across executions. If you need to store a date, use the ISO format.
         
         let refEpoch = transactedAt.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
-        return keyify([formattedDate, accountID, securityID, lotID])
+        let formattedShareCount = String(format: "%.4f", shareCount)
+        let formattedSharePrice = String(format: "%.4f", sharePrice)
+        return keyify([formattedDate, accountID, securityID, lotID, formattedShareCount, formattedSharePrice, transactionID])
     }
     
     public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
@@ -140,12 +152,24 @@ public struct MTransaction: Hashable & AllocBase {
         let rawValue1 = CodingKeys.accountID.rawValue
         let rawValue2 = CodingKeys.securityID.rawValue
         let rawValue3 = CodingKeys.lotID.rawValue
+        let rawValue4 = CodingKeys.shareCount.rawValue
+        let rawValue5 = CodingKeys.sharePrice.rawValue
+        let rawValue6 = CodingKeys.transactionID.rawValue
         guard let transactedAt_ = getDate(row, rawValue0),
               let accountID_ = getStr(row, rawValue1),
               let securityID_ = getStr(row, rawValue2),
-              let lotID_ = getStr(row, rawValue3)
+              let lotID_ = getStr(row, rawValue3),
+              let shareCount_ = getDouble(row, rawValue4),
+              let sharePrice_ = getDouble(row, rawValue5),
+              let transactionID_ = getStr(row, rawValue6)
         else { throw AllocDataError.invalidPrimaryKey("Transaction") }
-        return makePrimaryKey(transactedAt: transactedAt_, accountID: accountID_, securityID: securityID_, lotID: lotID_)
+        return makePrimaryKey(transactedAt: transactedAt_,
+                              accountID: accountID_,
+                              securityID: securityID_,
+                              lotID: lotID_,
+                              shareCount: shareCount_,
+                              sharePrice: sharePrice_,
+                              transactionID: transactionID_)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
@@ -165,13 +189,13 @@ public struct MTransaction: Hashable & AllocBase {
 
             // required, with default value
             let lotID = parseString(row[ck.lotID.rawValue]) ?? ""
+            let shareCount = parseDouble(row[ck.shareCount.rawValue]) ?? 0
+            let sharePrice = parseDouble(row[ck.sharePrice.rawValue]) ?? 0
+            let transactionID = parseString(row[ck.transactionID.rawValue]) ?? ""
 
             // optional values
-            let shareCount = parseDouble(row[ck.shareCount.rawValue])
-            let sharePrice = parseDouble(row[ck.sharePrice.rawValue])
             let realizedGainShort = parseDouble(row[ck.realizedGainShort.rawValue])
             let realizedGainLong = parseDouble(row[ck.realizedGainLong.rawValue])
-            let transactionID = parseString(row[ck.transactionID.rawValue])
 
             return [
                 ck.transactedAt.rawValue: transactedAt,
@@ -180,9 +204,9 @@ public struct MTransaction: Hashable & AllocBase {
                 ck.lotID.rawValue: lotID,
                 ck.shareCount.rawValue: shareCount,
                 ck.sharePrice.rawValue: sharePrice,
+                ck.transactionID.rawValue: transactionID,
                 ck.realizedGainShort.rawValue: realizedGainShort,
                 ck.realizedGainLong.rawValue: realizedGainLong,
-                ck.transactionID.rawValue: transactionID,
             ]
         }
     }
@@ -190,6 +214,6 @@ public struct MTransaction: Hashable & AllocBase {
 
 extension MTransaction: CustomStringConvertible {
     public var description: String {
-        "transactedAt=\(String(describing: transactedAt)) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(String(describing: shareCount)) sharePrice=\(String(describing: sharePrice)) realizedGainShort=\(String(describing: realizedGainShort)) realizedGainLong=\(String(describing: realizedGainLong)) transactionID=\(transactionID ?? "")"
+        "transactedAt=\(String(describing: transactedAt)) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(String(describing: shareCount)) sharePrice=\(String(describing: sharePrice)) transactionID=\(transactionID) realizedGainShort=\(String(describing: realizedGainShort)) realizedGainLong=\(String(describing: realizedGainLong))"
     }
 }

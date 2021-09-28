@@ -131,11 +131,11 @@ NOTE: this replaces the deprecated 'MHistory' entity.
 | txnAccountID | string | true | true | The account in which the transaction occurred. |
 | txnSecurityID | string | true | true | The security involved in the transaction. |
 | txnLotID | string | true | true | The lot of the position involved in the transaction (blank if none). |
-| shareCount | double | false | false | The number of shares transacted. |
-| sharePrice | double | false | false | The price at which the share(s) transacted. |
+| txnShareCount | double | true | true | The number of shares transacted. |
+| txnSharePrice | double | true | true | The price at which the share(s) transacted. |
+| txnID | string | true | true | Unique transaction identifier for the history record (blank if none). |
 | realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |
 | realizedGainLong | double | false | false | The total long-term realized gain (or loss) from a sale. |
-| transactionID | string | false | false | Unique transaction identifier for the history record. |
 
 ### MRebalanceAllocation
 
