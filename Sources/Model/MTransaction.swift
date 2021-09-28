@@ -89,14 +89,20 @@ public struct MTransaction: Hashable & AllocBase {
     }
 
     public init(from row: Row) throws {
-        guard let transactionID_ = MTransaction.getStr(row, CodingKeys.transactionID.rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.transactionID.rawValue) }
-        transactionID = transactionID_
+        guard let transactedAt_ = MTransaction.getDate(row, CodingKeys.transactedAt.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.transactedAt.rawValue) }
+        transactedAt = transactedAt_
 
-        transactedAt = MTransaction.getDate(row, CodingKeys.transactedAt.rawValue) ?? Date.init(timeIntervalSinceReferenceDate: 0)
-        accountID = MTransaction.getStr(row, CodingKeys.accountID.rawValue) ?? AllocNilKey
-        securityID = MTransaction.getStr(row, CodingKeys.securityID.rawValue) ?? AllocNilKey
-        lotID = MHolding.getStr(row, CodingKeys.lotID.rawValue) ?? AllocNilKey
+        guard let accountID_ = MTransaction.getStr(row, CodingKeys.accountID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
+        accountID = accountID_
+
+        guard let securityID_ = MTransaction.getStr(row, CodingKeys.securityID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.securityID.rawValue) }
+        securityID = securityID_
+        
+        lotID = MTransaction.getStr(row, CodingKeys.lotID.rawValue) ?? AllocNilKey
+        
         shareCount = MTransaction.getDouble(row, CodingKeys.shareCount.rawValue)
         sharePrice = MTransaction.getDouble(row, CodingKeys.sharePrice.rawValue)
         realizedGainShort = MTransaction.getDouble(row, CodingKeys.realizedGainShort.rawValue)
