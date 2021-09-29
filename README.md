@@ -17,8 +17,8 @@ Each row of the Accounts table describes a unique account.
 | accountID | string | true | true | The account number of the account. |
 | title | string | false | false | The title of the account. |
 | isActive | bool | false | false | Is the account active? (NOTE: no longer used by FlowAllocator) |
-| isTaxable | bool | false | false | Is the account taxable? |
-| canTrade | bool | false | false | Can you trade securities in the account? |
+| isTaxable | bool | false | false | Is the account taxable? (default: false) |
+| canTrade | bool | false | false | Can you trade securities in the account? (default: false) |
 | accountStrategyID | string | false | false | The strategy associated with this account, if any. |
 
 ### MAllocation
@@ -136,7 +136,7 @@ NOTE: this replaces the deprecated 'MHistory' entity.
 | txnID | string | true | true | Unique transaction identifier for the history record (blank if none). |
 | realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |
 | realizedGainLong | double | false | false | The total long-term realized gain (or loss) from a sale. |
-| isTransfer | bool | true | false | Were securities transferred to/from the account? |
+| isTransfer | bool | false | false | Were securities transferred to/from the account? (default: false) |
 
 ### MRebalanceAllocation
 

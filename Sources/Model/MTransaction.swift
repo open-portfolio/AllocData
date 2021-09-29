@@ -51,7 +51,7 @@ public struct MTransaction: Hashable & AllocBase {
         AllocAttribute(CodingKeys.sharePrice, .double, isRequired: true, isKey: true, "The price at which the share(s) transacted."),
         AllocAttribute(CodingKeys.realizedGainShort, .double, isRequired: false, isKey: false, "The total short-term realized gain (or loss) from a sale."),
         AllocAttribute(CodingKeys.realizedGainLong, .double, isRequired: false, isKey: false, "The total long-term realized gain (or loss) from a sale."),
-        AllocAttribute(CodingKeys.isTransfer, .bool, isRequired: true, isKey: false, "Were securities transferred to/from the account?"),
+        AllocAttribute(CodingKeys.isTransfer, .bool, isRequired: false, isKey: false, "Were securities transferred to/from the account?"),
     ]
 
     public init(transactedAt: Date,
