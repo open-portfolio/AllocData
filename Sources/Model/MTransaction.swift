@@ -18,6 +18,7 @@
 import Foundation
 
 public struct MTransaction: Hashable & AllocBase {
+    public var action: Action // key
     public var transactedAt: Date // key
     public var accountID: String // key
     public var securityID: String // key
@@ -26,9 +27,9 @@ public struct MTransaction: Hashable & AllocBase {
     public var sharePrice: Double // key
     public var realizedGainShort: Double?
     public var realizedGainLong: Double?
-    public var isTransfer: Bool
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
+        case action = "txnAction"
         case transactedAt = "txnTransactedAt"
         case accountID = "txnAccountID"
         case securityID = "txnSecurityID"
@@ -37,12 +38,12 @@ public struct MTransaction: Hashable & AllocBase {
         case sharePrice = "txnSharePrice"
         case realizedGainShort
         case realizedGainLong
-        case isTransfer
     }
 
     public static var schema: AllocSchema { .allocTransaction }
 
     public static var attributes: [AllocAttribute] = [
+        AllocAttribute(CodingKeys.action, .string, isRequired: true, isKey: true, "The type of transaction."),
         AllocAttribute(CodingKeys.transactedAt, .date, isRequired: true, isKey: true, "The date of the transaction."),
         AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account in which the transaction occurred."),
         AllocAttribute(CodingKeys.securityID, .string, isRequired: true, isKey: true, "The security involved in the transaction."),
@@ -51,19 +52,19 @@ public struct MTransaction: Hashable & AllocBase {
         AllocAttribute(CodingKeys.sharePrice, .double, isRequired: true, isKey: true, "The price at which the share(s) transacted."),
         AllocAttribute(CodingKeys.realizedGainShort, .double, isRequired: false, isKey: false, "The total short-term realized gain (or loss) from a sale."),
         AllocAttribute(CodingKeys.realizedGainLong, .double, isRequired: false, isKey: false, "The total long-term realized gain (or loss) from a sale."),
-        AllocAttribute(CodingKeys.isTransfer, .bool, isRequired: false, isKey: false, "Were securities transferred to/from the account?"),
     ]
 
-    public init(transactedAt: Date,
+    public init(action: Action,
+                transactedAt: Date,
                 accountID: String,
                 securityID: String,
                 lotID: String = AllocNilKey,
                 shareCount: Double = 0,
                 sharePrice: Double = 0,
                 realizedGainShort: Double? = nil,
-                realizedGainLong: Double? = nil,
-                isTransfer: Bool = false)
+                realizedGainLong: Double? = nil)
     {
+        self.action = action
         self.transactedAt = transactedAt
         self.accountID = accountID
         self.securityID = securityID
@@ -72,11 +73,11 @@ public struct MTransaction: Hashable & AllocBase {
         self.sharePrice = sharePrice
         self.realizedGainShort = realizedGainShort
         self.realizedGainLong = realizedGainLong
-        self.isTransfer = isTransfer
     }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        action = try c.decode(Action.self, forKey: .action)
         transactedAt = try c.decodeIfPresent(Date.self, forKey: .transactedAt) ?? Date.init(timeIntervalSinceReferenceDate: 0)
         accountID = try c.decodeIfPresent(String.self, forKey: .accountID) ?? AllocNilKey
         securityID = try c.decodeIfPresent(String.self, forKey: .securityID) ?? AllocNilKey
@@ -85,10 +86,14 @@ public struct MTransaction: Hashable & AllocBase {
         sharePrice = try c.decodeIfPresent(Double.self, forKey: .sharePrice) ?? 0
         realizedGainShort = try c.decodeIfPresent(Double.self, forKey: .realizedGainShort)
         realizedGainLong = try c.decodeIfPresent(Double.self, forKey: .realizedGainLong)
-        isTransfer = try c.decodeIfPresent(Bool.self, forKey: .isTransfer) ?? false
     }
 
     public init(from row: Row) throws {
+        guard let rawAction = MTransaction.getStr(row, CodingKeys.action.rawValue),
+              let action_ = Action(rawValue: rawAction)
+        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.action.rawValue) }
+        action = action_
+
         guard let transactedAt_ = MTransaction.getDate(row, CodingKeys.transactedAt.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.transactedAt.rawValue) }
         transactedAt = transactedAt_
@@ -107,19 +112,17 @@ public struct MTransaction: Hashable & AllocBase {
 
         realizedGainShort = MTransaction.getDouble(row, CodingKeys.realizedGainShort.rawValue)
         realizedGainLong = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue)
-        
-        isTransfer = MTransaction.getBool(row, CodingKeys.isTransfer.rawValue) ?? false
     }
 
     public mutating func update(from row: Row) throws {
         // ignore composite key
         if let val = MTransaction.getDouble(row, CodingKeys.realizedGainShort.rawValue) { realizedGainShort = val }
         if let val = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue) { realizedGainLong = val }
-        if let val = MTransaction.getBool(row, CodingKeys.isTransfer.rawValue) { isTransfer = val }
     }
 
     public var primaryKey: AllocKey {
-        MTransaction.makePrimaryKey(transactedAt: transactedAt,
+        MTransaction.makePrimaryKey(action: action,
+                                    transactedAt: transactedAt,
                                     accountID: accountID,
                                     securityID: securityID,
                                     lotID: lotID,
@@ -127,7 +130,8 @@ public struct MTransaction: Hashable & AllocBase {
                                     sharePrice: sharePrice)
     }
 
-    public static func makePrimaryKey(transactedAt: Date,
+    public static func makePrimaryKey(action: Action,
+                                      transactedAt: Date,
                                       accountID: String,
                                       securityID: String,
                                       lotID: String,
@@ -140,28 +144,33 @@ public struct MTransaction: Hashable & AllocBase {
         // Because of that AllocData keys should NOT be persisted in data files
         // or across executions. If you need to store a date, use the ISO format.
         
+        let formattedAction = action.rawValue
         let refEpoch = transactedAt.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
         let formattedShareCount = String(format: "%.4f", shareCount)
         let formattedSharePrice = String(format: "%.4f", sharePrice)
-        return keyify([formattedDate, accountID, securityID, lotID, formattedShareCount, formattedSharePrice])
+        return keyify([formattedAction, formattedDate, accountID, securityID, lotID, formattedShareCount, formattedSharePrice])
     }
     
     public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
-        let rawValue0 = CodingKeys.transactedAt.rawValue
-        let rawValue1 = CodingKeys.accountID.rawValue
-        let rawValue2 = CodingKeys.securityID.rawValue
-        let rawValue3 = CodingKeys.lotID.rawValue
-        let rawValue4 = CodingKeys.shareCount.rawValue
-        let rawValue5 = CodingKeys.sharePrice.rawValue
-        guard let transactedAt_ = getDate(row, rawValue0),
-              let accountID_ = getStr(row, rawValue1),
-              let securityID_ = getStr(row, rawValue2),
-              let lotID_ = getStr(row, rawValue3),
-              let shareCount_ = getDouble(row, rawValue4),
-              let sharePrice_ = getDouble(row, rawValue5)
+        let rawValue0 = CodingKeys.action.rawValue
+        let rawValue1 = CodingKeys.transactedAt.rawValue
+        let rawValue2 = CodingKeys.accountID.rawValue
+        let rawValue3 = CodingKeys.securityID.rawValue
+        let rawValue4 = CodingKeys.lotID.rawValue
+        let rawValue5 = CodingKeys.shareCount.rawValue
+        let rawValue6 = CodingKeys.sharePrice.rawValue
+        guard let rawAction = getStr(row, rawValue0),
+              let action_ = Action(rawValue: rawAction),
+              let transactedAt_ = getDate(row, rawValue1),
+              let accountID_ = getStr(row, rawValue2),
+              let securityID_ = getStr(row, rawValue3),
+              let lotID_ = getStr(row, rawValue4),
+              let shareCount_ = getDouble(row, rawValue5),
+              let sharePrice_ = getDouble(row, rawValue6)
         else { throw AllocDataError.invalidPrimaryKey("Transaction") }
-        return makePrimaryKey(transactedAt: transactedAt_,
+        return makePrimaryKey(action: action_,
+                              transactedAt: transactedAt_,
                               accountID: accountID_,
                               securityID: securityID_,
                               lotID: lotID_,
@@ -174,7 +183,9 @@ public struct MTransaction: Hashable & AllocBase {
 
         return rawRows.compactMap { row in
             // required, without default values
-            guard let transactedAt = parseDate(row[ck.transactedAt.rawValue]),
+            guard let rawAction = parseString(row[ck.action.rawValue]),
+                  let action = Action(rawValue: rawAction),
+                  let transactedAt = parseDate(row[ck.transactedAt.rawValue]),
                   let accountID = parseString(row[ck.accountID.rawValue]),
                   accountID.count > 0,
                   let securityID = parseString(row[ck.securityID.rawValue]),
@@ -192,9 +203,9 @@ public struct MTransaction: Hashable & AllocBase {
             // optional values
             let realizedGainShort = parseDouble(row[ck.realizedGainShort.rawValue])
             let realizedGainLong = parseDouble(row[ck.realizedGainLong.rawValue])
-            let isTransfer = parseBool(row[ck.isTransfer.rawValue])
 
             return [
+                ck.action.rawValue: action,
                 ck.transactedAt.rawValue: transactedAt,
                 ck.accountID.rawValue: accountID,
                 ck.securityID.rawValue: securityID,
@@ -203,7 +214,6 @@ public struct MTransaction: Hashable & AllocBase {
                 ck.sharePrice.rawValue: sharePrice,
                 ck.realizedGainShort.rawValue: realizedGainShort,
                 ck.realizedGainLong.rawValue: realizedGainLong,
-                ck.isTransfer.rawValue: isTransfer,
             ]
         }
     }
@@ -211,6 +221,6 @@ public struct MTransaction: Hashable & AllocBase {
 
 extension MTransaction: CustomStringConvertible {
     public var description: String {
-        "transactedAt=\(String(describing: transactedAt)) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(String(describing: shareCount)) sharePrice=\(String(describing: sharePrice)) realizedGainShort=\(String(describing: realizedGainShort)) realizedGainLong=\(String(describing: realizedGainLong))"
+        "action=\(action) transactedAt=\(String(describing: transactedAt)) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(String(describing: shareCount)) sharePrice=\(String(describing: sharePrice)) realizedGainShort=\(String(describing: realizedGainShort)) realizedGainLong=\(String(describing: realizedGainLong))"
     }
 }

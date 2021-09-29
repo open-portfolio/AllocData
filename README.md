@@ -121,22 +121,32 @@ relationship between Securities.
 
 This is the `openalloc/transaction` schema.
 
-A table of recent transaction history, including purchases and sales.
+A table of recent transaction history, including purchases, sales, and other actions.
 
 NOTE: this replaces the deprecated 'MHistory' entity.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
+| txnAction | string | true | true | The code of the type of transaction (see below). |
 | txnTransactedAt | date | true | true | The date of the transaction. |
 | txnAccountID | string | true | true | The account in which the transaction occurred. |
 | txnSecurityID | string | true | true | The security involved in the transaction. |
 | txnLotID | string | true | true | The lot of the position involved in the transaction (blank if none). |
 | txnShareCount | double | true | true | The number of shares transacted. |
 | txnSharePrice | double | true | true | The price at which the share(s) transacted. |
-| txnID | string | true | true | Unique transaction identifier for the history record (blank if none). |
 | realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |
 | realizedGainLong | double | false | false | The total long-term realized gain (or loss) from a sale. |
-| isTransfer | bool | false | false | Were securities transferred to/from the account? (default: false) |
+
+The action types:
+
+| Type | Code | Descript |
+| ---- | ---- | -------- |
+| Buy | buy | Purchase of a security with cash. | 
+| Sell | sell | Sale of a security for cash. | 
+| Dividend Income | div | Income from dividend, to cash. | 
+| Interest Income | int | Income from interest, to cash. | 
+| Miscellaneous Income | misc | Income from something else, to cash. | 
+| Transfer | xfr | Transfer of securities or cash to/from external source. | 
 
 ### MRebalanceAllocation
 

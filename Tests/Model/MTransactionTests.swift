@@ -29,29 +29,30 @@ class MTransactionTests: XCTestCase {
     }
 
     func testInit() {
-        let expected = MTransaction(transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, isTransfer: true)
-        var actual = MTransaction(transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x")
+        let expected = MTransaction(action: .dividendIncome, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
+        var actual = MTransaction(action: .buy, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x")
+        XCTAssertEqual(MTransaction.Action.buy, actual.action)
         XCTAssertEqual(timestamp, actual.transactedAt)
         XCTAssertEqual("a", actual.accountID)
         XCTAssertEqual("s", actual.securityID)
         XCTAssertEqual("x", actual.lotID)
         XCTAssertEqual(0.0, actual.shareCount)
         XCTAssertEqual(0.0, actual.sharePrice)
-        XCTAssertEqual(false, actual.isTransfer)
         XCTAssertNil(actual.realizedGainShort)
         XCTAssertNil(actual.realizedGainLong)
+        actual.action = .dividendIncome
         actual.shareCount = 3
         actual.sharePrice = 4
         actual.realizedGainShort = 5
         actual.realizedGainLong = 6
         actual.transactedAt = timestamp
-        actual.isTransfer = true
         XCTAssertEqual(expected, actual)
     }
 
     func testInitFromFINrow() throws {
-        let expected = MTransaction(transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, isTransfer: true)
+        let expected = MTransaction(action: .interestIncome, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
         let actual = try MTransaction(from: [
+            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.interestIncome.rawValue,
             MTransaction.CodingKeys.transactedAt.rawValue: timestamp,
             MTransaction.CodingKeys.accountID.rawValue: "a",
             MTransaction.CodingKeys.securityID.rawValue: "s",
@@ -60,14 +61,14 @@ class MTransactionTests: XCTestCase {
             MTransaction.CodingKeys.sharePrice.rawValue: 4,
             MTransaction.CodingKeys.realizedGainShort.rawValue: 5,
             MTransaction.CodingKeys.realizedGainLong.rawValue: 6,
-            MTransaction.CodingKeys.isTransfer.rawValue: true,
         ])
         XCTAssertEqual(expected, actual)
     }
 
     func testUpdateFromFINrow() throws {
-        var actual = MTransaction(transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, isTransfer: false)
+        var actual = MTransaction(action: .sell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
         let finRow: MTransaction.Row = [
+            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.miscIncome.rawValue, // IGNORED
             MTransaction.CodingKeys.transactedAt.rawValue: timestamp + 200, // IGNORED
             MTransaction.CodingKeys.accountID.rawValue: "bx", // IGNORED
             MTransaction.CodingKeys.securityID.rawValue: "cx", // IGNORED
@@ -76,20 +77,19 @@ class MTransactionTests: XCTestCase {
             MTransaction.CodingKeys.sharePrice.rawValue: 8, // IGNORED
             MTransaction.CodingKeys.realizedGainShort.rawValue: 9,
             MTransaction.CodingKeys.realizedGainLong.rawValue: 10,
-            MTransaction.CodingKeys.isTransfer.rawValue: true,
         ]
         try actual.update(from: finRow)
-        let expected = MTransaction(transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 9, realizedGainLong: 10, isTransfer: true)
+        let expected = MTransaction(action: .sell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 9, realizedGainLong: 10)
         XCTAssertEqual(expected, actual)
     }
 
     func testPrimaryKey() throws {
-        let element = MTransaction(transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
+        let element = MTransaction(action: .sell, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
         let refEpoch = timestamp.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
         
         let actual = element.primaryKey
-        let expected = "\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.0000"
+        let expected = "sell,\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.0000"
         XCTAssertEqual(expected, actual)
     }
     
@@ -97,6 +97,7 @@ class MTransactionTests: XCTestCase {
         let refEpoch = timestamp.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
         let finRow: MTransaction.Row = [
+            "txnAction": "misc",
             "txnTransactedAt": timestamp,
             "txnAccountID": " A-x?3 ",
             "txnSecurityID": " -3B ! ",
@@ -105,7 +106,7 @@ class MTransactionTests: XCTestCase {
             "txnSharePrice": 4,
         ]
         let actual = try MTransaction.getPrimaryKey(finRow)
-        let expected = "\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.0000"
+        let expected = "misc,\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.0000"
         XCTAssertEqual(expected, actual)
     }
 
@@ -113,6 +114,7 @@ class MTransactionTests: XCTestCase {
         let YYYYMMDD = df.string(from: timestamp)
         let YYYYMMDDts = df.date(from: YYYYMMDD)
         let rawRows: [MTransaction.RawRow] = [[
+            "txnAction": "xfr",
             "txnTransactedAt": YYYYMMDD,
             "txnAccountID": "a",
             "txnSecurityID": "s",
@@ -121,11 +123,11 @@ class MTransactionTests: XCTestCase {
             "txnSharePrice": "4",
             "realizedGainShort": "5",
             "realizedGainLong": "6",
-            "isTransfer": "TRUE",
         ]]
         var rejected = [MTransaction.Row]()
         let actual = try MTransaction.decode(rawRows, rejectedRows: &rejected)
         let expected: MTransaction.Row = [
+            "txnAction": MTransaction.Action.transfer,
             "txnTransactedAt": YYYYMMDDts,
             "txnAccountID": "a",
             "txnSecurityID": "s",
@@ -134,7 +136,6 @@ class MTransactionTests: XCTestCase {
             "txnSharePrice": 4,
             "realizedGainShort": 5,
             "realizedGainLong": 6,
-            "isTransfer": true
         ]
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)
