@@ -26,6 +26,7 @@ public struct MTransaction: Hashable & AllocBase {
     public var sharePrice: Double // key
     public var realizedGainShort: Double?
     public var realizedGainLong: Double?
+    public var isTransfer: Bool
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case transactedAt = "txnTransactedAt"
@@ -36,6 +37,7 @@ public struct MTransaction: Hashable & AllocBase {
         case sharePrice = "txnSharePrice"
         case realizedGainShort
         case realizedGainLong
+        case isTransfer
     }
 
     public static var schema: AllocSchema { .allocTransaction }
@@ -49,6 +51,7 @@ public struct MTransaction: Hashable & AllocBase {
         AllocAttribute(CodingKeys.sharePrice, .double, isRequired: true, isKey: true, "The price at which the share(s) transacted."),
         AllocAttribute(CodingKeys.realizedGainShort, .double, isRequired: false, isKey: false, "The total short-term realized gain (or loss) from a sale."),
         AllocAttribute(CodingKeys.realizedGainLong, .double, isRequired: false, isKey: false, "The total long-term realized gain (or loss) from a sale."),
+        AllocAttribute(CodingKeys.isTransfer, .bool, isRequired: true, isKey: false, "Were securities transferred to/from the account?"),
     ]
 
     public init(transactedAt: Date,
@@ -58,7 +61,8 @@ public struct MTransaction: Hashable & AllocBase {
                 shareCount: Double = 0,
                 sharePrice: Double = 0,
                 realizedGainShort: Double? = nil,
-                realizedGainLong: Double? = nil)
+                realizedGainLong: Double? = nil,
+                isTransfer: Bool = false)
     {
         self.transactedAt = transactedAt
         self.accountID = accountID
@@ -68,6 +72,7 @@ public struct MTransaction: Hashable & AllocBase {
         self.sharePrice = sharePrice
         self.realizedGainShort = realizedGainShort
         self.realizedGainLong = realizedGainLong
+        self.isTransfer = isTransfer
     }
 
     public init(from decoder: Decoder) throws {
@@ -80,6 +85,7 @@ public struct MTransaction: Hashable & AllocBase {
         sharePrice = try c.decodeIfPresent(Double.self, forKey: .sharePrice) ?? 0
         realizedGainShort = try c.decodeIfPresent(Double.self, forKey: .realizedGainShort)
         realizedGainLong = try c.decodeIfPresent(Double.self, forKey: .realizedGainLong)
+        isTransfer = try c.decodeIfPresent(Bool.self, forKey: .isTransfer) ?? false
     }
 
     public init(from row: Row) throws {
@@ -101,12 +107,15 @@ public struct MTransaction: Hashable & AllocBase {
 
         realizedGainShort = MTransaction.getDouble(row, CodingKeys.realizedGainShort.rawValue)
         realizedGainLong = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue)
+        
+        isTransfer = MTransaction.getBool(row, CodingKeys.isTransfer.rawValue) ?? false
     }
 
     public mutating func update(from row: Row) throws {
         // ignore composite key
         if let val = MTransaction.getDouble(row, CodingKeys.realizedGainShort.rawValue) { realizedGainShort = val }
         if let val = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue) { realizedGainLong = val }
+        if let val = MTransaction.getBool(row, CodingKeys.isTransfer.rawValue) { isTransfer = val }
     }
 
     public var primaryKey: AllocKey {
@@ -183,6 +192,7 @@ public struct MTransaction: Hashable & AllocBase {
             // optional values
             let realizedGainShort = parseDouble(row[ck.realizedGainShort.rawValue])
             let realizedGainLong = parseDouble(row[ck.realizedGainLong.rawValue])
+            let isTransfer = parseBool(row[ck.isTransfer.rawValue])
 
             return [
                 ck.transactedAt.rawValue: transactedAt,
@@ -193,6 +203,7 @@ public struct MTransaction: Hashable & AllocBase {
                 ck.sharePrice.rawValue: sharePrice,
                 ck.realizedGainShort.rawValue: realizedGainShort,
                 ck.realizedGainLong.rawValue: realizedGainLong,
+                ck.isTransfer.rawValue: isTransfer,
             ]
         }
     }

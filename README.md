@@ -136,6 +136,7 @@ NOTE: this replaces the deprecated 'MHistory' entity.
 | txnID | string | true | true | Unique transaction identifier for the history record (blank if none). |
 | realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |
 | realizedGainLong | double | false | false | The total long-term realized gain (or loss) from a sale. |
+| isTransfer | bool | true | false | Were securities transferred to/from the account? |
 
 ### MRebalanceAllocation
 

@@ -29,7 +29,7 @@ class MTransactionTests: XCTestCase {
     }
 
     func testInit() {
-        let expected = MTransaction(transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
+        let expected = MTransaction(transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, isTransfer: true)
         var actual = MTransaction(transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x")
         XCTAssertEqual(timestamp, actual.transactedAt)
         XCTAssertEqual("a", actual.accountID)
@@ -37,6 +37,7 @@ class MTransactionTests: XCTestCase {
         XCTAssertEqual("x", actual.lotID)
         XCTAssertEqual(0.0, actual.shareCount)
         XCTAssertEqual(0.0, actual.sharePrice)
+        XCTAssertEqual(false, actual.isTransfer)
         XCTAssertNil(actual.realizedGainShort)
         XCTAssertNil(actual.realizedGainLong)
         actual.shareCount = 3
@@ -44,11 +45,12 @@ class MTransactionTests: XCTestCase {
         actual.realizedGainShort = 5
         actual.realizedGainLong = 6
         actual.transactedAt = timestamp
+        actual.isTransfer = true
         XCTAssertEqual(expected, actual)
     }
 
     func testInitFromFINrow() throws {
-        let expected = MTransaction(transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
+        let expected = MTransaction(transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, isTransfer: true)
         let actual = try MTransaction(from: [
             MTransaction.CodingKeys.transactedAt.rawValue: timestamp,
             MTransaction.CodingKeys.accountID.rawValue: "a",
@@ -58,12 +60,13 @@ class MTransactionTests: XCTestCase {
             MTransaction.CodingKeys.sharePrice.rawValue: 4,
             MTransaction.CodingKeys.realizedGainShort.rawValue: 5,
             MTransaction.CodingKeys.realizedGainLong.rawValue: 6,
+            MTransaction.CodingKeys.isTransfer.rawValue: true,
         ])
         XCTAssertEqual(expected, actual)
     }
 
     func testUpdateFromFINrow() throws {
-        var actual = MTransaction(transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
+        var actual = MTransaction(transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, isTransfer: false)
         let finRow: MTransaction.Row = [
             MTransaction.CodingKeys.transactedAt.rawValue: timestamp + 200, // IGNORED
             MTransaction.CodingKeys.accountID.rawValue: "bx", // IGNORED
@@ -73,9 +76,10 @@ class MTransactionTests: XCTestCase {
             MTransaction.CodingKeys.sharePrice.rawValue: 8, // IGNORED
             MTransaction.CodingKeys.realizedGainShort.rawValue: 9,
             MTransaction.CodingKeys.realizedGainLong.rawValue: 10,
+            MTransaction.CodingKeys.isTransfer.rawValue: true,
         ]
         try actual.update(from: finRow)
-        let expected = MTransaction(transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 9, realizedGainLong: 10)
+        let expected = MTransaction(transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 9, realizedGainLong: 10, isTransfer: true)
         XCTAssertEqual(expected, actual)
     }
 
@@ -117,6 +121,7 @@ class MTransactionTests: XCTestCase {
             "txnSharePrice": "4",
             "realizedGainShort": "5",
             "realizedGainLong": "6",
+            "isTransfer": "TRUE",
         ]]
         var rejected = [MTransaction.Row]()
         let actual = try MTransaction.decode(rawRows, rejectedRows: &rejected)
@@ -129,6 +134,7 @@ class MTransactionTests: XCTestCase {
             "txnSharePrice": 4,
             "realizedGainShort": 5,
             "realizedGainLong": 6,
+            "isTransfer": true
         ]
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)
