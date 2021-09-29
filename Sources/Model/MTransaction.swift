@@ -24,7 +24,6 @@ public struct MTransaction: Hashable & AllocBase {
     public var lotID: String // key
     public var shareCount: Double // key
     public var sharePrice: Double // key
-    public var transactionID: String // key
     public var realizedGainShort: Double?
     public var realizedGainLong: Double?
 
@@ -35,7 +34,6 @@ public struct MTransaction: Hashable & AllocBase {
         case lotID = "txnLotID"
         case shareCount = "txnShareCount"
         case sharePrice = "txnSharePrice"
-        case transactionID = "txnID"
         case realizedGainShort
         case realizedGainLong
     }
@@ -49,7 +47,6 @@ public struct MTransaction: Hashable & AllocBase {
         AllocAttribute(CodingKeys.lotID, .string, isRequired: true, isKey: true, "The lot of the position involved in the transaction (blank if none)."),
         AllocAttribute(CodingKeys.shareCount, .double, isRequired: true, isKey: true, "The number of shares transacted."),
         AllocAttribute(CodingKeys.sharePrice, .double, isRequired: true, isKey: true, "The price at which the share(s) transacted."),
-        AllocAttribute(CodingKeys.transactionID, .string, isRequired: true, isKey: true, "Unique identifier for the transaction (blank if none)."),
         AllocAttribute(CodingKeys.realizedGainShort, .double, isRequired: false, isKey: false, "The total short-term realized gain (or loss) from a sale."),
         AllocAttribute(CodingKeys.realizedGainLong, .double, isRequired: false, isKey: false, "The total long-term realized gain (or loss) from a sale."),
     ]
@@ -60,7 +57,6 @@ public struct MTransaction: Hashable & AllocBase {
                 lotID: String = AllocNilKey,
                 shareCount: Double = 0,
                 sharePrice: Double = 0,
-                transactionID: String = AllocNilKey,
                 realizedGainShort: Double? = nil,
                 realizedGainLong: Double? = nil)
     {
@@ -70,7 +66,6 @@ public struct MTransaction: Hashable & AllocBase {
         self.lotID = lotID
         self.shareCount = shareCount
         self.sharePrice = sharePrice
-        self.transactionID = transactionID
         self.realizedGainShort = realizedGainShort
         self.realizedGainLong = realizedGainLong
     }
@@ -83,7 +78,6 @@ public struct MTransaction: Hashable & AllocBase {
         lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? AllocNilKey
         shareCount = try c.decodeIfPresent(Double.self, forKey: .shareCount) ?? 0
         sharePrice = try c.decodeIfPresent(Double.self, forKey: .sharePrice) ?? 0
-        transactionID = try c.decodeIfPresent(String.self, forKey: .transactionID) ?? AllocNilKey
         realizedGainShort = try c.decodeIfPresent(Double.self, forKey: .realizedGainShort)
         realizedGainLong = try c.decodeIfPresent(Double.self, forKey: .realizedGainLong)
     }
@@ -104,7 +98,6 @@ public struct MTransaction: Hashable & AllocBase {
         lotID = MTransaction.getStr(row, CodingKeys.lotID.rawValue) ?? AllocNilKey
         shareCount = MTransaction.getDouble(row, CodingKeys.shareCount.rawValue) ?? 0
         sharePrice = MTransaction.getDouble(row, CodingKeys.sharePrice.rawValue) ?? 0
-        transactionID = MTransaction.getStr(row, CodingKeys.transactionID.rawValue) ?? AllocNilKey
 
         realizedGainShort = MTransaction.getDouble(row, CodingKeys.realizedGainShort.rawValue)
         realizedGainLong = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue)
@@ -122,8 +115,7 @@ public struct MTransaction: Hashable & AllocBase {
                                     securityID: securityID,
                                     lotID: lotID,
                                     shareCount: shareCount,
-                                    sharePrice: sharePrice,
-                                    transactionID: transactionID)
+                                    sharePrice: sharePrice)
     }
 
     public static func makePrimaryKey(transactedAt: Date,
@@ -131,8 +123,7 @@ public struct MTransaction: Hashable & AllocBase {
                                       securityID: String,
                                       lotID: String,
                                       shareCount: Double,
-                                      sharePrice: Double,
-                                      transactionID: String) -> AllocKey {
+                                      sharePrice: Double) -> AllocKey {
         
         // NOTE: using time interval in composite key as ISO dates will vary.
         
@@ -144,7 +135,7 @@ public struct MTransaction: Hashable & AllocBase {
         let formattedDate = String(format: "%010.0f", refEpoch)
         let formattedShareCount = String(format: "%.4f", shareCount)
         let formattedSharePrice = String(format: "%.4f", sharePrice)
-        return keyify([formattedDate, accountID, securityID, lotID, formattedShareCount, formattedSharePrice, transactionID])
+        return keyify([formattedDate, accountID, securityID, lotID, formattedShareCount, formattedSharePrice])
     }
     
     public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
@@ -154,22 +145,19 @@ public struct MTransaction: Hashable & AllocBase {
         let rawValue3 = CodingKeys.lotID.rawValue
         let rawValue4 = CodingKeys.shareCount.rawValue
         let rawValue5 = CodingKeys.sharePrice.rawValue
-        let rawValue6 = CodingKeys.transactionID.rawValue
         guard let transactedAt_ = getDate(row, rawValue0),
               let accountID_ = getStr(row, rawValue1),
               let securityID_ = getStr(row, rawValue2),
               let lotID_ = getStr(row, rawValue3),
               let shareCount_ = getDouble(row, rawValue4),
-              let sharePrice_ = getDouble(row, rawValue5),
-              let transactionID_ = getStr(row, rawValue6)
+              let sharePrice_ = getDouble(row, rawValue5)
         else { throw AllocDataError.invalidPrimaryKey("Transaction") }
         return makePrimaryKey(transactedAt: transactedAt_,
                               accountID: accountID_,
                               securityID: securityID_,
                               lotID: lotID_,
                               shareCount: shareCount_,
-                              sharePrice: sharePrice_,
-                              transactionID: transactionID_)
+                              sharePrice: sharePrice_)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
@@ -191,7 +179,6 @@ public struct MTransaction: Hashable & AllocBase {
             let lotID = parseString(row[ck.lotID.rawValue]) ?? ""
             let shareCount = parseDouble(row[ck.shareCount.rawValue]) ?? 0
             let sharePrice = parseDouble(row[ck.sharePrice.rawValue]) ?? 0
-            let transactionID = parseString(row[ck.transactionID.rawValue]) ?? ""
 
             // optional values
             let realizedGainShort = parseDouble(row[ck.realizedGainShort.rawValue])
@@ -204,7 +191,6 @@ public struct MTransaction: Hashable & AllocBase {
                 ck.lotID.rawValue: lotID,
                 ck.shareCount.rawValue: shareCount,
                 ck.sharePrice.rawValue: sharePrice,
-                ck.transactionID.rawValue: transactionID,
                 ck.realizedGainShort.rawValue: realizedGainShort,
                 ck.realizedGainLong.rawValue: realizedGainLong,
             ]
@@ -214,6 +200,6 @@ public struct MTransaction: Hashable & AllocBase {
 
 extension MTransaction: CustomStringConvertible {
     public var description: String {
-        "transactedAt=\(String(describing: transactedAt)) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(String(describing: shareCount)) sharePrice=\(String(describing: sharePrice)) transactionID=\(transactionID) realizedGainShort=\(String(describing: realizedGainShort)) realizedGainLong=\(String(describing: realizedGainLong))"
+        "transactedAt=\(String(describing: transactedAt)) accountID=\(accountID) securityID=\(securityID) lotID=\(lotID) shareCount=\(String(describing: shareCount)) sharePrice=\(String(describing: sharePrice)) realizedGainShort=\(String(describing: realizedGainShort)) realizedGainLong=\(String(describing: realizedGainLong))"
     }
 }
