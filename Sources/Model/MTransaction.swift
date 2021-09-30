@@ -89,8 +89,7 @@ public struct MTransaction: Hashable & AllocBase {
     }
 
     public init(from row: DecodedRow) throws {
-        guard let rawAction = MTransaction.getStr(row, CodingKeys.action.rawValue),
-              let action_ = Action(rawValue: rawAction)
+        guard let action_ = row[CodingKeys.action.rawValue] as? MTransaction.Action
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.action.rawValue) }
         action = action_
 
