@@ -98,15 +98,10 @@ public struct MTransaction: Hashable & AllocBase {
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.transactedAt.rawValue) }
         transactedAt = transactedAt_
 
-        guard let accountID_ = MTransaction.getStr(row, CodingKeys.accountID.rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
-        accountID = accountID_
-
-        guard let securityID_ = MTransaction.getStr(row, CodingKeys.securityID.rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.securityID.rawValue) }
-        securityID = securityID_
-        
+        accountID = MTransaction.getStr(row, CodingKeys.accountID.rawValue) ?? AllocNilKey
+        securityID = MTransaction.getStr(row, CodingKeys.securityID.rawValue) ?? AllocNilKey
         lotID = MTransaction.getStr(row, CodingKeys.lotID.rawValue) ?? AllocNilKey
+        
         shareCount = MTransaction.getDouble(row, CodingKeys.shareCount.rawValue) ?? 0
         sharePrice = MTransaction.getDouble(row, CodingKeys.sharePrice.rawValue) ?? 0
 
@@ -163,9 +158,9 @@ public struct MTransaction: Hashable & AllocBase {
         guard let rawAction = getStr(row, rawValue0),
               let action_ = Action(rawValue: rawAction),
               let transactedAt_ = getDate(row, rawValue1),
-              case let accountID_ = getStr(row, rawValue2) ?? "",
-              case let securityID_ = getStr(row, rawValue3) ?? "",
-              case let lotID_ = getStr(row, rawValue4) ?? "",
+              case let accountID_ = getStr(row, rawValue2) ?? AllocNilKey,
+              case let securityID_ = getStr(row, rawValue3) ?? AllocNilKey,
+              case let lotID_ = getStr(row, rawValue4) ?? AllocNilKey,
               let shareCount_ = getDouble(row, rawValue5),
               let sharePrice_ = getDouble(row, rawValue6)
         else { throw AllocDataError.invalidPrimaryKey("Transaction") }
@@ -185,18 +180,16 @@ public struct MTransaction: Hashable & AllocBase {
             // required, without default values
             guard let rawAction = parseString(row[ck.action.rawValue]),
                   let action = Action(rawValue: rawAction),
-                  let transactedAt = parseDate(row[ck.transactedAt.rawValue]),
-                  let accountID = parseString(row[ck.accountID.rawValue]),
-                  accountID.count > 0,
-                  let securityID = parseString(row[ck.securityID.rawValue]),
-                  securityID.count > 0
+                  let transactedAt = parseDate(row[ck.transactedAt.rawValue])
             else {
                 rejectedRows.append(row)
                 return nil
             }
 
             // required, with default value
-            let lotID = parseString(row[ck.lotID.rawValue]) ?? ""
+            let accountID = parseString(row[ck.accountID.rawValue]) ?? AllocNilKey
+            let securityID = parseString(row[ck.securityID.rawValue]) ?? AllocNilKey
+            let lotID = parseString(row[ck.lotID.rawValue]) ?? AllocNilKey
             let shareCount = parseDouble(row[ck.shareCount.rawValue]) ?? 0
             let sharePrice = parseDouble(row[ck.sharePrice.rawValue]) ?? 0
 
