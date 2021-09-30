@@ -67,7 +67,7 @@ class MTransactionTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MTransaction(action: .sell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
-        let finRow: MTransaction.Row = [
+        let finRow: MTransaction.DecodedRow = [
             MTransaction.CodingKeys.action.rawValue: MTransaction.Action.miscIncome.rawValue, // IGNORED
             MTransaction.CodingKeys.transactedAt.rawValue: timestamp + 200, // IGNORED
             MTransaction.CodingKeys.accountID.rawValue: "bx", // IGNORED
@@ -96,7 +96,7 @@ class MTransactionTests: XCTestCase {
     func testGetPrimaryKey() throws {
         let refEpoch = timestamp.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
-        let finRow: MTransaction.Row = [
+        let finRow: MTransaction.DecodedRow = [
             "txnAction": "misc",
             "txnTransactedAt": timestamp,
             "txnAccountID": " A-x?3 ",
@@ -124,9 +124,9 @@ class MTransactionTests: XCTestCase {
             "realizedGainShort": "5",
             "realizedGainLong": "6",
         ]]
-        var rejected = [MTransaction.Row]()
+        var rejected = [MTransaction.RawRow]()
         let actual = try MTransaction.decode(rawRows, rejectedRows: &rejected)
-        let expected: MTransaction.Row = [
+        let expected: MTransaction.DecodedRow = [
             "txnAction": MTransaction.Action.transfer,
             "txnTransactedAt": YYYYMMDDts,
             "txnAccountID": "a",

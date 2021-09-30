@@ -66,7 +66,7 @@ class MHistoryTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MHistory(transactionID: "1", accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6, transactedAt: timestamp)
-        let finRow: MHistory.Row = [
+        let finRow: MHistory.DecodedRow = [
             MHistory.CodingKeys.transactionID.rawValue: "x", // IGNORED
             MHistory.CodingKeys.accountID.rawValue: "b",
             MHistory.CodingKeys.securityID.rawValue: "c",
@@ -90,7 +90,7 @@ class MHistoryTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MHistory.Row = ["transactionID": " A-x?3 ",
+        let finRow: MHistory.DecodedRow = ["transactionID": " A-x?3 ",
                                     "historyAccountID": " -3B ! ",
                                     "historySecurityID": "  37 D302 "]
         let actual = try MHistory.getPrimaryKey(finRow)
@@ -112,9 +112,9 @@ class MHistoryTests: XCTestCase {
             "realizedGainLong": "6",
             "transactedAt": YYYYMMDD,
         ]]
-        var rejected = [MHistory.Row]()
+        var rejected = [MHistory.RawRow]()
         let actual = try MHistory.decode(rawRows, rejectedRows: &rejected)
-        let expected: MHistory.Row = [
+        let expected: MHistory.DecodedRow = [
             "transactionID": "1",
             "historyAccountID": "a",
             "historySecurityID": "s",

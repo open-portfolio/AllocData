@@ -64,7 +64,7 @@ public struct MSecurity: Hashable & AllocBase {
         trackerID = try c.decodeIfPresent(String.self, forKey: .trackerID) ?? AllocNilKey
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let securityID_ = MSecurity.getStr(row, CodingKeys.securityID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.securityID.rawValue) }
         securityID = securityID_
@@ -75,7 +75,7 @@ public struct MSecurity: Hashable & AllocBase {
         trackerID = MSecurity.getStr(row, CodingKeys.trackerID.rawValue) ?? AllocNilKey
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MSecurity.getStr(row, CodingKeys.assetID.rawValue) { assetID = val }
         if let val = MSecurity.getDouble(row, CodingKeys.sharePrice.rawValue) { sharePrice = val }
         if let val = MSecurity.getDate(row, CodingKeys.updatedAt.rawValue) { updatedAt = val }
@@ -86,14 +86,14 @@ public struct MSecurity: Hashable & AllocBase {
         MSecurity.keyify(securityID)
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue = CodingKeys.securityID.rawValue
         guard let securityID_ = getStr(row, rawValue)
         else { throw AllocDataError.invalidPrimaryKey(rawValue) }
         return keyify(securityID_)
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MSecurity.CodingKeys.self
 
         return rawRows.compactMap { row in

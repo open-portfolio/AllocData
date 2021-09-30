@@ -51,7 +51,7 @@ class MValuationAccountTests: XCTestCase {
     func testUpdateFromFINrow() throws {
         let beg = MValuationSnapshot(snapshotID: "B", capturedAt: timestamp)
         var actual = MValuationAccount(snapshotID: beg.snapshotID, accountID: "1", strategyID: "333")
-        let finRow: MValuationAccount.Row = [
+        let finRow: MValuationAccount.DecodedRow = [
             MValuationAccount.CodingKeys.snapshotID.rawValue: "Z", // IGNORED
             MValuationAccount.CodingKeys.accountID.rawValue: "x", // IGNORED
             MValuationAccount.CodingKeys.strategyID.rawValue: "333",
@@ -70,7 +70,7 @@ class MValuationAccountTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MValuationAccount.Row = [
+        let finRow: MValuationAccount.DecodedRow = [
             "valuationAccountSnapshotID": " B  ",
             "valuationAccountAccountID": " A-x?3 ",
             "strategyID": "333",
@@ -86,9 +86,9 @@ class MValuationAccountTests: XCTestCase {
             "valuationAccountAccountID": "1",
             "strategyID": "333",
         ]]
-        var rejected = [MValuationAccount.Row]()
+        var rejected = [MValuationAccount.RawRow]()
         let actual = try MValuationAccount.decode(rawRows, rejectedRows: &rejected)
-        let expected: MValuationAccount.Row = [
+        let expected: MValuationAccount.DecodedRow = [
             "valuationAccountSnapshotID": "B",
             "valuationAccountAccountID": "1",
             "strategyID": "333",

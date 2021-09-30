@@ -70,7 +70,7 @@ public struct MHolding: Hashable & AllocBase {
         acquiredAt = try c.decodeIfPresent(Date.self, forKey: .acquiredAt)
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let accountID_ = MHolding.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
         accountID = accountID_
@@ -85,7 +85,7 @@ public struct MHolding: Hashable & AllocBase {
         acquiredAt = MHolding.getDate(row, CodingKeys.acquiredAt.rawValue)
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MHolding.getDouble(row, CodingKeys.shareCount.rawValue) { shareCount = val }
         if let val = MHolding.getDouble(row, CodingKeys.shareBasis.rawValue) { shareBasis = val }
         if let val = MHolding.getDate(row, CodingKeys.acquiredAt.rawValue) { acquiredAt = val }
@@ -95,7 +95,7 @@ public struct MHolding: Hashable & AllocBase {
         MHolding.keyify([accountID, securityID, lotID])
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue1 = CodingKeys.accountID.rawValue
         let rawValue2 = CodingKeys.securityID.rawValue
         let rawValue3 = CodingKeys.lotID.rawValue
@@ -106,7 +106,7 @@ public struct MHolding: Hashable & AllocBase {
         return keyify([accountID_, securityID_, lotID_])
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MHolding.CodingKeys.self
 
         return rawRows.compactMap { row in

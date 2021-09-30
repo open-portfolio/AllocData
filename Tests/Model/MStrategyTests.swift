@@ -44,7 +44,7 @@ class MStrategyTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MStrategy(strategyID: "a", title: "b")
-        let finRow: MStrategy.Row = [
+        let finRow: MStrategy.DecodedRow = [
             MStrategy.CodingKeys.strategyID.rawValue: "c", // IGNORED
             MStrategy.CodingKeys.title.rawValue: "e",
         ]
@@ -61,7 +61,7 @@ class MStrategyTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MStrategy.Row = ["strategyID": " A-x?3 "]
+        let finRow: MStrategy.DecodedRow = ["strategyID": " A-x?3 "]
         let actual = try MStrategy.getPrimaryKey(finRow)
         let expected = "a-x?3"
         XCTAssertEqual(expected, actual)
@@ -72,9 +72,9 @@ class MStrategyTests: XCTestCase {
             "strategyID": "a",
             "title": "b",
         ]]
-        var rejected = [MStrategy.Row]()
+        var rejected = [MStrategy.RawRow]()
         let actual = try MStrategy.decode(rawRows, rejectedRows: &rejected)
-        let expected: MStrategy.Row = [
+        let expected: MStrategy.DecodedRow = [
             "strategyID": "a",
             "title": "b",
         ]

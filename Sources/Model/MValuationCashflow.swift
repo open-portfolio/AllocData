@@ -66,7 +66,7 @@ public struct MValuationCashflow: Hashable & AllocBase {
         reconciled = try c.decode(Bool.self, forKey: .reconciled)
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let transactedAt_ = MValuationCashflow.getDate(row, CodingKeys.transactedAt.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.transactedAt.rawValue) }
         transactedAt = transactedAt_
@@ -83,7 +83,7 @@ public struct MValuationCashflow: Hashable & AllocBase {
         reconciled = MValuationPosition.getBool(row, CodingKeys.reconciled.rawValue) ?? false
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MValuationPosition.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
         if let val = MValuationPosition.getBool(row, CodingKeys.reconciled.rawValue) { reconciled = val }
     }
@@ -104,7 +104,7 @@ public struct MValuationCashflow: Hashable & AllocBase {
         return keyify([formattedDate, accountID, assetID])
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue0 = CodingKeys.transactedAt.rawValue
         let rawValue1 = CodingKeys.accountID.rawValue
         let rawValue2 = CodingKeys.assetID.rawValue
@@ -115,7 +115,7 @@ public struct MValuationCashflow: Hashable & AllocBase {
         return makePrimaryKey(transactedAt: transactedAt_, accountID: accountID_, assetID: assetID_)
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MValuationCashflow.CodingKeys.self
 
         return rawRows.compactMap { row in

@@ -58,7 +58,7 @@ class MHoldingTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MHolding(accountID: "1", securityID: "BND", lotID: "3", shareCount: 3, shareBasis: 4, acquiredAt: timestamp)
-        let finRow: MHolding.Row = [
+        let finRow: MHolding.DecodedRow = [
             MHolding.CodingKeys.accountID.rawValue: "x", // IGNORED
             MHolding.CodingKeys.securityID.rawValue: "xx", // IGNORED
             MHolding.CodingKeys.lotID.rawValue: "xxx", // IGNORED
@@ -79,7 +79,7 @@ class MHoldingTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MHolding.Row = ["holdingAccountID": " A-x?3 ", "holdingSecurityID": " -3B ! ", "holdingLotID": "   "]
+        let finRow: MHolding.DecodedRow = ["holdingAccountID": " A-x?3 ", "holdingSecurityID": " -3B ! ", "holdingLotID": "   "]
         let actual = try MHolding.getPrimaryKey(finRow)
         let expected = "a-x?3,-3b !,"
         XCTAssertEqual(expected, actual)
@@ -96,9 +96,9 @@ class MHoldingTests: XCTestCase {
             "shareBasis": "5",
             "acquiredAt": YYYYMMDD,
         ]]
-        var rejected = [MHolding.Row]()
+        var rejected = [MHolding.RawRow]()
         let actual = try MHolding.decode(rawRows, rejectedRows: &rejected)
-        let expected: MHolding.Row = [
+        let expected: MHolding.DecodedRow = [
             "holdingAccountID": "1",
             "holdingSecurityID": "BND",
             "holdingLotID": "3",

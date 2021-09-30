@@ -57,7 +57,7 @@ class MValuationPositionTests: XCTestCase {
     func testUpdateFromFINrow() throws {
         let beg = MValuationSnapshot(snapshotID: "B", capturedAt: timestamp)
         var actual = MValuationPosition(snapshotID: beg.snapshotID, accountID: "1", assetID: "Bond", totalBasis: 4, marketValue: 3)
-        let finRow: MValuationPosition.Row = [
+        let finRow: MValuationPosition.DecodedRow = [
             MValuationPosition.CodingKeys.snapshotID.rawValue: "Z", // IGNORED
             MValuationPosition.CodingKeys.accountID.rawValue: "x", // IGNORED
             MValuationPosition.CodingKeys.assetID.rawValue: "Bond", // IGNORED
@@ -78,7 +78,7 @@ class MValuationPositionTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MValuationPosition.Row = [
+        let finRow: MValuationPosition.DecodedRow = [
             "valuationPositionSnapshotID": " B  ",
             "valuationPositionAccountID": " A-x?3 ",
             "valuationPositionAssetID": " -3B ! ",
@@ -96,9 +96,9 @@ class MValuationPositionTests: XCTestCase {
             "totalBasis": "5",
             "marketValue": "9",
         ]]
-        var rejected = [MValuationPosition.Row]()
+        var rejected = [MValuationPosition.RawRow]()
         let actual = try MValuationPosition.decode(rawRows, rejectedRows: &rejected)
-        let expected: MValuationPosition.Row = [
+        let expected: MValuationPosition.DecodedRow = [
             "valuationPositionSnapshotID": "B",
             "valuationPositionAccountID": "1",
             "valuationPositionAssetID": "Bond",

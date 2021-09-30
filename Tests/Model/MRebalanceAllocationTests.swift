@@ -48,7 +48,7 @@ class MRebalanceAllocationTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MRebalanceAllocation(accountID: "1", assetID: "Bond", amount: 3)
-        let finRow: MRebalanceAllocation.Row = [
+        let finRow: MRebalanceAllocation.DecodedRow = [
             MRebalanceAllocation.CodingKeys.accountID.rawValue: "x", // IGNORED
             MRebalanceAllocation.CodingKeys.assetID.rawValue: "xx", // IGNORED
             MRebalanceAllocation.CodingKeys.amount.rawValue: 5,
@@ -66,7 +66,7 @@ class MRebalanceAllocationTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MRebalanceAllocation.Row = ["allocationAccountID": " A-x?3 ", "allocationAssetID": " -3B ! "]
+        let finRow: MRebalanceAllocation.DecodedRow = ["allocationAccountID": " A-x?3 ", "allocationAssetID": " -3B ! "]
         let actual = try MRebalanceAllocation.getPrimaryKey(finRow)
         let expected = "a-x?3,-3b !"
         XCTAssertEqual(expected, actual)
@@ -78,9 +78,9 @@ class MRebalanceAllocationTests: XCTestCase {
             "allocationAssetID": "Bond",
             "amount": "4",
         ]]
-        var rejected = [MRebalanceAllocation.Row]()
+        var rejected = [MRebalanceAllocation.RawRow]()
         let actual = try MRebalanceAllocation.decode(rawRows, rejectedRows: &rejected)
-        let expected: MRebalanceAllocation.Row = [
+        let expected: MRebalanceAllocation.DecodedRow = [
             "allocationAccountID": "1",
             "allocationAssetID": "Bond",
             "amount": 4,

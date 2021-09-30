@@ -46,7 +46,7 @@ public struct MStrategy: Hashable & AllocBase {
         title = try c.decodeIfPresent(String.self, forKey: .title)
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let strategyID_ = MStrategy.getStr(row, CodingKeys.strategyID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.strategyID.rawValue) }
         strategyID = strategyID_
@@ -54,7 +54,7 @@ public struct MStrategy: Hashable & AllocBase {
         title = MStrategy.getStr(row, CodingKeys.title.rawValue)
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MStrategy.getStr(row, CodingKeys.title.rawValue) { title = val }
     }
 
@@ -62,14 +62,14 @@ public struct MStrategy: Hashable & AllocBase {
         MStrategy.keyify(strategyID)
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue = CodingKeys.strategyID.rawValue
         guard let strategyID_ = getStr(row, rawValue)
         else { throw AllocDataError.invalidPrimaryKey(rawValue) }
         return keyify(strategyID_)
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MStrategy.CodingKeys.self
 
         return rawRows.compactMap { row in

@@ -18,7 +18,7 @@
 import Foundation
 
 public extension AllocBase {
-    static func getStr(_ row: Row, _ key: String) -> String? {
+    static func getStr(_ row: DecodedRow, _ key: String) -> String? {
         if let val = row[key] as? String {
             return val
         }
@@ -31,27 +31,27 @@ public extension AllocBase {
         return nil
     }
 
-    static func getBool(_ row: Row, _ key: String) -> Bool? {
+    static func getBool(_ row: DecodedRow, _ key: String) -> Bool? {
         guard let val = row[key] as? Bool else { return nil }
         return val
     }
 
-    static func getInt(_ row: Row, _ key: String) -> Int? {
+    static func getInt(_ row: DecodedRow, _ key: String) -> Int? {
         guard let val = row[key] as? Int else { return nil }
         return val
     }
 
-    static func getDouble(_ row: Row, _ key: String) -> Double? {
+    static func getDouble(_ row: DecodedRow, _ key: String) -> Double? {
         guard let val = row[key] as? Double else { return nil }
         return val
     }
 
-    static func getDate(_ row: Row, _ key: String) -> Date? {
+    static func getDate(_ row: DecodedRow, _ key: String) -> Date? {
         guard let val = row[key] as? Date else { return nil }
         return val
     }
     
-    static func getURL(_ row: Row, _ key: String) -> URL? {
+    static func getURL(_ row: DecodedRow, _ key: String) -> URL? {
         guard let val = row[key] as? URL else { return nil }
         return val
     }

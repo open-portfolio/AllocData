@@ -56,7 +56,7 @@ class MSecurityTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MSecurity(securityID: "BND", assetID: "Bond", sharePrice: 0.77, updatedAt: timestamp, trackerID: "3")
-        let finRow: MSecurity.Row = [
+        let finRow: MSecurity.DecodedRow = [
             MSecurity.CodingKeys.securityID.rawValue: "x", // IGNORED
             MSecurity.CodingKeys.assetID.rawValue: "Equities",
             MSecurity.CodingKeys.sharePrice.rawValue: 0.88,
@@ -76,7 +76,7 @@ class MSecurityTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MSecurity.Row = ["securityID": " A-x?3 ", "securityAssetID": " -3B ! "]
+        let finRow: MSecurity.DecodedRow = ["securityID": " A-x?3 ", "securityAssetID": " -3B ! "]
         let actual = try MSecurity.getPrimaryKey(finRow)
         let expected = "a-x?3"
         XCTAssertEqual(expected, actual)
@@ -92,9 +92,9 @@ class MSecurityTests: XCTestCase {
             "updatedAt": YYYYMMDD,
             "securityTrackerID": "3",
         ]]
-        var rejected = [MSecurity.Row]()
+        var rejected = [MSecurity.RawRow]()
         let actual = try MSecurity.decode(rawRows, rejectedRows: &rejected)
-        let expected: MSecurity.Row = [
+        let expected: MSecurity.DecodedRow = [
             "securityID": "BND",
             "securityAssetID": "Bond",
             "sharePrice": 0.77,

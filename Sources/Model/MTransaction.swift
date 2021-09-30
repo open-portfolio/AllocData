@@ -88,7 +88,7 @@ public struct MTransaction: Hashable & AllocBase {
         realizedGainLong = try c.decodeIfPresent(Double.self, forKey: .realizedGainLong)
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let rawAction = MTransaction.getStr(row, CodingKeys.action.rawValue),
               let action_ = Action(rawValue: rawAction)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.action.rawValue) }
@@ -114,7 +114,7 @@ public struct MTransaction: Hashable & AllocBase {
         realizedGainLong = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue)
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         // ignore composite key
         if let val = MTransaction.getDouble(row, CodingKeys.realizedGainShort.rawValue) { realizedGainShort = val }
         if let val = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue) { realizedGainLong = val }
@@ -152,7 +152,7 @@ public struct MTransaction: Hashable & AllocBase {
         return keyify([formattedAction, formattedDate, accountID, securityID, lotID, formattedShareCount, formattedSharePrice])
     }
     
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue0 = CodingKeys.action.rawValue
         let rawValue1 = CodingKeys.transactedAt.rawValue
         let rawValue2 = CodingKeys.accountID.rawValue
@@ -178,7 +178,7 @@ public struct MTransaction: Hashable & AllocBase {
                               sharePrice: sharePrice_)
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MTransaction.CodingKeys.self
 
         return rawRows.compactMap { row in

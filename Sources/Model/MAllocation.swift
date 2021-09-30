@@ -60,7 +60,7 @@ public struct MAllocation: Hashable & AllocBase {
         isLocked = try c.decodeIfPresent(Bool.self, forKey: .isLocked) ?? false
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let strategyID_ = MAllocation.getStr(row, CodingKeys.strategyID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.strategyID.rawValue) }
         strategyID = strategyID_
@@ -73,7 +73,7 @@ public struct MAllocation: Hashable & AllocBase {
         isLocked = MAllocation.getBool(row, CodingKeys.isLocked.rawValue) ?? false
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MAllocation.getDouble(row, CodingKeys.targetPct.rawValue) { targetPct = val }
         if let val = MAllocation.getBool(row, CodingKeys.isLocked.rawValue) { isLocked = val }
     }
@@ -82,7 +82,7 @@ public struct MAllocation: Hashable & AllocBase {
         MAllocation.keyify([strategyID, assetID])
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue1 = CodingKeys.strategyID.rawValue
         let rawValue2 = CodingKeys.assetID.rawValue
         guard let strategyID_ = getStr(row, rawValue1),
@@ -91,7 +91,7 @@ public struct MAllocation: Hashable & AllocBase {
         return keyify([strategyID_, assetID_])
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MAllocation.CodingKeys.self
 
         return rawRows.compactMap { row in

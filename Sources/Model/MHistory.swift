@@ -102,7 +102,7 @@ public struct MHistory: Hashable & AllocBase {
         transactedAt = try c.decodeIfPresent(Date.self, forKey: .transactedAt)
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let transactionID_ = MHistory.getStr(row, CodingKeys.transactionID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.transactionID.rawValue) }
         transactionID = transactionID_
@@ -117,7 +117,7 @@ public struct MHistory: Hashable & AllocBase {
         transactedAt = MHistory.getDate(row, CodingKeys.transactedAt.rawValue)
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         // IGNORE transactionID
         if let val = MHistory.getStr(row, CodingKeys.accountID.rawValue) { accountID = val }
         if let val = MHistory.getStr(row, CodingKeys.securityID.rawValue) { securityID = val }
@@ -133,14 +133,14 @@ public struct MHistory: Hashable & AllocBase {
         MHistory.keyify(transactionID)
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue = CodingKeys.transactionID.rawValue
         guard let transactionID_ = getStr(row, rawValue)
         else { throw AllocDataError.invalidPrimaryKey(rawValue) }
         return keyify(transactionID_)
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows _: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows _: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MHistory.CodingKeys.self
 
         return rawRows.compactMap { row in

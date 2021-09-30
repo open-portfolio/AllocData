@@ -66,7 +66,7 @@ public struct MValuationPosition: Hashable & AllocBase {
         marketValue = try c.decode(Double.self, forKey: .marketValue)
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let snapshotID_ = MValuationPosition.getStr(row, CodingKeys.snapshotID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.snapshotID.rawValue) }
         snapshotID = snapshotID_
@@ -83,7 +83,7 @@ public struct MValuationPosition: Hashable & AllocBase {
         marketValue = MValuationPosition.getDouble(row, CodingKeys.marketValue.rawValue) ?? 0
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MValuationPosition.getDouble(row, CodingKeys.totalBasis.rawValue) { totalBasis = val }
         if let val = MValuationPosition.getDouble(row, CodingKeys.marketValue.rawValue) { marketValue = val }
     }
@@ -96,7 +96,7 @@ public struct MValuationPosition: Hashable & AllocBase {
         keyify([snapshotID, accountID, assetID])
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue0 = CodingKeys.snapshotID.rawValue
         let rawValue1 = CodingKeys.accountID.rawValue
         let rawValue2 = CodingKeys.assetID.rawValue
@@ -107,24 +107,24 @@ public struct MValuationPosition: Hashable & AllocBase {
         return makePrimaryKey(snapshotID: snapshotID_, accountID: accountID_, assetID: assetID_)
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MValuationPosition.CodingKeys.self
 
-        return rawRows.compactMap { row in
+        return rawRows.compactMap { rawRow in
             // required values, without default values
-            guard let snapshotID = parseString(row[ck.snapshotID.rawValue]),
-                  let accountID = parseString(row[ck.accountID.rawValue]),
+            guard let snapshotID = parseString(rawRow[ck.snapshotID.rawValue]),
+                  let accountID = parseString(rawRow[ck.accountID.rawValue]),
                   accountID.count > 0,
-                  let assetID = parseString(row[ck.assetID.rawValue]),
+                  let assetID = parseString(rawRow[ck.assetID.rawValue]),
                   assetID.count > 0
             else {
-                rejectedRows.append(row)
+                rejectedRows.append(rawRow)
                 return nil
             }
 
             // optional values
-            let totalBasis = parseDouble(row[ck.totalBasis.rawValue])
-            let marketValue = parseDouble(row[ck.marketValue.rawValue])
+            let totalBasis = parseDouble(rawRow[ck.totalBasis.rawValue])
+            let marketValue = parseDouble(rawRow[ck.marketValue.rawValue])
 
             return [
                 ck.snapshotID.rawValue: snapshotID,

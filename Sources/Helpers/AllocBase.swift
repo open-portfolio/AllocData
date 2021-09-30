@@ -22,7 +22,7 @@ public protocol AllocBase: Codable {
     typealias RawRow = [String: String]
 
     // decoded row, with strong typing
-    typealias Row = [String: AnyHashable?]
+    typealias DecodedRow = [String: AnyHashable?]
 
     static var schema: AllocSchema { get }
     static var attributes: [AllocAttribute] { get }
@@ -33,12 +33,12 @@ public protocol AllocBase: Codable {
     var primaryKey: AllocKey { get }
 
     // create object from row
-    init(from row: Row) throws
+    init(from row: DecodedRow) throws
 
     // additive update from row
-    mutating func update(from row: Row) throws
+    mutating func update(from row: DecodedRow) throws
 
-    static func getPrimaryKey(_ row: Row) throws -> AllocKey
+    static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey
 
-    static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row]
+    static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow]
 }

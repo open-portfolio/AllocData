@@ -53,7 +53,7 @@ class MValuationCashflowTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MValuationCashflow(transactedAt: timestamp, accountID: "1", assetID: "Bond", amount: 3, reconciled: false)
-        let finRow: MValuationCashflow.Row = [
+        let finRow: MValuationCashflow.DecodedRow = [
             MValuationCashflow.CodingKeys.transactedAt.rawValue: timestamp + 1000, // IGNORED
             MValuationCashflow.CodingKeys.accountID.rawValue: "x", // IGNORED
             MValuationCashflow.CodingKeys.assetID.rawValue: "xx", // IGNORED
@@ -78,7 +78,7 @@ class MValuationCashflowTests: XCTestCase {
     func testGetPrimaryKey() throws {
         let refEpoch = timestamp.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
-        let finRow: MValuationCashflow.Row = [
+        let finRow: MValuationCashflow.DecodedRow = [
             "valuationCashflowTransactedAt": timestamp,
             "valuationCashflowAccountID": " A-x?3 ",
             "valuationCashflowAssetID": " -3B ! ",
@@ -98,9 +98,9 @@ class MValuationCashflowTests: XCTestCase {
             "amount": "9",
             "reconciled": "TRUE",
         ]]
-        var rejected = [MValuationCashflow.Row]()
+        var rejected = [MValuationCashflow.RawRow]()
         let actual = try MValuationCashflow.decode(rawRows, rejectedRows: &rejected)
-        let expected: MValuationCashflow.Row = [
+        let expected: MValuationCashflow.DecodedRow = [
             "valuationCashflowTransactedAt": parsedDate,
             "valuationCashflowAccountID": "1",
             "valuationCashflowAssetID": "Bond",

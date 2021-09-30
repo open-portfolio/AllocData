@@ -54,7 +54,7 @@ class MSourceMetaTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MSourceMeta(sourceMetaID: "1", url: URL(string: "http://blah.com"), importerID: "blech", exportedAt: timestamp)
-        let finRow: MSourceMeta.Row = [
+        let finRow: MSourceMeta.DecodedRow = [
             MSourceMeta.CodingKeys.sourceMetaID.rawValue: "x", // IGNORED
             MSourceMeta.CodingKeys.url.rawValue: URL(string: "http://blort.com"),
             MSourceMeta.CodingKeys.importerID.rawValue: "bloop",
@@ -73,7 +73,7 @@ class MSourceMetaTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MSourceMeta.Row = ["sourceMetaID": " A-x?3 "]
+        let finRow: MSourceMeta.DecodedRow = ["sourceMetaID": " A-x?3 "]
         let actual = try MSourceMeta.getPrimaryKey(finRow)
         let expected = "a-x?3"
         XCTAssertEqual(expected, actual)
@@ -88,9 +88,9 @@ class MSourceMetaTests: XCTestCase {
             "importerID": "blech",
             "exportedAt": YYYYMMDD,
         ]]
-        var rejected = [MSourceMeta.Row]()
+        var rejected = [MSourceMeta.RawRow]()
         let actual = try MSourceMeta.decode(rawRows, rejectedRows: &rejected)
-        let expected: MSourceMeta.Row = [
+        let expected: MSourceMeta.DecodedRow = [
             "sourceMetaID": "1",
             "url": URL(string: "http://blah.com"),
             "importerID": "blech",

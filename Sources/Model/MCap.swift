@@ -54,7 +54,7 @@ public struct MCap: Hashable & AllocBase {
         limitPct = try c.decodeIfPresent(Double.self, forKey: .limitPct) ?? MCap.defaultLimitPct
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let accountID_ = MCap.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
         accountID = accountID_
@@ -66,7 +66,7 @@ public struct MCap: Hashable & AllocBase {
         limitPct = MCap.getDouble(row, CodingKeys.limitPct.rawValue) ?? MCap.defaultLimitPct
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MCap.getDouble(row, CodingKeys.limitPct.rawValue) { limitPct = val }
     }
 
@@ -74,7 +74,7 @@ public struct MCap: Hashable & AllocBase {
         MCap.keyify([accountID, assetID])
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue1 = CodingKeys.accountID.rawValue
         let rawValue2 = CodingKeys.assetID.rawValue
         guard let accountID_ = getStr(row, rawValue1),
@@ -83,7 +83,7 @@ public struct MCap: Hashable & AllocBase {
         return keyify([accountID_, assetID_])
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MCap.CodingKeys.self
 
         return rawRows.compactMap { row in

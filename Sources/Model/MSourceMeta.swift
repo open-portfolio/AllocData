@@ -58,7 +58,7 @@ public struct MSourceMeta: Hashable & AllocBase {
         exportedAt = try c.decodeIfPresent(Date.self, forKey: .exportedAt)
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let sourceMetaID_ = MSourceMeta.getStr(row, CodingKeys.sourceMetaID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.sourceMetaID.rawValue) }
         sourceMetaID = sourceMetaID_
@@ -68,7 +68,7 @@ public struct MSourceMeta: Hashable & AllocBase {
         exportedAt = MSourceMeta.getDate(row, CodingKeys.exportedAt.rawValue)
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MSourceMeta.getURL(row, CodingKeys.url.rawValue) { url = val }
         if let val = MSourceMeta.getStr(row, CodingKeys.importerID.rawValue) { importerID = val }
         if let val = MSourceMeta.getDate(row, CodingKeys.exportedAt.rawValue) { exportedAt = val }
@@ -78,14 +78,14 @@ public struct MSourceMeta: Hashable & AllocBase {
         MSourceMeta.keyify(sourceMetaID)
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue = CodingKeys.sourceMetaID.rawValue
         guard let sourceMetaID_ = getStr(row, rawValue)
         else { throw AllocDataError.invalidPrimaryKey(rawValue) }
         return keyify(sourceMetaID_)
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MSourceMeta.CodingKeys.self
 
         return rawRows.compactMap { row in

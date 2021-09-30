@@ -58,7 +58,7 @@ public struct MAsset: Hashable & AllocBase {
         parentAssetID = try c.decodeIfPresent(String.self, forKey: .parentAssetID) ?? AllocNilKey
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let assetID_ = MAsset.getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.assetID.rawValue) }
         assetID = assetID_
@@ -68,7 +68,7 @@ public struct MAsset: Hashable & AllocBase {
         parentAssetID = MAsset.getStr(row, CodingKeys.parentAssetID.rawValue) ?? AllocNilKey
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MAsset.getStr(row, CodingKeys.title.rawValue) { title = val }
         if let val = MAsset.getInt(row, CodingKeys.colorCode.rawValue) { colorCode = val }
         if let val = MAsset.getStr(row, CodingKeys.parentAssetID.rawValue) { parentAssetID = val }
@@ -78,14 +78,14 @@ public struct MAsset: Hashable & AllocBase {
         MAsset.keyify(assetID)
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue = CodingKeys.assetID.rawValue
         guard let assetID_ = getStr(row, rawValue)
         else { throw AllocDataError.invalidPrimaryKey(rawValue) }
         return keyify(assetID_)
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MAsset.CodingKeys.self
 
         return rawRows.compactMap { row in

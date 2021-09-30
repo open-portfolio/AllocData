@@ -94,7 +94,7 @@ public struct MAccount: Hashable & AllocBase {
         strategyID = try c.decodeIfPresent(String.self, forKey: .strategyID) ?? AllocNilKey
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let accountID_ = MAccount.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
         accountID = accountID_
@@ -106,7 +106,7 @@ public struct MAccount: Hashable & AllocBase {
         strategyID = MAccount.getStr(row, CodingKeys.strategyID.rawValue) ?? AllocNilKey
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MAccount.getStr(row, CodingKeys.title.rawValue) { title = val }
         if let val = MAccount.getBool(row, CodingKeys.isActive.rawValue) { isActive = val }
         if let val = MAccount.getBool(row, CodingKeys.isTaxable.rawValue) { isTaxable = val }
@@ -118,14 +118,14 @@ public struct MAccount: Hashable & AllocBase {
         MAccount.keyify(accountID)
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue = CodingKeys.accountID.rawValue
         guard let accountID_ = getStr(row, rawValue)
         else { throw AllocDataError.invalidPrimaryKey(rawValue) }
         return keyify(accountID_)
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MAccount.CodingKeys.self
 
         return rawRows.compactMap { row in

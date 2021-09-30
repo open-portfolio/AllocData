@@ -46,7 +46,7 @@ public struct MValuationSnapshot: Hashable & AllocBase {
         capturedAt = try c.decode(Date.self, forKey: .capturedAt)
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let snapshotID_ = MValuationSnapshot.getStr(row, CodingKeys.snapshotID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.snapshotID.rawValue) }
         snapshotID = snapshotID_
@@ -56,7 +56,7 @@ public struct MValuationSnapshot: Hashable & AllocBase {
         capturedAt = capturedAt_
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MValuationSnapshot.getDate(row, CodingKeys.capturedAt.rawValue) { capturedAt = val }
     }
 
@@ -68,14 +68,14 @@ public struct MValuationSnapshot: Hashable & AllocBase {
         keyify(snapshotID)
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue0 = CodingKeys.snapshotID.rawValue
         guard let snapshotID_ = getStr(row, rawValue0)
         else { throw AllocDataError.invalidPrimaryKey("Archive") }
         return makePrimaryKey(snapshotID: snapshotID_)
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MValuationSnapshot.CodingKeys.self
 
         return rawRows.compactMap { row in

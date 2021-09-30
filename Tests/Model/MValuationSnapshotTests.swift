@@ -49,7 +49,7 @@ class MValuationSnapshotTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MValuationSnapshot(snapshotID: "XYZ", capturedAt: timestamp)
-        let finRow: MValuationSnapshot.Row = [
+        let finRow: MValuationSnapshot.DecodedRow = [
             MValuationSnapshot.CodingKeys.snapshotID.rawValue: "ABC",  // ignored
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: timestamp2,
         ]
@@ -66,7 +66,7 @@ class MValuationSnapshotTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MValuationSnapshot.Row = [
+        let finRow: MValuationSnapshot.DecodedRow = [
             MValuationSnapshot.CodingKeys.snapshotID.rawValue: "  ABC  ",
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: timestamp,
         ]
@@ -84,9 +84,9 @@ class MValuationSnapshotTests: XCTestCase {
             MValuationSnapshot.CodingKeys.snapshotID.rawValue: "XYZ",
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: formattedDate,
         ]]
-        var rejected = [MValuationSnapshot.Row]()
+        var rejected = [MValuationSnapshot.RawRow]()
         let actual = try MValuationSnapshot.decode(rawRows, rejectedRows: &rejected)
-        let expected: MValuationSnapshot.Row = [
+        let expected: MValuationSnapshot.DecodedRow = [
             MValuationSnapshot.CodingKeys.snapshotID.rawValue: "XYZ",
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: parsedDate,
         ]

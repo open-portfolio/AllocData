@@ -70,7 +70,7 @@ public struct MRebalanceSale: Hashable & AllocBase {
         liquidateAll = try c.decodeIfPresent(Bool.self, forKey: .liquidateAll) ?? false
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let accountID_ = MRebalanceSale.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
         accountID = accountID_
@@ -85,7 +85,7 @@ public struct MRebalanceSale: Hashable & AllocBase {
         liquidateAll = MRebalanceSale.getBool(row, CodingKeys.liquidateAll.rawValue) ?? false
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MRebalanceSale.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
         if let val = MRebalanceSale.getDouble(row, CodingKeys.shareCount.rawValue) { shareCount = val }
         if let val = MRebalanceSale.getBool(row, CodingKeys.liquidateAll.rawValue) { liquidateAll = val }
@@ -95,7 +95,7 @@ public struct MRebalanceSale: Hashable & AllocBase {
         MRebalanceSale.keyify([accountID, securityID, lotID])
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue1 = CodingKeys.accountID.rawValue
         let rawValue2 = CodingKeys.securityID.rawValue
         let rawValue3 = CodingKeys.lotID.rawValue
@@ -106,7 +106,7 @@ public struct MRebalanceSale: Hashable & AllocBase {
         return keyify([accountID_, securityID_, lotID_])
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MRebalanceSale.CodingKeys.self
 
         return rawRows.compactMap { row in

@@ -52,7 +52,7 @@ public struct MRebalanceAllocation: Hashable & AllocBase {
         amount = try c.decode(Double.self, forKey: .amount)
     }
 
-    public init(from row: Row) throws {
+    public init(from row: DecodedRow) throws {
         guard let accountID_ = MRebalanceAllocation.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
         accountID = accountID_
@@ -64,7 +64,7 @@ public struct MRebalanceAllocation: Hashable & AllocBase {
         amount = MRebalanceAllocation.getDouble(row, CodingKeys.amount.rawValue) ?? 0
     }
 
-    public mutating func update(from row: Row) throws {
+    public mutating func update(from row: DecodedRow) throws {
         if let val = MRebalanceAllocation.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
     }
 
@@ -72,7 +72,7 @@ public struct MRebalanceAllocation: Hashable & AllocBase {
         MRebalanceAllocation.keyify([accountID, assetID])
     }
 
-    public static func getPrimaryKey(_ row: Row) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         let rawValue1 = CodingKeys.accountID.rawValue
         let rawValue2 = CodingKeys.assetID.rawValue
         guard let accountID_ = getStr(row, rawValue1),
@@ -81,7 +81,7 @@ public struct MRebalanceAllocation: Hashable & AllocBase {
         return keyify([accountID_, assetID_])
     }
 
-    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row] {
+    public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MRebalanceAllocation.CodingKeys.self
 
         return rawRows.compactMap { row in
