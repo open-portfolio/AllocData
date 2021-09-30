@@ -23,8 +23,8 @@ public extension MTransaction {
         case sell = "sell"
         case dividendIncome = "div"
         case interestIncome = "int"
-        case miscIncome = "misc"
         case transfer = "xfr"
+        case miscellaneous = "misc"
     }
 }
 

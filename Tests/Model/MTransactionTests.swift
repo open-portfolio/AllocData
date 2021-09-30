@@ -68,7 +68,7 @@ class MTransactionTests: XCTestCase {
     func testUpdateFromFINrow() throws {
         var actual = MTransaction(action: .sell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
         let finRow: MTransaction.DecodedRow = [
-            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.miscIncome.rawValue, // IGNORED
+            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.miscellaneous.rawValue, // IGNORED
             MTransaction.CodingKeys.transactedAt.rawValue: timestamp + 200, // IGNORED
             MTransaction.CodingKeys.accountID.rawValue: "bx", // IGNORED
             MTransaction.CodingKeys.securityID.rawValue: "cx", // IGNORED
