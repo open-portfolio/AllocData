@@ -163,9 +163,9 @@ public struct MTransaction: Hashable & AllocBase {
         guard let rawAction = getStr(row, rawValue0),
               let action_ = Action(rawValue: rawAction),
               let transactedAt_ = getDate(row, rawValue1),
-              let accountID_ = getStr(row, rawValue2),
-              let securityID_ = getStr(row, rawValue3),
-              let lotID_ = getStr(row, rawValue4),
+              case let accountID_ = getStr(row, rawValue2) ?? "",
+              case let securityID_ = getStr(row, rawValue3) ?? "",
+              case let lotID_ = getStr(row, rawValue4) ?? "",
               let shareCount_ = getDouble(row, rawValue5),
               let sharePrice_ = getDouble(row, rawValue6)
         else { throw AllocDataError.invalidPrimaryKey("Transaction") }
