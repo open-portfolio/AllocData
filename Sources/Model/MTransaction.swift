@@ -155,8 +155,7 @@ public struct MTransaction: Hashable & AllocBase {
         let rawValue4 = CodingKeys.lotID.rawValue
         let rawValue5 = CodingKeys.shareCount.rawValue
         let rawValue6 = CodingKeys.sharePrice.rawValue
-        guard let rawAction = getStr(row, rawValue0),
-              let action_ = Action(rawValue: rawAction),
+        guard let action_ = row[rawValue0] as? MTransaction.Action,
               let transactedAt_ = getDate(row, rawValue1),
               case let accountID_ = getStr(row, rawValue2) ?? AllocNilKey,
               case let securityID_ = getStr(row, rawValue3) ?? AllocNilKey,

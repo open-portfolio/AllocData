@@ -97,7 +97,7 @@ class MTransactionTests: XCTestCase {
         let refEpoch = timestamp.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
         let finRow: MTransaction.DecodedRow = [
-            "txnAction": "misc",
+            "txnAction": MTransaction.Action.miscellaneous,
             "txnTransactedAt": timestamp,
             "txnAccountID": " A-x?3 ",
             "txnSecurityID": " -3B ! ",
