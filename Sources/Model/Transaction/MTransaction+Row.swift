@@ -27,9 +27,9 @@ extension MTransaction: AllocRowed {
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.transactedAt.rawValue) }
         transactedAt = transactedAt_
 
-        accountID = MTransaction.getStr(row, CodingKeys.accountID.rawValue) ?? AllocNilKey
-        securityID = MTransaction.getStr(row, CodingKeys.securityID.rawValue) ?? AllocNilKey
-        lotID = MTransaction.getStr(row, CodingKeys.lotID.rawValue) ?? AllocNilKey
+        accountID = MTransaction.getStr(row, CodingKeys.accountID.rawValue) ?? MTransaction.AllocNilKey
+        securityID = MTransaction.getStr(row, CodingKeys.securityID.rawValue) ?? MTransaction.AllocNilKey
+        lotID = MTransaction.getStr(row, CodingKeys.lotID.rawValue) ?? MTransaction.AllocNilKey
 
         shareCount = MTransaction.getDouble(row, CodingKeys.shareCount.rawValue) ?? 0
         sharePrice = MTransaction.getDouble(row, CodingKeys.sharePrice.rawValue) ?? 0
@@ -54,9 +54,9 @@ extension MTransaction: AllocRowed {
         let rawValue6 = CodingKeys.sharePrice.rawValue
         guard let action_ = row[rawValue0] as? MTransaction.Action,
               let transactedAt_ = getDate(row, rawValue1),
-              case let accountID_ = getStr(row, rawValue2) ?? AllocNilKey,
-              case let securityID_ = getStr(row, rawValue3) ?? AllocNilKey,
-              case let lotID_ = getStr(row, rawValue4) ?? AllocNilKey,
+              case let accountID_ = getStr(row, rawValue2) ?? MTransaction.AllocNilKey,
+              case let securityID_ = getStr(row, rawValue3) ?? MTransaction.AllocNilKey,
+              case let lotID_ = getStr(row, rawValue4) ?? MTransaction.AllocNilKey,
               let shareCount_ = getDouble(row, rawValue5),
               let sharePrice_ = getDouble(row, rawValue6)
         else { throw AllocDataError.invalidPrimaryKey("Transaction") }
@@ -83,9 +83,9 @@ extension MTransaction: AllocRowed {
             }
 
             // required, with default value
-            let accountID = parseString(row[ck.accountID.rawValue]) ?? AllocNilKey
-            let securityID = parseString(row[ck.securityID.rawValue]) ?? AllocNilKey
-            let lotID = parseString(row[ck.lotID.rawValue]) ?? AllocNilKey
+            let accountID = parseString(row[ck.accountID.rawValue]) ?? MTransaction.AllocNilKey
+            let securityID = parseString(row[ck.securityID.rawValue]) ?? MTransaction.AllocNilKey
+            let lotID = parseString(row[ck.lotID.rawValue]) ?? MTransaction.AllocNilKey
             let shareCount = parseDouble(row[ck.shareCount.rawValue]) ?? 0
             let sharePrice = parseDouble(row[ck.sharePrice.rawValue]) ?? 0
 

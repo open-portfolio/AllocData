@@ -23,10 +23,10 @@ extension MSecurity: AllocRowed {
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.securityID.rawValue) }
         securityID = securityID_
 
-        assetID = MSecurity.getStr(row, CodingKeys.assetID.rawValue) ?? AllocNilKey
+        assetID = MSecurity.getStr(row, CodingKeys.assetID.rawValue) ?? MSecurity.AllocNilKey
         sharePrice = MSecurity.getDouble(row, CodingKeys.sharePrice.rawValue)
         updatedAt = MSecurity.getDate(row, CodingKeys.updatedAt.rawValue)
-        trackerID = MSecurity.getStr(row, CodingKeys.trackerID.rawValue) ?? AllocNilKey
+        trackerID = MSecurity.getStr(row, CodingKeys.trackerID.rawValue) ?? MSecurity.AllocNilKey
     }
 
     public mutating func update(from row: DecodedRow) throws {

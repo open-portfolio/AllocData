@@ -17,7 +17,7 @@
 
 import Foundation
 
-public protocol AllocRowed {
+public protocol AllocRowed: AllocKeyed {
     // pre-decoded row, without strong typing
     typealias RawRow = [String: String]
 

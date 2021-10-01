@@ -18,12 +18,23 @@
 import Foundation
 
 public protocol AllocKeyed {
+    // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
+    var primaryKey: AllocKey { get }
+
     static func keyify(_ component: String?) -> AllocKey
     static func keyify(_ components: [String?]) -> AllocKey
-    static func makeAllocMap<T: AllocBase>(_ elements: [T]) -> [AllocKey: T]
+    static func makeAllocMap<T: AllocKeyed>(_ elements: [T]) -> [AllocKey: T]
 }
 
 public extension AllocKeyed {
+    
+    // an AllocKey is a normalized 'ID', trimmed and lowercased.
+    typealias AllocKey = String
+
+    // an AllocKey in non-optional 'nil' state
+    // needed to support SwiftUI Picker
+    static var AllocNilKey: AllocKey { "" }
+
     static func keyify(_ component: String?) -> AllocKey {
         component?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? AllocNilKey
     }
@@ -36,8 +47,8 @@ public extension AllocKeyed {
                 .joined(separator: separator).lowercased()
     }
 
-    static func makeAllocMap<T: AllocBase>(_ elements: [T]) -> [AllocKey: T] {
-        let keys = elements.map(\.primaryKey)
+    static func makeAllocMap<T: AllocKeyed>(_ elements: [T]) -> [AllocKey: T] {
+        let keys: [AllocKey] = elements.map(\.primaryKey)
         return Dictionary(zip(keys, elements), uniquingKeysWith: { old, _ in old })
     }
 }

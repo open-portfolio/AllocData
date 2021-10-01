@@ -19,7 +19,4 @@ import Foundation
 
 public protocol AllocBase {
     static var schema: AllocSchema { get }
-
-    // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
-    var primaryKey: AllocKey { get }
 }

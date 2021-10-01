@@ -25,7 +25,7 @@ extension MAsset: AllocRowed {
 
         title = MAsset.getStr(row, CodingKeys.title.rawValue)
         colorCode = MAsset.getInt(row, CodingKeys.colorCode.rawValue)
-        parentAssetID = MAsset.getStr(row, CodingKeys.parentAssetID.rawValue) ?? AllocNilKey
+        parentAssetID = MAsset.getStr(row, CodingKeys.parentAssetID.rawValue) ?? MAsset.AllocNilKey
     }
 
     public mutating func update(from row: DecodedRow) throws {

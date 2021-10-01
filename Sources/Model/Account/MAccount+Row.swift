@@ -27,7 +27,7 @@ extension MAccount: AllocRowed {
         isActive = MAccount.getBool(row, CodingKeys.isActive.rawValue) ?? false
         isTaxable = MAccount.getBool(row, CodingKeys.isTaxable.rawValue) ?? false
         canTrade = MAccount.getBool(row, CodingKeys.canTrade.rawValue) ?? false
-        strategyID = MAccount.getStr(row, CodingKeys.strategyID.rawValue) ?? AllocNilKey
+        strategyID = MAccount.getStr(row, CodingKeys.strategyID.rawValue) ?? MAccount.AllocNilKey
     }
 
     public mutating func update(from row: DecodedRow) throws {
