@@ -19,17 +19,17 @@ import Foundation
 
 extension MValuationPosition: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let snapshotID_ = MValuationPosition.getStr(row, CodingKeys.snapshotID.rawValue)
+        guard let _snapshotID = MValuationPosition.getStr(row, CodingKeys.snapshotID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.snapshotID.rawValue) }
-        snapshotID = snapshotID_
+        snapshotID = _snapshotID
 
-        guard let accountID_ = MValuationPosition.getStr(row, CodingKeys.accountID.rawValue)
+        guard let _accountID = MValuationPosition.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
-        accountID = accountID_
+        accountID = _accountID
 
-        guard let assetID_ = MValuationPosition.getStr(row, CodingKeys.assetID.rawValue)
+        guard let _assetID = MValuationPosition.getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.assetID.rawValue) }
-        assetID = assetID_
+        assetID = _assetID
 
         totalBasis = MValuationPosition.getDouble(row, CodingKeys.totalBasis.rawValue) ?? 0
         marketValue = MValuationPosition.getDouble(row, CodingKeys.marketValue.rawValue) ?? 0
@@ -41,14 +41,11 @@ extension MValuationPosition: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue0 = CodingKeys.snapshotID.rawValue
-        let rawValue1 = CodingKeys.accountID.rawValue
-        let rawValue2 = CodingKeys.assetID.rawValue
-        guard let snapshotID_ = getStr(row, rawValue0),
-              let accountID_ = getStr(row, rawValue1),
-              let assetID_ = getStr(row, rawValue2)
-        else { throw AllocDataError.invalidPrimaryKey("Position") }
-        return makePrimaryKey(snapshotID: snapshotID_, accountID: accountID_, assetID: assetID_)
+        guard let _snapshotID = getStr(row, CodingKeys.snapshotID.rawValue),
+              let _accountID = getStr(row, CodingKeys.accountID.rawValue),
+              let _assetID = getStr(row, CodingKeys.assetID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey("Valuation Position") }
+        return makePrimaryKey(snapshotID: _snapshotID, accountID: _accountID, assetID: _assetID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

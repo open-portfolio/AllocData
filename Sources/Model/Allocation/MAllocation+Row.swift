@@ -19,13 +19,13 @@ import Foundation
 
 extension MAllocation: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let strategyID_ = MAllocation.getStr(row, CodingKeys.strategyID.rawValue)
+        guard let _strategyID = MAllocation.getStr(row, CodingKeys.strategyID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.strategyID.rawValue) }
-        strategyID = strategyID_
+        strategyID = _strategyID
 
-        guard let assetID_ = MAllocation.getStr(row, CodingKeys.assetID.rawValue)
+        guard let _assetID = MAllocation.getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.assetID.rawValue) }
-        assetID = assetID_
+        assetID = _assetID
 
         targetPct = MAllocation.getDouble(row, CodingKeys.targetPct.rawValue) ?? MAllocation.defaultTargetPct
         isLocked = MAllocation.getBool(row, CodingKeys.isLocked.rawValue) ?? false
@@ -37,12 +37,10 @@ extension MAllocation: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue1 = CodingKeys.strategyID.rawValue
-        let rawValue2 = CodingKeys.assetID.rawValue
-        guard let strategyID_ = getStr(row, rawValue1),
-              let assetID_ = getStr(row, rawValue2)
+        guard let _strategyID = getStr(row, CodingKeys.strategyID.rawValue),
+              let _assetID = getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Allocation") }
-        return keyify([strategyID_, assetID_])
+        return keyify([_strategyID, _assetID])
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

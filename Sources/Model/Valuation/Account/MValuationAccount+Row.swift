@@ -19,17 +19,17 @@ import Foundation
 
 extension MValuationAccount: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let snapshotID_ = MValuationAccount.getStr(row, CodingKeys.snapshotID.rawValue)
+        guard let _snapshotID = MValuationAccount.getStr(row, CodingKeys.snapshotID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.snapshotID.rawValue) }
-        snapshotID = snapshotID_
+        snapshotID = _snapshotID
 
-        guard let accountID_ = MValuationAccount.getStr(row, CodingKeys.accountID.rawValue)
+        guard let _accountID = MValuationAccount.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
-        accountID = accountID_
+        accountID = _accountID
 
-        guard let strategyID_ = MValuationAccount.getStr(row, CodingKeys.strategyID.rawValue)
+        guard let _strategyID = MValuationAccount.getStr(row, CodingKeys.strategyID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.strategyID.rawValue) }
-        strategyID = strategyID_
+        strategyID = _strategyID
 
         strategyID = MValuationAccount.getStr(row, CodingKeys.strategyID.rawValue) ?? ""
     }
@@ -39,12 +39,10 @@ extension MValuationAccount: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue0 = CodingKeys.snapshotID.rawValue
-        let rawValue1 = CodingKeys.accountID.rawValue
-        guard let snapshotID_ = getStr(row, rawValue0),
-              let accountID_ = getStr(row, rawValue1)
+        guard let _snapshotID = getStr(row, CodingKeys.snapshotID.rawValue),
+              let _accountID = getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Valuation Account") }
-        return makePrimaryKey(snapshotID: snapshotID_, accountID: accountID_)
+        return makePrimaryKey(snapshotID: _snapshotID, accountID: _accountID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

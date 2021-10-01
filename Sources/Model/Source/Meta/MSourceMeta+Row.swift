@@ -19,9 +19,9 @@ import Foundation
 
 extension MSourceMeta: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let sourceMetaID_ = MSourceMeta.getStr(row, CodingKeys.sourceMetaID.rawValue)
+        guard let _sourceMetaID = MSourceMeta.getStr(row, CodingKeys.sourceMetaID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.sourceMetaID.rawValue) }
-        sourceMetaID = sourceMetaID_
+        sourceMetaID = _sourceMetaID
 
         url = MSourceMeta.getURL(row, CodingKeys.url.rawValue)
         importerID = MSourceMeta.getStr(row, CodingKeys.importerID.rawValue)
@@ -35,10 +35,9 @@ extension MSourceMeta: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue = CodingKeys.sourceMetaID.rawValue
-        guard let sourceMetaID_ = getStr(row, rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(rawValue) }
-        return keyify(sourceMetaID_)
+        guard let _sourceMetaID = getStr(row, CodingKeys.sourceMetaID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey("Source Meta") }
+        return keyify(_sourceMetaID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

@@ -19,9 +19,9 @@ import Foundation
 
 extension MTracker: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let trackerID_ = MTracker.getStr(row, CodingKeys.trackerID.rawValue)
+        guard let _trackerID = MTracker.getStr(row, CodingKeys.trackerID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.trackerID.rawValue) }
-        trackerID = trackerID_
+        trackerID = _trackerID
 
         title = MTracker.getStr(row, CodingKeys.title.rawValue)
     }
@@ -31,10 +31,9 @@ extension MTracker: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue = CodingKeys.trackerID.rawValue
-        guard let trackerID_ = getStr(row, rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(rawValue) }
-        return keyify(trackerID_)
+        guard let _trackerID = getStr(row, CodingKeys.trackerID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey("Index Tracker") }
+        return keyify(_trackerID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

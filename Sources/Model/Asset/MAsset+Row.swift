@@ -19,9 +19,9 @@ import Foundation
 
 extension MAsset: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let assetID_ = MAsset.getStr(row, CodingKeys.assetID.rawValue)
+        guard let _assetID = MAsset.getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.assetID.rawValue) }
-        assetID = assetID_
+        assetID = _assetID
 
         title = MAsset.getStr(row, CodingKeys.title.rawValue)
         colorCode = MAsset.getInt(row, CodingKeys.colorCode.rawValue)
@@ -35,10 +35,9 @@ extension MAsset: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue = CodingKeys.assetID.rawValue
-        guard let assetID_ = getStr(row, rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(rawValue) }
-        return keyify(assetID_)
+        guard let _assetID = getStr(row, CodingKeys.assetID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey("Asset") }
+        return keyify(_assetID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

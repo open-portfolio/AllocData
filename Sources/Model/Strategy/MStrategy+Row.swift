@@ -19,9 +19,9 @@ import Foundation
 
 extension MStrategy: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let strategyID_ = MStrategy.getStr(row, CodingKeys.strategyID.rawValue)
+        guard let _strategyID = MStrategy.getStr(row, CodingKeys.strategyID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.strategyID.rawValue) }
-        strategyID = strategyID_
+        strategyID = _strategyID
 
         title = MStrategy.getStr(row, CodingKeys.title.rawValue)
     }
@@ -31,10 +31,9 @@ extension MStrategy: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue = CodingKeys.strategyID.rawValue
-        guard let strategyID_ = getStr(row, rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(rawValue) }
-        return keyify(strategyID_)
+        guard let _strategyID = getStr(row, CodingKeys.strategyID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey("Strategy") }
+        return keyify(_strategyID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

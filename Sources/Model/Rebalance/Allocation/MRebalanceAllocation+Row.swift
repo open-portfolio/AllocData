@@ -19,13 +19,13 @@ import Foundation
 
 extension MRebalanceAllocation: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let accountID_ = MRebalanceAllocation.getStr(row, CodingKeys.accountID.rawValue)
+        guard let _accountID = MRebalanceAllocation.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
-        accountID = accountID_
+        accountID = _accountID
 
-        guard let assetID_ = MRebalanceAllocation.getStr(row, CodingKeys.assetID.rawValue)
+        guard let _assetID = MRebalanceAllocation.getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.assetID.rawValue) }
-        assetID = assetID_
+        assetID = _assetID
 
         amount = MRebalanceAllocation.getDouble(row, CodingKeys.amount.rawValue) ?? 0
     }
@@ -35,12 +35,10 @@ extension MRebalanceAllocation: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue1 = CodingKeys.accountID.rawValue
-        let rawValue2 = CodingKeys.assetID.rawValue
-        guard let accountID_ = getStr(row, rawValue1),
-              let assetID_ = getStr(row, rawValue2)
-        else { throw AllocDataError.invalidPrimaryKey("Allocation") }
-        return keyify([accountID_, assetID_])
+        guard let _accountID = getStr(row, CodingKeys.accountID.rawValue),
+              let _assetID = getStr(row, CodingKeys.assetID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey("Rebalance Allocation") }
+        return keyify([_accountID, _assetID])
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

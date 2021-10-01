@@ -19,13 +19,13 @@ import Foundation
 
 extension MTransaction: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let action_ = row[CodingKeys.action.rawValue] as? MTransaction.Action
+        guard let _action = row[CodingKeys.action.rawValue] as? MTransaction.Action
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.action.rawValue) }
-        action = action_
+        action = _action
 
-        guard let transactedAt_ = MTransaction.getDate(row, CodingKeys.transactedAt.rawValue)
+        guard let _transactedAt = MTransaction.getDate(row, CodingKeys.transactedAt.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.transactedAt.rawValue) }
-        transactedAt = transactedAt_
+        transactedAt = _transactedAt
 
         accountID = MTransaction.getStr(row, CodingKeys.accountID.rawValue) ?? ""
         securityID = MTransaction.getStr(row, CodingKeys.securityID.rawValue) ?? ""
@@ -45,28 +45,21 @@ extension MTransaction: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue0 = CodingKeys.action.rawValue
-        let rawValue1 = CodingKeys.transactedAt.rawValue
-        let rawValue2 = CodingKeys.accountID.rawValue
-        let rawValue3 = CodingKeys.securityID.rawValue
-        let rawValue4 = CodingKeys.lotID.rawValue
-        let rawValue5 = CodingKeys.shareCount.rawValue
-        let rawValue6 = CodingKeys.sharePrice.rawValue
-        guard let action_ = row[rawValue0] as? MTransaction.Action,
-              let transactedAt_ = getDate(row, rawValue1),
-              case let accountID_ = getStr(row, rawValue2) ?? "",
-              case let securityID_ = getStr(row, rawValue3) ?? "",
-              case let lotID_ = getStr(row, rawValue4) ?? "",
-              let shareCount_ = getDouble(row, rawValue5),
-              let sharePrice_ = getDouble(row, rawValue6)
+        guard let _action = row[CodingKeys.action.rawValue] as? MTransaction.Action,
+              let _transactedAt = getDate(row, CodingKeys.transactedAt.rawValue),
+              let _shareCount = getDouble(row, CodingKeys.shareCount.rawValue),
+              let _sharePrice = getDouble(row, CodingKeys.sharePrice.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Transaction") }
-        return makePrimaryKey(action: action_,
-                              transactedAt: transactedAt_,
-                              accountID: accountID_,
-                              securityID: securityID_,
-                              lotID: lotID_,
-                              shareCount: shareCount_,
-                              sharePrice: sharePrice_)
+        let _accountID = getStr(row, CodingKeys.accountID.rawValue) ?? ""
+        let _securityID = getStr(row, CodingKeys.securityID.rawValue) ?? ""
+        let _lotID = getStr(row, CodingKeys.lotID.rawValue) ?? ""
+        return makePrimaryKey(action: _action,
+                              transactedAt: _transactedAt,
+                              accountID: _accountID,
+                              securityID: _securityID,
+                              lotID: _lotID,
+                              shareCount: _shareCount,
+                              sharePrice: _sharePrice)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

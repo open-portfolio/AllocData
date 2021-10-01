@@ -19,9 +19,9 @@ import Foundation
 
 extension MSecurity: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let securityID_ = MSecurity.getStr(row, CodingKeys.securityID.rawValue)
+        guard let _securityID = MSecurity.getStr(row, CodingKeys.securityID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.securityID.rawValue) }
-        securityID = securityID_
+        securityID = _securityID
 
         assetID = MSecurity.getStr(row, CodingKeys.assetID.rawValue) ?? ""
         sharePrice = MSecurity.getDouble(row, CodingKeys.sharePrice.rawValue)
@@ -37,10 +37,9 @@ extension MSecurity: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue = CodingKeys.securityID.rawValue
-        guard let securityID_ = getStr(row, rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(rawValue) }
-        return keyify(securityID_)
+        guard let _securityID = getStr(row, CodingKeys.securityID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey("Security") }
+        return keyify(_securityID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

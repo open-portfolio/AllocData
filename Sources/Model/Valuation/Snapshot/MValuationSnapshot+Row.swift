@@ -19,13 +19,13 @@ import Foundation
 
 extension MValuationSnapshot: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let snapshotID_ = MValuationSnapshot.getStr(row, CodingKeys.snapshotID.rawValue)
+        guard let _snapshotID = MValuationSnapshot.getStr(row, CodingKeys.snapshotID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.snapshotID.rawValue) }
-        snapshotID = snapshotID_
+        snapshotID = _snapshotID
 
-        guard let capturedAt_ = MValuationSnapshot.getDate(row, CodingKeys.capturedAt.rawValue)
+        guard let _capturedAt = MValuationSnapshot.getDate(row, CodingKeys.capturedAt.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.capturedAt.rawValue) }
-        capturedAt = capturedAt_
+        capturedAt = _capturedAt
     }
 
     public mutating func update(from row: DecodedRow) throws {
@@ -33,10 +33,9 @@ extension MValuationSnapshot: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue0 = CodingKeys.snapshotID.rawValue
-        guard let snapshotID_ = getStr(row, rawValue0)
-        else { throw AllocDataError.invalidPrimaryKey("Archive") }
-        return makePrimaryKey(snapshotID: snapshotID_)
+        guard let _snapshotID = getStr(row, CodingKeys.snapshotID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey("Valuation Snapshot") }
+        return makePrimaryKey(snapshotID: _snapshotID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

@@ -19,9 +19,9 @@ import Foundation
 
 extension MAccount: AllocRowed {
     public init(from row: DecodedRow) throws {
-        guard let accountID_ = MAccount.getStr(row, CodingKeys.accountID.rawValue)
+        guard let _accountID = MAccount.getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
-        accountID = accountID_
+        accountID = _accountID
 
         title = MAccount.getStr(row, CodingKeys.title.rawValue)
         isActive = MAccount.getBool(row, CodingKeys.isActive.rawValue) ?? false
@@ -39,10 +39,9 @@ extension MAccount: AllocRowed {
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
-        let rawValue = CodingKeys.accountID.rawValue
-        guard let accountID_ = getStr(row, rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(rawValue) }
-        return keyify(accountID_)
+        guard let _accountID = getStr(row, CodingKeys.accountID.rawValue)
+        else { throw AllocDataError.invalidPrimaryKey("Account") }
+        return keyify(_accountID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
