@@ -251,24 +251,6 @@ Each row of the SourceMeta table describes an import or transformation of source
 | importerID | string | false | false | The id of the importer/transformer, if any. |
 | exportedAt | date | false | false | The published export date of the source data, if any. |
 
-### MHistory **DEPRECATED**
-
-This is the `openalloc/history` schema.
-
-A table of recent transaction history, including purchases and sales.
-
-| Name | Type | IsRequired | IsKey | Descript |
-| ---- | ---- | ---------- | ----- | -------- |
-| transactionID | string | false | true | Unique transaction identifier for the history record. |
-| historyAccountID | string | true | false | The account in which the transaction occurred. |
-| historySecurityID | string | true | false | The security involved in the transaction. |
-| historyLotID | string | false | false | The lot of the position involved in the transaction, if any. |
-| shareCount | double | false | false | The number of shares transacted. |
-| sharePrice | double | false | false | The price at which the share(s) transacted. |
-| realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |
-| realizedGainLong | double | false | false | The total long-term realized gain (or loss) from a sale. |
-| transactedAt | date | false | false | The date of the transaction. |
-
 ## Data Formats
 
 ### Dates
@@ -281,26 +263,32 @@ Entities in the data model all conform to the following protocols:
 
 ### Base
 
+Base functionality for all entities. Currently just a schema identifier.
+
 ```swift
 public protocol AllocBase {
     static var schema: AllocSchema { get }
-
-    // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
-    var primaryKey: AllocKey { get }
 }
 ```
 
 ### Keyed
 
+Used to retrieve and generate the entity's primary key.
+
 ```swift
 public protocol AllocKeyed {
+    // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
+    var primaryKey: AllocKey { get }
+
     static func keyify(_ component: String?) -> AllocKey
     static func keyify(_ components: [String?]) -> AllocKey
-    static func makeAllocMap<T: AllocBase>(_ elements: [T]) -> [AllocKey: T]
+    static func makeAllocMap<T: AllocKeyed>(_ elements: [T]) -> [AllocKey: T]
 }
 ```
 
 ### Rowed
+
+Used to parse (decode) and generate (encode) delimited data for the entities.
 
 ```swift
 public protocol AllocRowed {
@@ -323,6 +311,8 @@ public protocol AllocRowed {
 ```
 
 ### Attributable
+
+Used to fetch a description of the entity's attributes.
 
 ```swift
 public protocol AllocAttributable {
