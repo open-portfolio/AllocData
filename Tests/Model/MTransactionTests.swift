@@ -29,7 +29,7 @@ class MTransactionTests: XCTestCase {
     }
 
     func testInit() {
-        let expected = MTransaction(action: .dividend, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
+        let expected = MTransaction(action: .income, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
         var actual = MTransaction(action: .buysell, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x")
         XCTAssertEqual(MTransaction.Action.buysell, actual.action)
         XCTAssertEqual(timestamp, actual.transactedAt)
@@ -40,7 +40,7 @@ class MTransactionTests: XCTestCase {
         XCTAssertEqual(0.0, actual.sharePrice)
         XCTAssertNil(actual.realizedGainShort)
         XCTAssertNil(actual.realizedGainLong)
-        actual.action = .dividend
+        actual.action = .income
         actual.shareCount = 3
         actual.sharePrice = 4
         actual.realizedGainShort = 5
@@ -50,9 +50,9 @@ class MTransactionTests: XCTestCase {
     }
 
     func testInitFromFINrow() throws {
-        let expected = MTransaction(action: .interest, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
+        let expected = MTransaction(action: .income, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
         let actual = try MTransaction(from: [
-            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.interest,
+            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.income,
             MTransaction.CodingKeys.transactedAt.rawValue: timestamp,
             MTransaction.CodingKeys.accountID.rawValue: "a",
             MTransaction.CodingKeys.securityID.rawValue: "s",

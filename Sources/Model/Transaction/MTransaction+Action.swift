@@ -18,32 +18,12 @@
 import Foundation
 
 public extension MTransaction {
+
+    /// See README for details on what these mean
     enum Action: String, Codable, CaseIterable {
-        
-        /// purchase/sale of security to/from cash; aka conversion
-        /// scope: local to account
-        /// shareCount: <0 is a sale; >0 is a purchase
-        /// sharePrice: >0, price per share
-        /// security: required
         case buysell
-                
-        /// income from interest, or the dividend of a stock/etf/etc.
-        /// scope: local to account
-        /// shareCount: amount of income
-        /// sharePrice: 1.0
-        /// security: if dividend
         case income
-        
-        /// transfer of security/cash to/from external source
-        /// shareCount: <0 is outgoing; >0 is incoming
-        /// sharePrice: 1.0 if cash; >0 for security
-        /// security: if not cash
         case transfer
-        
-        /// neutral (non-income) cashflow in account
-        /// shareCount: <0 is outgoing; >0 is incoming
-        /// sharePrice: 1.0
-        /// security: none
         case misc
     }
 }
