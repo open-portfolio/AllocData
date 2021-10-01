@@ -39,7 +39,7 @@ public struct MAccount: Hashable & AllocBase {
         self.isActive = isActive ?? false
         self.isTaxable = isTaxable ?? false
         self.canTrade = canTrade ?? false
-        self.strategyID = strategyID ?? MAccount.AllocNilKey
+        self.strategyID = strategyID ?? ""
     }
 }
 
@@ -60,7 +60,7 @@ extension MAccount: Codable {
         isActive = try c.decodeIfPresent(Bool.self, forKey: .isActive) ?? false
         isTaxable = try c.decodeIfPresent(Bool.self, forKey: .isTaxable) ?? false
         canTrade = try c.decodeIfPresent(Bool.self, forKey: .canTrade) ?? false
-        strategyID = try c.decodeIfPresent(String.self, forKey: .strategyID) ?? MAccount.AllocNilKey
+        strategyID = try c.decodeIfPresent(String.self, forKey: .strategyID) ?? ""
     }
 }
 

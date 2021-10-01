@@ -35,7 +35,7 @@ class MSecurityTests: XCTestCase {
         XCTAssertEqual("Bond", actual.assetID)
         XCTAssertNil(actual.sharePrice)
         XCTAssertNil(actual.updatedAt)
-        XCTAssertEqual(MSecurity.AllocNilKey, actual.trackerID)
+        XCTAssertEqual("", actual.trackerID)
         actual.sharePrice = 0.77
         actual.updatedAt = timestamp
         actual.trackerID = "3"

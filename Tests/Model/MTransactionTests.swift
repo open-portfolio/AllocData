@@ -29,7 +29,7 @@ class MTransactionTests: XCTestCase {
     }
 
     func testInit() {
-        let expected = MTransaction(action: .dividendIncome, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
+        let expected = MTransaction(action: .dividend, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
         var actual = MTransaction(action: .buy, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x")
         XCTAssertEqual(MTransaction.Action.buy, actual.action)
         XCTAssertEqual(timestamp, actual.transactedAt)
@@ -40,7 +40,7 @@ class MTransactionTests: XCTestCase {
         XCTAssertEqual(0.0, actual.sharePrice)
         XCTAssertNil(actual.realizedGainShort)
         XCTAssertNil(actual.realizedGainLong)
-        actual.action = .dividendIncome
+        actual.action = .dividend
         actual.shareCount = 3
         actual.sharePrice = 4
         actual.realizedGainShort = 5
@@ -50,9 +50,9 @@ class MTransactionTests: XCTestCase {
     }
 
     func testInitFromFINrow() throws {
-        let expected = MTransaction(action: .interestIncome, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
+        let expected = MTransaction(action: .interest, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
         let actual = try MTransaction(from: [
-            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.interestIncome,
+            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.interest,
             MTransaction.CodingKeys.transactedAt.rawValue: timestamp,
             MTransaction.CodingKeys.accountID.rawValue: "a",
             MTransaction.CodingKeys.securityID.rawValue: "s",
@@ -68,7 +68,7 @@ class MTransactionTests: XCTestCase {
     func testUpdateFromFINrow() throws {
         var actual = MTransaction(action: .sell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
         let finRow: MTransaction.DecodedRow = [
-            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.miscellaneous, // IGNORED
+            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.misc, // IGNORED
             MTransaction.CodingKeys.transactedAt.rawValue: timestamp + 200, // IGNORED
             MTransaction.CodingKeys.accountID.rawValue: "bx", // IGNORED
             MTransaction.CodingKeys.securityID.rawValue: "cx", // IGNORED
@@ -97,7 +97,7 @@ class MTransactionTests: XCTestCase {
         let refEpoch = timestamp.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
         let finRow: MTransaction.DecodedRow = [
-            "txnAction": MTransaction.Action.miscellaneous,
+            "txnAction": MTransaction.Action.misc,
             "txnTransactedAt": timestamp,
             "txnAccountID": " A-x?3 ",
             "txnSecurityID": " -3B ! ",
@@ -114,7 +114,7 @@ class MTransactionTests: XCTestCase {
         let YYYYMMDD = df.string(from: timestamp)
         let YYYYMMDDts = df.date(from: YYYYMMDD)
         let rawRows: [MTransaction.RawRow] = [[
-            "txnAction": "xfr",
+            "txnAction": "transfer",
             "txnTransactedAt": YYYYMMDD,
             "txnAccountID": "a",
             "txnSecurityID": "s",

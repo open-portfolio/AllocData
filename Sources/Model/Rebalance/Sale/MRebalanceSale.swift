@@ -57,7 +57,7 @@ extension MRebalanceSale: Codable {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         accountID = try c.decode(String.self, forKey: .accountID)
         securityID = try c.decode(String.self, forKey: .securityID)
-        lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? MRebalanceSale.AllocNilKey
+        lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? ""
         amount = try c.decode(Double.self, forKey: .amount)
         shareCount = try c.decodeIfPresent(Double.self, forKey: .shareCount)
         liquidateAll = try c.decodeIfPresent(Bool.self, forKey: .liquidateAll) ?? false

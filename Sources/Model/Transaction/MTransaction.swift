@@ -34,7 +34,7 @@ public struct MTransaction: Hashable & AllocBase {
                 transactedAt: Date,
                 accountID: String,
                 securityID: String,
-                lotID: String = MTransaction.AllocNilKey,
+                lotID: String = "",
                 shareCount: Double = 0,
                 sharePrice: Double = 0,
                 realizedGainShort: Double? = nil,
@@ -69,9 +69,9 @@ extension MTransaction: Codable {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         action = try c.decode(Action.self, forKey: .action)
         transactedAt = try c.decodeIfPresent(Date.self, forKey: .transactedAt) ?? Date(timeIntervalSinceReferenceDate: 0)
-        accountID = try c.decodeIfPresent(String.self, forKey: .accountID) ?? MTransaction.AllocNilKey
-        securityID = try c.decodeIfPresent(String.self, forKey: .securityID) ?? MTransaction.AllocNilKey
-        lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? MTransaction.AllocNilKey
+        accountID = try c.decodeIfPresent(String.self, forKey: .accountID) ?? ""
+        securityID = try c.decodeIfPresent(String.self, forKey: .securityID) ?? ""
+        lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? ""
         shareCount = try c.decodeIfPresent(Double.self, forKey: .shareCount) ?? 0
         sharePrice = try c.decodeIfPresent(Double.self, forKey: .sharePrice) ?? 0
         realizedGainShort = try c.decodeIfPresent(Double.self, forKey: .realizedGainShort)

@@ -143,9 +143,9 @@ The action types:
 | ---- | ---- | -------- |
 | Buy | buy | Purchase of a security with cash. | 
 | Sell | sell | Sale of a security for cash. | 
-| Dividend Income | div | Income from dividend, to cash. | 
-| Interest Income | int | Income from interest, to cash. | 
-| Transfer | xfr | Transfer of securities or cash to/from external source. | 
+| Dividend Income | dividend | Income from dividend, to cash. | 
+| Interest Income | interest | Income from interest, to cash. | 
+| Transfer | transfer | Transfer of securities or cash to/from external source. | 
 | Miscellaneous | misc | Credit(+)/debit(-) from something else, to/from cash. | 
 
 ### MRebalanceAllocation

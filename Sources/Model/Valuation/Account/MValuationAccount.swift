@@ -28,7 +28,7 @@ public struct MValuationAccount: Hashable & AllocBase {
     public init(
         snapshotID: String,
         accountID: String,
-        strategyID: String = MValuationAccount.AllocNilKey
+        strategyID: String = ""
     ) {
         self.snapshotID = snapshotID
         self.accountID = accountID
@@ -47,7 +47,7 @@ extension MValuationAccount: Codable {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         snapshotID = try c.decode(String.self, forKey: .snapshotID)
         accountID = try c.decode(String.self, forKey: .accountID)
-        strategyID = try c.decodeIfPresent(String.self, forKey: .strategyID) ?? MValuationAccount.AllocNilKey
+        strategyID = try c.decodeIfPresent(String.self, forKey: .strategyID) ?? ""
     }
 }
 

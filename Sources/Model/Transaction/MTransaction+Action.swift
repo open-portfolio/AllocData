@@ -19,11 +19,11 @@ import Foundation
 
 public extension MTransaction {
     enum Action: String, Codable, CaseIterable {
-        case buy
-        case sell
-        case dividendIncome = "div"
-        case interestIncome = "int"
-        case transfer = "xfr"
-        case miscellaneous = "misc"
+        case buy // purchase
+        case sell // sale
+        case dividend // dividend income
+        case interest // interest income
+        case transfer // transfer
+        case misc // miscellaneous
     }
 }

@@ -31,7 +31,7 @@ extension MValuationAccount: AllocRowed {
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.strategyID.rawValue) }
         strategyID = strategyID_
 
-        strategyID = MValuationAccount.getStr(row, CodingKeys.strategyID.rawValue) ?? MValuationAccount.AllocNilKey
+        strategyID = MValuationAccount.getStr(row, CodingKeys.strategyID.rawValue) ?? ""
     }
 
     public mutating func update(from row: DecodedRow) throws {
@@ -61,7 +61,7 @@ extension MValuationAccount: AllocRowed {
             }
 
             // optional values
-            let strategyID = parseString(row[ck.strategyID.rawValue]) ?? MValuationAccount.AllocNilKey
+            let strategyID = parseString(row[ck.strategyID.rawValue]) ?? ""
 
             return [
                 ck.snapshotID.rawValue: snapshotID,

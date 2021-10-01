@@ -27,7 +27,7 @@ extension MHolding: AllocRowed {
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.securityID.rawValue) }
         securityID = securityID_
 
-        lotID = MHolding.getStr(row, CodingKeys.lotID.rawValue) ?? MHolding.AllocNilKey
+        lotID = MHolding.getStr(row, CodingKeys.lotID.rawValue) ?? ""
         shareCount = MHolding.getDouble(row, CodingKeys.shareCount.rawValue)
         shareBasis = MHolding.getDouble(row, CodingKeys.shareBasis.rawValue)
         acquiredAt = MHolding.getDate(row, CodingKeys.acquiredAt.rawValue)
@@ -65,7 +65,7 @@ extension MHolding: AllocRowed {
             }
 
             // required, but with default value
-            let lotID = parseString(row[ck.lotID.rawValue]) ?? MHolding.AllocNilKey
+            let lotID = parseString(row[ck.lotID.rawValue]) ?? ""
 
             // optional values
             let shareCount = parseDouble(row[ck.shareCount.rawValue])

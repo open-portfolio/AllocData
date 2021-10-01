@@ -33,10 +33,10 @@ public struct MSecurity: Hashable & AllocBase {
                 trackerID: String? = nil)
     {
         self.securityID = securityID
-        self.assetID = assetID ?? MSecurity.AllocNilKey
+        self.assetID = assetID ?? ""
         self.sharePrice = sharePrice
         self.updatedAt = updatedAt
-        self.trackerID = trackerID ?? MSecurity.AllocNilKey
+        self.trackerID = trackerID ?? ""
     }
 }
 
@@ -52,10 +52,10 @@ extension MSecurity: Codable {
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         securityID = try c.decode(String.self, forKey: .securityID)
-        assetID = try c.decodeIfPresent(String.self, forKey: .assetID) ?? MSecurity.AllocNilKey
+        assetID = try c.decodeIfPresent(String.self, forKey: .assetID) ?? ""
         sharePrice = try c.decodeIfPresent(Double.self, forKey: .sharePrice)
         updatedAt = try c.decodeIfPresent(Date.self, forKey: .updatedAt)
-        trackerID = try c.decodeIfPresent(String.self, forKey: .trackerID) ?? MSecurity.AllocNilKey
+        trackerID = try c.decodeIfPresent(String.self, forKey: .trackerID) ?? ""
     }
 }
 

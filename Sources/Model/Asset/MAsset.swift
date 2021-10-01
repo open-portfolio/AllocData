@@ -33,7 +33,7 @@ public struct MAsset: Hashable & AllocBase {
         self.assetID = assetID
         self.title = title
         self.colorCode = colorCode
-        self.parentAssetID = parentAssetID ?? MAsset.AllocNilKey
+        self.parentAssetID = parentAssetID ?? ""
     }
 }
 
@@ -50,7 +50,7 @@ extension MAsset: Codable {
         assetID = try c.decode(String.self, forKey: .assetID)
         title = try c.decodeIfPresent(String.self, forKey: .title)
         colorCode = try c.decodeIfPresent(Int.self, forKey: .colorCode)
-        parentAssetID = try c.decodeIfPresent(String.self, forKey: .parentAssetID) ?? MAsset.AllocNilKey
+        parentAssetID = try c.decodeIfPresent(String.self, forKey: .parentAssetID) ?? ""
     }
 }
 

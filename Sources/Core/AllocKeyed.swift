@@ -31,19 +31,15 @@ public extension AllocKeyed {
     // an AllocKey is a normalized 'ID', trimmed and lowercased.
     typealias AllocKey = String
 
-    // an AllocKey in non-optional 'nil' state
-    // needed to support SwiftUI Picker
-    static var AllocNilKey: AllocKey { "" }
-
     static func keyify(_ component: String?) -> AllocKey {
-        component?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? AllocNilKey
+        component?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
     }
 
     static func keyify(_ components: [String?]) -> AllocKey {
         let separator = ","
         return
             components
-                .map { $0?.trimmingCharacters(in: .whitespacesAndNewlines) ?? AllocNilKey }
+                .map { $0?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "" }
                 .joined(separator: separator).lowercased()
     }
 

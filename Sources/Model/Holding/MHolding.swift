@@ -57,7 +57,7 @@ extension MHolding: Codable {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         accountID = try c.decode(String.self, forKey: .accountID)
         securityID = try c.decode(String.self, forKey: .securityID)
-        lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? MHolding.AllocNilKey
+        lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? ""
         shareCount = try c.decodeIfPresent(Double.self, forKey: .shareCount)
         shareBasis = try c.decodeIfPresent(Double.self, forKey: .shareBasis)
         acquiredAt = try c.decodeIfPresent(Date.self, forKey: .acquiredAt)

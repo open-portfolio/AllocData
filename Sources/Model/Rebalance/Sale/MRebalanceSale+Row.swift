@@ -27,7 +27,7 @@ extension MRebalanceSale: AllocRowed {
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.securityID.rawValue) }
         securityID = securityID_
 
-        lotID = MRebalanceSale.getStr(row, CodingKeys.lotID.rawValue) ?? MRebalanceSale.AllocNilKey
+        lotID = MRebalanceSale.getStr(row, CodingKeys.lotID.rawValue) ?? ""
         amount = MRebalanceSale.getDouble(row, CodingKeys.amount.rawValue) ?? 0
         shareCount = MRebalanceSale.getDouble(row, CodingKeys.shareCount.rawValue)
         liquidateAll = MRebalanceSale.getBool(row, CodingKeys.liquidateAll.rawValue) ?? false
@@ -67,7 +67,7 @@ extension MRebalanceSale: AllocRowed {
             }
 
             // required, but with default value
-            let lotID = parseString(row[ck.lotID.rawValue]) ?? MRebalanceSale.AllocNilKey
+            let lotID = parseString(row[ck.lotID.rawValue]) ?? ""
 
             // optional values
             let shareCount = parseDouble(row[ck.shareCount.rawValue])
