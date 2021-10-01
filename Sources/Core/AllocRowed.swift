@@ -1,5 +1,5 @@
 //
-//  AllocRowUtils.swift
+//  AllocRowed.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -17,7 +17,25 @@
 
 import Foundation
 
-public extension AllocRow {
+public protocol AllocRowed {
+    // pre-decoded row, without strong typing
+    typealias RawRow = [String: String]
+
+    // decoded row, with strong typing
+    typealias DecodedRow = [String: AnyHashable?]
+
+    // create object from row
+    init(from row: DecodedRow) throws
+
+    static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow]
+
+    // additive update from row
+    mutating func update(from row: DecodedRow) throws
+
+    static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey
+}
+
+public extension AllocRowed {
     static func getStr(_ row: DecodedRow, _ key: String) -> String? {
         if let val = row[key] as? String {
             return val

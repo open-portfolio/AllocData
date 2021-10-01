@@ -277,33 +277,56 @@ In delimited text files, the dates should be in the ISO 8601 / RFC 3339 format (
 
 ## API
 
-Entities in the data model all conform to AllocBase protocol.
+Entities in the data model all conform to the following protocols:
+
+### Base
 
 ```swift
-public protocol AllocBase: Codable {
+public protocol AllocBase {
+    static var schema: AllocSchema { get }
+
+    // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
+    var primaryKey: AllocKey { get }
+}
+```
+
+### Keyed
+
+```swift
+public protocol AllocKeyed {
+    static func keyify(_ component: String?) -> AllocKey
+    static func keyify(_ components: [String?]) -> AllocKey
+    static func makeAllocMap<T: AllocBase>(_ elements: [T]) -> [AllocKey: T]
+}
+```
+
+### Rowed
+
+```swift
+public protocol AllocRowed {
     // pre-decoded row, without strong typing
     typealias RawRow = [String: String]
 
     // decoded row, with strong typing
     typealias DecodedRow = [String: AnyHashable?]
 
-    static var schema: AllocSchema { get }
-    static var attributes: [AllocAttribute] { get }
-
-    // Note that key values should NOT be persisted. Their
-    // format and composition may vary across platforms and
-    // versions.
-    var primaryKey: AllocKey { get }
-
     // create object from row
     init(from row: DecodedRow) throws
+
+    static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow]
 
     // additive update from row
     mutating func update(from row: DecodedRow) throws
 
     static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey
+}
+```
 
-    static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow]
+### Attributable
+
+```swift
+public protocol AllocAttributable {
+    static var attributes: [AllocAttribute] { get }
 }
 ```
 

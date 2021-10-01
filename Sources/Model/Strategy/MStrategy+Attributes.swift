@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  M+Attributes.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -17,12 +17,9 @@
 
 import Foundation
 
-extension MValuationPosition: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MValuationPosition.makePrimaryKey(snapshotID: snapshotID, accountID: accountID, assetID: assetID)
-    }
-
-    public static func makePrimaryKey(snapshotID: String, accountID: String, assetID: String) -> AllocKey {
-        keyify([snapshotID, accountID, assetID])
-    }
+extension MStrategy: AllocAttributable {
+    public static var attributes: [AllocAttribute] = [
+        AllocAttribute(CodingKeys.strategyID, .string, isRequired: true, isKey: true, "The name of the strategy."),
+        AllocAttribute(CodingKeys.title, .string, isRequired: false, isKey: false, "The title of the strategy."),
+    ]
 }

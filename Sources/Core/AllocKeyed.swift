@@ -1,5 +1,5 @@
 //
-//  AllocBase+KeyUtils.swift
+//  AllocKeyed.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -17,13 +17,13 @@
 
 import Foundation
 
-public protocol AllocBaseKey {
+public protocol AllocKeyed {
     static func keyify(_ component: String?) -> AllocKey
     static func keyify(_ components: [String?]) -> AllocKey
     static func makeAllocMap<T: AllocBase>(_ elements: [T]) -> [AllocKey: T]
 }
 
-public extension AllocBaseKey {
+public extension AllocKeyed {
     static func keyify(_ component: String?) -> AllocKey {
         component?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? AllocNilKey
     }

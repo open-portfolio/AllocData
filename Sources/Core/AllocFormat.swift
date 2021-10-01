@@ -1,5 +1,5 @@
 //
-//  FINformat.swift
+//  AllocFormat.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //

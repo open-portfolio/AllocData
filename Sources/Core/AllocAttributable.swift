@@ -1,5 +1,5 @@
 //
-//  AllocAttribute.swift
+//  AllocAttributable.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+public protocol AllocAttributable {
+    static var attributes: [AllocAttribute] { get }
+}
 
 public struct AllocAttribute {
     public enum AttributeTypes {

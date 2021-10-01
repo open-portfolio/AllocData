@@ -17,12 +17,8 @@
 
 import Foundation
 
-extension MValuationPosition: AllocKeyed {
+extension MStrategy: AllocKeyed {
     public var primaryKey: AllocKey {
-        MValuationPosition.makePrimaryKey(snapshotID: snapshotID, accountID: accountID, assetID: assetID)
-    }
-
-    public static func makePrimaryKey(snapshotID: String, accountID: String, assetID: String) -> AllocKey {
-        keyify([snapshotID, accountID, assetID])
+        MStrategy.keyify(strategyID)
     }
 }
