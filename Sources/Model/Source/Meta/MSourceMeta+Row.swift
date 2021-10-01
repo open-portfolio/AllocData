@@ -44,27 +44,33 @@ extension MSourceMeta: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MSourceMeta.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            guard let sourceMetaID = parseString(row[ck.sourceMetaID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let sourceMetaID = parseString(rawRow[ck.sourceMetaID.rawValue]),
                   sourceMetaID.count > 0
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // optional values
-            let url = parseURL(row[ck.url.rawValue])
-            let importerID = parseString(row[ck.importerID.rawValue])
-
-            let rawExportedAt = row[ck.exportedAt.rawValue]
-            let exportedAt = MSourceMeta.parseDate(rawExportedAt)
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.sourceMetaID.rawValue: sourceMetaID,
-                ck.url.rawValue: url,
-                ck.importerID.rawValue: importerID,
-                ck.exportedAt.rawValue: exportedAt,
             ]
+
+            if let url = parseURL(rawRow[ck.url.rawValue]) {
+                decodedRow[ck.url.rawValue] = url
+            }
+
+            if let importerID = parseString(rawRow[ck.importerID.rawValue]) {
+                decodedRow[ck.importerID.rawValue] = importerID
+            }
+
+            if let rawExportedAt = rawRow[ck.exportedAt.rawValue],
+               let exportedAt = MSourceMeta.parseDate(rawExportedAt)
+            {
+                decodedRow[ck.exportedAt.rawValue] = exportedAt
+            }
+
+            array.append(decodedRow)
         }
     }
 }

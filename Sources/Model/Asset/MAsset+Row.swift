@@ -44,26 +44,29 @@ extension MAsset: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MAsset.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            // required values
-            guard let assetID = parseString(row[ck.assetID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let assetID = parseString(rawRow[ck.assetID.rawValue]),
                   assetID.count > 0
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // optional values
-            let title = parseString(row[ck.title.rawValue])
-            let parentAssetID = parseString(row[ck.parentAssetID.rawValue])
-            let colorCode = parseInt(row[ck.colorCode.rawValue])
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.assetID.rawValue: assetID,
-                ck.title.rawValue: title,
-                ck.colorCode.rawValue: colorCode,
-                ck.parentAssetID.rawValue: parentAssetID,
             ]
+
+            if let title = parseString(rawRow[ck.title.rawValue]) {
+                decodedRow[ck.title.rawValue] = title
+            }
+            if let parentAssetID = parseString(rawRow[ck.parentAssetID.rawValue]) {
+                decodedRow[ck.parentAssetID.rawValue] = parentAssetID
+            }
+            if let colorCode = parseInt(rawRow[ck.colorCode.rawValue]) {
+                decodedRow[ck.colorCode.rawValue] = colorCode
+            }
+
+            array.append(decodedRow)
         }
     }
 }

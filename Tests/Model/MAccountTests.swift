@@ -122,7 +122,6 @@ class MAccountTests: XCTestCase {
             "isActive": true,
             "isTaxable": true,
             "canTrade": true,
-            "accountStrategyID": "",
         ]
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)

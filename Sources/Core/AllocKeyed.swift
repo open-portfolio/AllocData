@@ -27,7 +27,6 @@ public protocol AllocKeyed {
 }
 
 public extension AllocKeyed {
-    
     // an AllocKey is a normalized 'ID', trimmed and lowercased.
     typealias AllocKey = String
 

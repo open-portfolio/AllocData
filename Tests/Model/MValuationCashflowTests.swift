@@ -90,7 +90,7 @@ class MValuationCashflowTests: XCTestCase {
 
     func testDecode() throws {
         let formattedDate = formatter.string(for: timestamp)!
-        let parsedDate = formatter.date(from: formattedDate)
+        let parsedDate = formatter.date(from: formattedDate)!
         let rawRows: [MValuationCashflow.RawRow] = [[
             "valuationCashflowTransactedAt": formattedDate,
             "valuationCashflowAccountID": "1",

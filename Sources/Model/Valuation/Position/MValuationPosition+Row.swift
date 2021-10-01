@@ -54,8 +54,7 @@ extension MValuationPosition: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MValuationPosition.CodingKeys.self
 
-        return rawRows.compactMap { rawRow in
-            // required values, without default values
+        return rawRows.reduce(into: []) { array, rawRow in
             guard let snapshotID = parseString(rawRow[ck.snapshotID.rawValue]),
                   let accountID = parseString(rawRow[ck.accountID.rawValue]),
                   accountID.count > 0,
@@ -63,20 +62,23 @@ extension MValuationPosition: AllocRowed {
                   assetID.count > 0
             else {
                 rejectedRows.append(rawRow)
-                return nil
+                return
             }
 
-            // optional values
-            let totalBasis = parseDouble(rawRow[ck.totalBasis.rawValue])
-            let marketValue = parseDouble(rawRow[ck.marketValue.rawValue])
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.snapshotID.rawValue: snapshotID,
                 ck.accountID.rawValue: accountID,
                 ck.assetID.rawValue: assetID,
-                ck.totalBasis.rawValue: totalBasis,
-                ck.marketValue.rawValue: marketValue,
             ]
+
+            if let totalBasis = parseDouble(rawRow[ck.totalBasis.rawValue]) {
+                decodedRow[ck.totalBasis.rawValue] = totalBasis
+            }
+            if let marketValue = parseDouble(rawRow[ck.marketValue.rawValue]) {
+                decodedRow[ck.marketValue.rawValue] = marketValue
+            }
+
+            array.append(decodedRow)
         }
     }
 }

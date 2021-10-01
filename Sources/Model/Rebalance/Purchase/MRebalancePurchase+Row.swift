@@ -46,26 +46,25 @@ extension MRebalancePurchase: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MRebalancePurchase.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            // required values, without default values
-            guard let accountID = parseString(row[ck.accountID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let accountID = parseString(rawRow[ck.accountID.rawValue]),
                   accountID.count > 0,
-                  let assetID = parseString(row[ck.assetID.rawValue]),
+                  let assetID = parseString(rawRow[ck.assetID.rawValue]),
                   assetID.count > 0,
-                  let amount = parseDouble(row[ck.amount.rawValue]),
+                  let amount = parseDouble(rawRow[ck.amount.rawValue]),
                   amount > 0
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // optional values
-
-            return [
+            let decodedRow: DecodedRow = [
                 ck.accountID.rawValue: accountID,
                 ck.assetID.rawValue: assetID,
                 ck.amount.rawValue: amount,
             ]
+
+            array.append(decodedRow)
         }
     }
 }

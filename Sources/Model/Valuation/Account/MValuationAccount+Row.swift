@@ -50,24 +50,25 @@ extension MValuationAccount: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MValuationAccount.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            // required values, without default values
-            guard let snapshotID = parseString(row[ck.snapshotID.rawValue]),
-                  let accountID = parseString(row[ck.accountID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let snapshotID = parseString(rawRow[ck.snapshotID.rawValue]),
+                  let accountID = parseString(rawRow[ck.accountID.rawValue]),
                   accountID.count > 0
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // optional values
-            let strategyID = parseString(row[ck.strategyID.rawValue]) ?? ""
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.snapshotID.rawValue: snapshotID,
                 ck.accountID.rawValue: accountID,
-                ck.strategyID.rawValue: strategyID,
             ]
+
+            if let strategyID = parseString(rawRow[ck.strategyID.rawValue]) {
+                decodedRow[ck.strategyID.rawValue] = strategyID
+            }
+
+            array.append(decodedRow)
         }
     }
 }

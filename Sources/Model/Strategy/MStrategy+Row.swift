@@ -40,21 +40,23 @@ extension MStrategy: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MStrategy.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            guard let strategyID = parseString(row[ck.strategyID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let strategyID = parseString(rawRow[ck.strategyID.rawValue]),
                   strategyID.count > 0
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // optional values
-            let title = parseString(row[ck.title.rawValue])
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.strategyID.rawValue: strategyID,
-                ck.title.rawValue: title,
             ]
+
+            if let title = parseString(rawRow[ck.title.rawValue]) {
+                decodedRow[ck.title.rawValue] = title
+            }
+
+            array.append(decodedRow)
         }
     }
 }

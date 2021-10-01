@@ -72,38 +72,43 @@ extension MTransaction: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MTransaction.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            // required, without default values
-            guard let rawAction = parseString(row[ck.action.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let rawAction = parseString(rawRow[ck.action.rawValue]),
                   let action = Action(rawValue: rawAction),
-                  let transactedAt = parseDate(row[ck.transactedAt.rawValue])
+                  let transactedAt = parseDate(rawRow[ck.transactedAt.rawValue])
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // required, with default value
-            let accountID = parseString(row[ck.accountID.rawValue]) ?? ""
-            let securityID = parseString(row[ck.securityID.rawValue]) ?? ""
-            let lotID = parseString(row[ck.lotID.rawValue]) ?? ""
-            let shareCount = parseDouble(row[ck.shareCount.rawValue]) ?? 0
-            let sharePrice = parseDouble(row[ck.sharePrice.rawValue]) ?? 0
-
-            // optional values
-            let realizedGainShort = parseDouble(row[ck.realizedGainShort.rawValue])
-            let realizedGainLong = parseDouble(row[ck.realizedGainLong.rawValue])
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.action.rawValue: action,
                 ck.transactedAt.rawValue: transactedAt,
-                ck.accountID.rawValue: accountID,
-                ck.securityID.rawValue: securityID,
-                ck.lotID.rawValue: lotID,
-                ck.shareCount.rawValue: shareCount,
-                ck.sharePrice.rawValue: sharePrice,
-                ck.realizedGainShort.rawValue: realizedGainShort,
-                ck.realizedGainLong.rawValue: realizedGainLong,
             ]
+
+            if let accountID = parseString(rawRow[ck.accountID.rawValue]) {
+                decodedRow[ck.accountID.rawValue] = accountID
+            }
+            if let securityID = parseString(rawRow[ck.securityID.rawValue]) {
+                decodedRow[ck.securityID.rawValue] = securityID
+            }
+            if let lotID = parseString(rawRow[ck.lotID.rawValue]) {
+                decodedRow[ck.lotID.rawValue] = lotID
+            }
+            if let shareCount = parseDouble(rawRow[ck.shareCount.rawValue]) {
+                decodedRow[ck.shareCount.rawValue] = shareCount
+            }
+            if let sharePrice = parseDouble(rawRow[ck.sharePrice.rawValue]) {
+                decodedRow[ck.sharePrice.rawValue] = sharePrice
+            }
+            if let realizedGainShort = parseDouble(rawRow[ck.realizedGainShort.rawValue]) {
+                decodedRow[ck.realizedGainShort.rawValue] = realizedGainShort
+            }
+            if let realizedGainLong = parseDouble(rawRow[ck.realizedGainLong.rawValue]) {
+                decodedRow[ck.realizedGainLong.rawValue] = realizedGainLong
+            }
+
+            array.append(decodedRow)
         }
     }
 }

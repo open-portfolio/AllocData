@@ -18,7 +18,6 @@
 import Foundation
 
 public extension MTransaction {
-
     /// See README for details on what these mean
     enum Action: String, Codable, CaseIterable {
         case buysell

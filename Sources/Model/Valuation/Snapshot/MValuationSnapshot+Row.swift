@@ -42,22 +42,21 @@ extension MValuationSnapshot: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MValuationSnapshot.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            // required values, without default values
-            guard let snapshotID = parseString(row[ck.snapshotID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let snapshotID = parseString(rawRow[ck.snapshotID.rawValue]),
                   snapshotID.count > 0,
-                  let capturedAt = parseDate(row[ck.capturedAt.rawValue])
+                  let capturedAt = parseDate(rawRow[ck.capturedAt.rawValue])
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // optional values
-
-            return [
+            let decodedRow: DecodedRow = [
                 ck.snapshotID.rawValue: snapshotID,
                 ck.capturedAt.rawValue: capturedAt,
             ]
+
+            array.append(decodedRow)
         }
     }
 }

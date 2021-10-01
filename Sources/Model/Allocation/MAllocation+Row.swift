@@ -48,27 +48,28 @@ extension MAllocation: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MAllocation.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            // required values
-            guard let strategyID = parseString(row[ck.strategyID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let strategyID = parseString(rawRow[ck.strategyID.rawValue]),
                   strategyID.count > 0,
-                  let assetID = parseString(row[ck.assetID.rawValue]),
+                  let assetID = parseString(rawRow[ck.assetID.rawValue]),
                   assetID.count > 0
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // optional values
-            let targetPct = parseDouble(row[ck.targetPct.rawValue]) ?? MAllocation.defaultTargetPct
-            let isLocked = parseBool(row[ck.isLocked.rawValue])
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.strategyID.rawValue: strategyID,
                 ck.assetID.rawValue: assetID,
-                ck.targetPct.rawValue: targetPct,
-                ck.isLocked.rawValue: isLocked,
             ]
+
+            decodedRow[ck.targetPct.rawValue] = parseDouble(rawRow[ck.targetPct.rawValue]) ?? MAllocation.defaultTargetPct
+
+            if let isLocked = parseBool(rawRow[ck.isLocked.rawValue]) {
+                decodedRow[ck.isLocked.rawValue] = isLocked
+            }
+
+            array.append(decodedRow)
         }
     }
 }

@@ -40,21 +40,23 @@ extension MTracker: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MTracker.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            guard let trackerID = parseString(row[ck.trackerID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let trackerID = parseString(rawRow[ck.trackerID.rawValue]),
                   trackerID.count > 0
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // optional values
-            let title = parseString(row[ck.title.rawValue])
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.trackerID.rawValue: trackerID,
-                ck.title.rawValue: title,
             ]
+
+            if let title = parseString(rawRow[ck.title.rawValue]) {
+                decodedRow[ck.title.rawValue] = title
+            }
+
+            array.append(decodedRow)
         }
     }
 }

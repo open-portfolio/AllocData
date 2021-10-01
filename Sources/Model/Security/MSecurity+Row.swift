@@ -46,30 +46,34 @@ extension MSecurity: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MSecurity.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            // required values
-            guard let securityID = parseString(row[ck.securityID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let securityID = parseString(rawRow[ck.securityID.rawValue]),
                   securityID.count > 0
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // optional values
-            let assetID = parseString(row[ck.assetID.rawValue])
-            let sharePrice = parseDouble(row[ck.sharePrice.rawValue])
-            let trackerID = parseString(row[ck.trackerID.rawValue])
-
-            let rawUpdatedAt = row[ck.updatedAt.rawValue]
-            let updatedAt = MSecurity.parseDate(rawUpdatedAt)
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.securityID.rawValue: securityID,
-                ck.assetID.rawValue: assetID,
-                ck.sharePrice.rawValue: sharePrice,
-                ck.updatedAt.rawValue: updatedAt,
-                ck.trackerID.rawValue: trackerID,
             ]
+
+            if let assetID = parseString(rawRow[ck.assetID.rawValue]) {
+                decodedRow[ck.assetID.rawValue] = assetID
+            }
+            if let sharePrice = parseDouble(rawRow[ck.sharePrice.rawValue]) {
+                decodedRow[ck.sharePrice.rawValue] = sharePrice
+            }
+            if let trackerID = parseString(rawRow[ck.trackerID.rawValue]) {
+                decodedRow[ck.trackerID.rawValue] = trackerID
+            }
+            if let rawUpdatedAt = rawRow[ck.updatedAt.rawValue],
+               let updatedAt = MSecurity.parseDate(rawUpdatedAt)
+            {
+                decodedRow[ck.updatedAt.rawValue] = updatedAt
+            }
+
+            array.append(decodedRow)
         }
     }
 }

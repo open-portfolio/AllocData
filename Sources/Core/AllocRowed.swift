@@ -22,7 +22,7 @@ public protocol AllocRowed: AllocKeyed {
     typealias RawRow = [String: String]
 
     // decoded row, with strong typing
-    typealias DecodedRow = [String: AnyHashable?]
+    typealias DecodedRow = [String: AnyHashable]
 
     // create object from row
     init(from row: DecodedRow) throws

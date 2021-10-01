@@ -81,7 +81,7 @@ class MSourceMetaTests: XCTestCase {
 
     func testDecode() throws {
         let YYYYMMDD = df.string(from: timestamp)
-        let YYYYMMDDts = df.date(from: YYYYMMDD)
+        let YYYYMMDDts = df.date(from: YYYYMMDD)!
         let rawRows: [MSourceMeta.RawRow] = [[
             "sourceMetaID": "1",
             "url": "http://blah.com",
@@ -92,7 +92,7 @@ class MSourceMetaTests: XCTestCase {
         let actual = try MSourceMeta.decode(rawRows, rejectedRows: &rejected)
         let expected: MSourceMeta.DecodedRow = [
             "sourceMetaID": "1",
-            "url": URL(string: "http://blah.com"),
+            "url": URL(string: "http://blah.com")!,
             "importerID": "blech",
             "exportedAt": YYYYMMDDts,
         ]

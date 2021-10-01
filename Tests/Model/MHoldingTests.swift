@@ -87,7 +87,7 @@ class MHoldingTests: XCTestCase {
 
     func testDecode() throws {
         let YYYYMMDD = df.string(from: timestamp)
-        let YYYYMMDDts = df.date(from: YYYYMMDD)
+        let YYYYMMDDts = df.date(from: YYYYMMDD)!
         let rawRows: [MHolding.RawRow] = [[
             "holdingAccountID": "1",
             "holdingSecurityID": "BND",

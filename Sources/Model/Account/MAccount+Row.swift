@@ -48,30 +48,35 @@ extension MAccount: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MAccount.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            // required values
-            guard let accountID = parseString(row[ck.accountID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let accountID = parseString(rawRow[ck.accountID.rawValue]),
                   accountID.count > 0
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // optional values
-            let title = parseString(row[ck.title.rawValue])
-            let isActive = parseBool(row[ck.isActive.rawValue])
-            let isTaxable = parseBool(row[ck.isTaxable.rawValue])
-            let canTrade = parseBool(row[ck.canTrade.rawValue])
-            let strategyID = parseString(row[ck.strategyID.rawValue])
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.accountID.rawValue: accountID,
-                ck.title.rawValue: title,
-                ck.isActive.rawValue: isActive,
-                ck.isTaxable.rawValue: isTaxable,
-                ck.canTrade.rawValue: canTrade,
-                ck.strategyID.rawValue: strategyID,
             ]
+
+            if let title = parseString(rawRow[ck.title.rawValue]) {
+                decodedRow[ck.title.rawValue] = title
+            }
+            if let isActive = parseBool(rawRow[ck.isActive.rawValue]) {
+                decodedRow[ck.isActive.rawValue] = isActive
+            }
+            if let isTaxable = parseBool(rawRow[ck.isTaxable.rawValue]) {
+                decodedRow[ck.isTaxable.rawValue] = isTaxable
+            }
+            if let canTrade = parseBool(rawRow[ck.canTrade.rawValue]) {
+                decodedRow[ck.canTrade.rawValue] = canTrade
+            }
+            if let strategyID = parseString(rawRow[ck.strategyID.rawValue]) {
+                decodedRow[ck.strategyID.rawValue] = strategyID
+            }
+
+            array.append(decodedRow)
         }
     }
 }

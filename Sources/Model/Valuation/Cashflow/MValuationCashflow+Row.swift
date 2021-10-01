@@ -54,32 +54,31 @@ extension MValuationCashflow: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MValuationCashflow.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            // required, without default values
-            guard let transactedAt = parseDate(row[ck.transactedAt.rawValue]),
-                  let accountID = parseString(row[ck.accountID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let transactedAt = parseDate(rawRow[ck.transactedAt.rawValue]),
+                  let accountID = parseString(rawRow[ck.accountID.rawValue]),
                   accountID.count > 0,
-                  let assetID = parseString(row[ck.assetID.rawValue]),
+                  let assetID = parseString(rawRow[ck.assetID.rawValue]),
                   assetID.count > 0
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // required, with default value
-            // none
-
-            // optional values
-            let amount = parseDouble(row[ck.amount.rawValue])
-            let reconciled = parseBool(row[ck.reconciled.rawValue])
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.transactedAt.rawValue: transactedAt,
                 ck.accountID.rawValue: accountID,
                 ck.assetID.rawValue: assetID,
-                ck.amount.rawValue: amount,
-                ck.reconciled.rawValue: reconciled,
             ]
+
+            if let amount = parseDouble(rawRow[ck.amount.rawValue]) {
+                decodedRow[ck.amount.rawValue] = amount
+            }
+            if let reconciled = parseBool(rawRow[ck.reconciled.rawValue]) {
+                decodedRow[ck.reconciled.rawValue] = reconciled
+            }
+
+            array.append(decodedRow)
         }
     }
 }

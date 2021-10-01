@@ -76,10 +76,8 @@ class MValuationSnapshotTests: XCTestCase {
     }
 
     func testDecode() throws {
-        // let formattedDate = generateYYYYMMDD2(timestamp) ?? ""
         let formattedDate = formatter.string(for: timestamp)!
-        // let parsedDate = parseYYYYMMDD(formattedDate)
-        let parsedDate = formatter.date(from: formattedDate)
+        let parsedDate = formatter.date(from: formattedDate)!
         let rawRows: [MValuationSnapshot.RawRow] = [[
             MValuationSnapshot.CodingKeys.snapshotID.rawValue: "XYZ",
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: formattedDate,

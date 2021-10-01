@@ -53,35 +53,40 @@ extension MHolding: AllocRowed {
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
         let ck = MHolding.CodingKeys.self
 
-        return rawRows.compactMap { row in
-            // required values, without default values
-            guard let accountID = parseString(row[ck.accountID.rawValue]),
+        return rawRows.reduce(into: []) { array, rawRow in
+            guard let accountID = parseString(rawRow[ck.accountID.rawValue]),
                   accountID.count > 0,
-                  let securityID = parseString(row[ck.securityID.rawValue]),
+                  let securityID = parseString(rawRow[ck.securityID.rawValue]),
                   securityID.count > 0
             else {
-                rejectedRows.append(row)
-                return nil
+                rejectedRows.append(rawRow)
+                return
             }
 
-            // required, but with default value
-            let lotID = parseString(row[ck.lotID.rawValue]) ?? ""
-
-            // optional values
-            let shareCount = parseDouble(row[ck.shareCount.rawValue])
-            let shareBasis = parseDouble(row[ck.shareBasis.rawValue])
-
-            let rawAcquiredAt = row[ck.acquiredAt.rawValue]
-            let acquiredAt = MHolding.parseDate(rawAcquiredAt)
-
-            return [
+            var decodedRow: DecodedRow = [
                 ck.accountID.rawValue: accountID,
                 ck.securityID.rawValue: securityID,
-                ck.lotID.rawValue: lotID,
-                ck.shareCount.rawValue: shareCount,
-                ck.shareBasis.rawValue: shareBasis,
-                ck.acquiredAt.rawValue: acquiredAt,
             ]
+
+            if let lotID = parseString(rawRow[ck.lotID.rawValue]) {
+                decodedRow[ck.lotID.rawValue] = lotID
+            }
+
+            if let shareCount = parseDouble(rawRow[ck.shareCount.rawValue]) {
+                decodedRow[ck.shareCount.rawValue] = shareCount
+            }
+
+            if let shareBasis = parseDouble(rawRow[ck.shareBasis.rawValue]) {
+                decodedRow[ck.shareBasis.rawValue] = shareBasis
+            }
+
+            if let rawAcquiredAt = rawRow[ck.acquiredAt.rawValue],
+               let acquiredAt = MHolding.parseDate(rawAcquiredAt)
+            {
+                decodedRow[ck.acquiredAt.rawValue] = acquiredAt
+            }
+
+            array.append(decodedRow)
         }
     }
 }

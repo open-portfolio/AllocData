@@ -112,7 +112,7 @@ class MTransactionTests: XCTestCase {
 
     func testDecode() throws {
         let YYYYMMDD = df.string(from: timestamp)
-        let YYYYMMDDts = df.date(from: YYYYMMDD)
+        let YYYYMMDDts = df.date(from: YYYYMMDD)!
         let rawRows: [MTransaction.RawRow] = [[
             "txnAction": "transfer",
             "txnTransactedAt": YYYYMMDD,

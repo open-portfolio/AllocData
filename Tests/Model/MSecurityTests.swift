@@ -84,7 +84,7 @@ class MSecurityTests: XCTestCase {
 
     func testDecode() throws {
         let YYYYMMDD = df.string(from: timestamp)
-        let YYYYMMDDts = df.date(from: YYYYMMDD)
+        let YYYYMMDDts = df.date(from: YYYYMMDD)!
         let rawRows: [MSecurity.RawRow] = [[
             "securityID": "BND",
             "securityAssetID": "Bond",
