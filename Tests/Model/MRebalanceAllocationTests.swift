@@ -19,7 +19,6 @@
 import XCTest
 
 class MRebalanceAllocationTests: XCTestCase {
-
     func testSchema() {
         let expected = AllocSchema.allocRebalanceAllocation
         let actual = MRebalanceAllocation.schema

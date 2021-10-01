@@ -69,7 +69,7 @@ class MValuationCashflowTests: XCTestCase {
         let element = MValuationCashflow(transactedAt: timestamp, accountID: " A-x?3 ", assetID: " -3B ! ", amount: 3, reconciled: true)
         let refEpoch = timestamp.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
-        
+
         let actual = element.primaryKey
         let expected = "\(formattedDate),a-x?3,-3b !"
         XCTAssertEqual(expected, actual)

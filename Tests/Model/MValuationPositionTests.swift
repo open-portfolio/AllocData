@@ -29,14 +29,14 @@ class MValuationPositionTests: XCTestCase {
 
     func testInit() {
         let beg = MValuationSnapshot(snapshotID: "B", capturedAt: timestamp)
-        let expected = MValuationPosition(snapshotID: beg.snapshotID, accountID: "1", assetID: "Bond", totalBasis: 24*23, marketValue: 25*23)
-        var actual = MValuationPosition(snapshotID: beg.snapshotID, accountID: "1", assetID: "ITGov", totalBasis: 4*3, marketValue: 5*3)
+        let expected = MValuationPosition(snapshotID: beg.snapshotID, accountID: "1", assetID: "Bond", totalBasis: 24 * 23, marketValue: 25 * 23)
+        var actual = MValuationPosition(snapshotID: beg.snapshotID, accountID: "1", assetID: "ITGov", totalBasis: 4 * 3, marketValue: 5 * 3)
         XCTAssertEqual("1", actual.accountID)
         XCTAssertEqual("ITGov", actual.assetID)
         XCTAssertEqual(12, actual.totalBasis)
         XCTAssertEqual(15, actual.marketValue)
-        actual.totalBasis = 24*23
-        actual.marketValue = 25*23
+        actual.totalBasis = 24 * 23
+        actual.marketValue = 25 * 23
         actual.assetID = "Bond"
         XCTAssertEqual(expected, actual)
     }

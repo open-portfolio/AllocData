@@ -87,12 +87,12 @@ class MTransactionTests: XCTestCase {
         let element = MTransaction(action: .sell, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
         let refEpoch = timestamp.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
-        
+
         let actual = element.primaryKey
         let expected = "sell,\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.0000"
         XCTAssertEqual(expected, actual)
     }
-    
+
     func testGetPrimaryKey() throws {
         let refEpoch = timestamp.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)

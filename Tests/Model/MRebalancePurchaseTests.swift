@@ -19,7 +19,6 @@
 import XCTest
 
 class MRebalancePurchaseTests: XCTestCase {
-
     func testSchema() {
         let expected = AllocSchema.allocRebalancePurchase
         let actual = MRebalancePurchase.schema

@@ -22,7 +22,7 @@ class MValuationSnapshotTests: XCTestCase {
     let timestamp = Date()
     let timestamp2 = Date() + 20000
     let formatter = ISO8601DateFormatter()
-    
+
     func testSchema() {
         let expected = AllocSchema.allocValuationSnapshot
         let actual = MValuationSnapshot.schema
@@ -50,7 +50,7 @@ class MValuationSnapshotTests: XCTestCase {
     func testUpdateFromFINrow() throws {
         var actual = MValuationSnapshot(snapshotID: "XYZ", capturedAt: timestamp)
         let finRow: MValuationSnapshot.DecodedRow = [
-            MValuationSnapshot.CodingKeys.snapshotID.rawValue: "ABC",  // ignored
+            MValuationSnapshot.CodingKeys.snapshotID.rawValue: "ABC", // ignored
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: timestamp2,
         ]
         try actual.update(from: finRow)
@@ -76,9 +76,9 @@ class MValuationSnapshotTests: XCTestCase {
     }
 
     func testDecode() throws {
-        //let formattedDate = generateYYYYMMDD2(timestamp) ?? ""
+        // let formattedDate = generateYYYYMMDD2(timestamp) ?? ""
         let formattedDate = formatter.string(for: timestamp)!
-        //let parsedDate = parseYYYYMMDD(formattedDate)
+        // let parsedDate = parseYYYYMMDD(formattedDate)
         let parsedDate = formatter.date(from: formattedDate)
         let rawRows: [MValuationSnapshot.RawRow] = [[
             MValuationSnapshot.CodingKeys.snapshotID.rawValue: "XYZ",

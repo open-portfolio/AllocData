@@ -105,7 +105,7 @@ class MAccountTests: XCTestCase {
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)
     }
-    
+
     func testDecodeUpperBool() throws {
         let rawRows: [MAccount.RawRow] = [[
             "accountID": "a",
@@ -127,5 +127,4 @@ class MAccountTests: XCTestCase {
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)
     }
-
 }
