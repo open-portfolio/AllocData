@@ -139,14 +139,12 @@ NOTE: this replaces the deprecated 'MHistory' entity.
 
 The action types:
 
-| Type | Code | Descript |
-| ---- | ---- | -------- |
-| Buy | buy | Purchase of a security with cash. | 
-| Sell | sell | Sale of a security for cash. | 
-| Dividend Income | dividend | Income from dividend, to cash. | 
-| Interest Income | interest | Income from interest, to cash. | 
-| Transfer | transfer | Transfer of securities or cash to/from external source. | 
-| Miscellaneous | misc | Credit(+)/debit(-) from something else, to/from cash. | 
+| Type | ShareCount | SharePrice | SecurityID | Descript |
+| ---- | ---------- | ---------- | ---------- |
+| buysell | <0 if sale; >0 if purchase | >0, price/share | required | Purchase/sale of security to/from cash. | 
+| income | amount of income | 1.0 (cash) | if dividend | Income from interest, or the dividend of a stock/ETF/etc.. | 
+| transfer | <0 is outgoing; >0 is incoming | 1.0 if cash; >0 for security | if not cash | Transfer of security/cash to/from external source. | 
+| misc | <0 is outgoing; >0 is incoming | 1.0 (cash) | none | Neutral cashflow in account. | 
 
 ### MRebalanceAllocation
 

@@ -30,8 +30,8 @@ class MTransactionTests: XCTestCase {
 
     func testInit() {
         let expected = MTransaction(action: .dividend, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
-        var actual = MTransaction(action: .buy, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x")
-        XCTAssertEqual(MTransaction.Action.buy, actual.action)
+        var actual = MTransaction(action: .buysell, transactedAt: timestamp, accountID: "a", securityID: "s", lotID: "x")
+        XCTAssertEqual(MTransaction.Action.buysell, actual.action)
         XCTAssertEqual(timestamp, actual.transactedAt)
         XCTAssertEqual("a", actual.accountID)
         XCTAssertEqual("s", actual.securityID)
@@ -66,7 +66,7 @@ class MTransactionTests: XCTestCase {
     }
 
     func testUpdateFromFINrow() throws {
-        var actual = MTransaction(action: .sell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
+        var actual = MTransaction(action: .buysell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
         let finRow: MTransaction.DecodedRow = [
             MTransaction.CodingKeys.action.rawValue: MTransaction.Action.misc, // IGNORED
             MTransaction.CodingKeys.transactedAt.rawValue: timestamp + 200, // IGNORED
@@ -79,17 +79,17 @@ class MTransactionTests: XCTestCase {
             MTransaction.CodingKeys.realizedGainLong.rawValue: 10,
         ]
         try actual.update(from: finRow)
-        let expected = MTransaction(action: .sell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 9, realizedGainLong: 10)
+        let expected = MTransaction(action: .buysell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 9, realizedGainLong: 10)
         XCTAssertEqual(expected, actual)
     }
 
     func testPrimaryKey() throws {
-        let element = MTransaction(action: .sell, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
+        let element = MTransaction(action: .buysell, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
         let refEpoch = timestamp.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
 
         let actual = element.primaryKey
-        let expected = "sell,\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.0000"
+        let expected = "buysell,\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.0000"
         XCTAssertEqual(expected, actual)
     }
 
