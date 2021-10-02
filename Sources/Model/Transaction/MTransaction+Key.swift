@@ -46,7 +46,7 @@ extension MTransaction: AllocKeyed {
         let refEpoch = transactedAt.timeIntervalSinceReferenceDate
         let formattedDate = String(format: "%010.0f", refEpoch)
         let formattedShareCount = String(format: "%.4f", shareCount)
-        let formattedSharePrice = String(format: "%.4f", sharePrice)
+        let formattedSharePrice = String(format: "%.2f", sharePrice) // BUGFIX: Schwab gain/loss exports rounding to nearest penny
         return keyify([formattedAction, formattedDate, accountID, securityID, lotID, formattedShareCount, formattedSharePrice])
     }
 }

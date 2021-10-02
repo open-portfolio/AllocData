@@ -89,7 +89,7 @@ class MTransactionTests: XCTestCase {
         let formattedDate = String(format: "%010.0f", refEpoch)
 
         let actual = element.primaryKey
-        let expected = "buysell,\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.0000"
+        let expected = "buysell,\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.00"
         XCTAssertEqual(expected, actual)
     }
 
@@ -106,7 +106,7 @@ class MTransactionTests: XCTestCase {
             "txnSharePrice": 4,
         ]
         let actual = try MTransaction.getPrimaryKey(finRow)
-        let expected = "misc,\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.0000"
+        let expected = "misc,\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.00"
         XCTAssertEqual(expected, actual)
     }
 
