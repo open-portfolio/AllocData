@@ -47,7 +47,7 @@ class MCapTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MCap(accountID: "1", assetID: "Bond", limitPct: 0.77)
-        let finRow: MCap.Row = [
+        let finRow: MCap.DecodedRow = [
             MCap.CodingKeys.accountID.rawValue: "x", // IGNORED
             MCap.CodingKeys.assetID.rawValue: "xx", // IGNORED
             MCap.CodingKeys.limitPct.rawValue: 0.88,
@@ -65,7 +65,7 @@ class MCapTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MCap.Row = ["capAccountID": " A-x?3 ", "capAssetID": " -3B ! "]
+        let finRow: MCap.DecodedRow = ["capAccountID": " A-x?3 ", "capAssetID": " -3B ! "]
         let actual = try MCap.getPrimaryKey(finRow)
         let expected = "a-x?3,-3b !"
         XCTAssertEqual(expected, actual)
@@ -77,9 +77,9 @@ class MCapTests: XCTestCase {
             "capAssetID": "Bond",
             "limitPct": "0.77",
         ]]
-        var rejected = [MCap.Row]()
+        var rejected = [MCap.RawRow]()
         let actual = try MCap.decode(rawRows, rejectedRows: &rejected)
-        let expected: MCap.Row = [
+        let expected: MCap.DecodedRow = [
             "capAccountID": "1",
             "capAssetID": "Bond",
             "limitPct": 0.77,

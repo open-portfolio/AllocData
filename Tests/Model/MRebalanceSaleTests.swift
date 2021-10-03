@@ -19,7 +19,6 @@
 import XCTest
 
 class MRebalanceSaleTests: XCTestCase {
-
     func testSchema() {
         let expected = AllocSchema.allocRebalanceSale
         let actual = MRebalanceSale.schema
@@ -55,7 +54,7 @@ class MRebalanceSaleTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MRebalanceSale(accountID: "1", securityID: "BND", lotID: "3", amount: 17, shareCount: 3, liquidateAll: true)
-        let finRow: MRebalanceSale.Row = [
+        let finRow: MRebalanceSale.DecodedRow = [
             MRebalanceSale.CodingKeys.accountID.rawValue: "x", // IGNORED
             MRebalanceSale.CodingKeys.securityID.rawValue: "xx", // IGNORED
             MRebalanceSale.CodingKeys.lotID.rawValue: "xxx", // IGNORED
@@ -76,7 +75,7 @@ class MRebalanceSaleTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MRebalanceSale.Row = ["saleAccountID": " A-x?3 ", "saleSecurityID": " -3B ! ", "saleLotID": "   "]
+        let finRow: MRebalanceSale.DecodedRow = ["saleAccountID": " A-x?3 ", "saleSecurityID": " -3B ! ", "saleLotID": "   "]
         let actual = try MRebalanceSale.getPrimaryKey(finRow)
         let expected = "a-x?3,-3b !,"
         XCTAssertEqual(expected, actual)
@@ -91,9 +90,9 @@ class MRebalanceSaleTests: XCTestCase {
             "shareCount": "4",
             "liquidateAll": "true",
         ]]
-        var rejected = [MRebalanceSale.Row]()
+        var rejected = [MRebalanceSale.RawRow]()
         let actual = try MRebalanceSale.decode(rawRows, rejectedRows: &rejected)
-        let expected: MRebalanceSale.Row = [
+        let expected: MRebalanceSale.DecodedRow = [
             "saleAccountID": "1",
             "saleSecurityID": "BND",
             "saleLotID": "3",

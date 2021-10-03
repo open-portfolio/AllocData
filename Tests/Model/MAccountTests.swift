@@ -32,7 +32,7 @@ class MAccountTests: XCTestCase {
         XCTAssertFalse(actual.isActive)
         XCTAssertFalse(actual.isTaxable)
         XCTAssertFalse(actual.canTrade)
-        XCTAssertEqual(AllocNilKey, actual.strategyID)
+        XCTAssertEqual("", actual.strategyID)
         actual.title = "b"
         actual.isActive = true
         actual.isTaxable = true
@@ -56,7 +56,7 @@ class MAccountTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MAccount(accountID: "a", title: "b", isActive: false, isTaxable: false, canTrade: false, strategyID: "X")
-        let finRow: MAccount.Row = [
+        let finRow: MAccount.DecodedRow = [
             MAccount.CodingKeys.accountID.rawValue: "c", // IGNORED
             MAccount.CodingKeys.title.rawValue: "e",
             MAccount.CodingKeys.isActive.rawValue: true,
@@ -77,7 +77,7 @@ class MAccountTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MAccount.Row = ["accountID": " A-x?3 "]
+        let finRow: MAccount.DecodedRow = ["accountID": " A-x?3 "]
         let actual = try MAccount.getPrimaryKey(finRow)
         let expected = "a-x?3"
         XCTAssertEqual(expected, actual)
@@ -92,9 +92,9 @@ class MAccountTests: XCTestCase {
             "canTrade": "true",
             "accountStrategyID": "X",
         ]]
-        var rejected = [MAccount.Row]()
+        var rejected = [MAccount.RawRow]()
         let actual = try MAccount.decode(rawRows, rejectedRows: &rejected)
-        let expected: MAccount.Row = [
+        let expected: MAccount.DecodedRow = [
             "accountID": "a",
             "title": "b",
             "isActive": true,
@@ -105,7 +105,7 @@ class MAccountTests: XCTestCase {
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)
     }
-    
+
     func testDecodeUpperBool() throws {
         let rawRows: [MAccount.RawRow] = [[
             "accountID": "a",
@@ -114,18 +114,16 @@ class MAccountTests: XCTestCase {
             "isTaxable": "TRUE",
             "canTrade": "TRUE",
         ]]
-        var rejected = [MAccount.Row]()
+        var rejected = [MAccount.RawRow]()
         let actual = try MAccount.decode(rawRows, rejectedRows: &rejected)
-        let expected: MAccount.Row = [
+        let expected: MAccount.DecodedRow = [
             "accountID": "a",
             "title": "b",
             "isActive": true,
             "isTaxable": true,
             "canTrade": true,
-            "accountStrategyID": nil,
         ]
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)
     }
-
 }

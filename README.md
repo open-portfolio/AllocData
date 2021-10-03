@@ -8,7 +8,7 @@ The following entities are defined in the _AllocData_ data model.
 
 ### MAccount
 
-This is the ‘openalloc/account’ schema.
+This is the `openalloc/account` schema.
 
 Each row of the Accounts table describes a unique account.
 
@@ -17,13 +17,13 @@ Each row of the Accounts table describes a unique account.
 | accountID | string | true | true | The account number of the account. |
 | title | string | false | false | The title of the account. |
 | isActive | bool | false | false | Is the account active? (NOTE: no longer used by FlowAllocator) |
-| isTaxable | bool | false | false | Is the account taxable? |
-| canTrade | bool | false | false | Can you trade securities in the account? |
+| isTaxable | bool | false | false | Is the account taxable? (default: false) |
+| canTrade | bool | false | false | Can you trade securities in the account? (default: false) |
 | accountStrategyID | string | false | false | The strategy associated with this account, if any. |
 
 ### MAllocation
 
-This is the ‘openalloc/allocation’ schema.
+This is the `openalloc/allocation` schema.
 
 Each row of the Allocations table describes a ‘slice’ of a strategy’s
 allocation pie.
@@ -37,7 +37,7 @@ allocation pie.
 
 ### MAsset
 
-This is the ‘openalloc/asset’ schema.
+This is the `openalloc/asset` schema.
 
 Each row of the Assets table describes a unique asset class.
 
@@ -52,7 +52,7 @@ It also establishes relations between assets.
 
 ### MCap
 
-This is the ‘openalloc/cap’ schema.
+This is the `openalloc/cap` schema.
 
 This table describes limits on allocation for an asset class within an
 account.
@@ -63,26 +63,9 @@ account.
 | capAssetID | string | true | true | The asset in which the limit will be imposed. |
 | limitPct | double | false | false | Allocate no more than this fraction of the account's capacity to the asset. |
 
-### MHistory
-
-This is the ‘openalloc/history’ schema.
-
-A table of recent transaction history, including purchases and sales.
-
-| Name | Type | IsRequired | IsKey | Descript |
-| ---- | ---- | ---------- | ----- | -------- |
-| transactionID | string | false | true | Unique transaction identifier for the history record. |
-| historyAccountID | string | true | false | The account in which the transaction occurred. |
-| historySecurityID | string | true | false | The security involved in the transaction. |
-| shareCount | double | false | false | The number of shares transacted. |
-| sharePrice | double | false | false | The price at which the share(s) transacted. |
-| realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |
-| realizedGainLong | double | false | false | The total long-term realized gain (or loss) from a sale. |
-| transactedAt | date | false | false | The date of the transaction. |
-
 ### MHolding
 
-This is the ‘openalloc/holding’ schema.
+This is the `openalloc/holding` schema.
 
 A table where each row describes an individual position, with account,
 ticker, share count, share basis, etc.
@@ -98,7 +81,7 @@ ticker, share count, share basis, etc.
 
 ### MSecurity
 
-This is the ‘openalloc/security’ schema.
+This is the `openalloc/security` schema.
 
 Table where each row describes a unique security, with its ticker, asset
 class and latest price.
@@ -113,7 +96,7 @@ class and latest price.
 
 ### MStrategy
 
-This is the ‘openalloc/strategy’ schema.
+This is the `openalloc/strategy` schema.
 
 Each row of the Strategies table describes a single allocation strategy.
 
@@ -124,7 +107,7 @@ Each row of the Strategies table describes a single allocation strategy.
 
 ### MTracker
 
-This is the ‘openalloc/tracker’ schema.
+This is the `openalloc/tracker` schema.
 
 Each row of the Tracker table describes a many-to-many
 relationship between Securities.
@@ -134,9 +117,38 @@ relationship between Securities.
 | trackerID | string | true | true | The name of the tracking index. |
 | title | string | false | false | The title of the tracking index. |
 
+### MTransaction **NEW**
+
+This is the `openalloc/transaction` schema.
+
+A table of recent transaction history, including purchases, sales, and other actions.
+
+NOTE: this replaces the deprecated 'MHistory' entity.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| txnAction | string | true | true | The code of the type of transaction (see below). |
+| txnTransactedAt | date | true | true | The date of the transaction. |
+| txnAccountID | string | true | true | The account in which the transaction occurred. |
+| txnSecurityID | string | true | true | The security involved in the transaction. |
+| txnLotID | string | true | true | The lot of the position involved in the transaction (blank if none). |
+| txnShareCount | double | true | true | The number of shares transacted. |
+| txnSharePrice | double | true | true | The price at which the share(s) transacted. |
+| realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |
+| realizedGainLong | double | false | false | The total long-term realized gain (or loss) from a sale. |
+
+The action types:
+
+| Type | ShareCount | SharePrice | SecurityID | Descript |
+| ---- | ---------- | ---------- | ---------- |
+| buysell | <0 if sale; >0 if purchase | >0, price/share | required | Purchase/sale of security to/from cash. | 
+| income | amount of income | 1.0 (cash) | if dividend | Income from interest, or the dividend of a stock/ETF/etc.. | 
+| transfer | <0 is outgoing; >0 is incoming | 1.0 if cash; >0 for security | if not cash | Transfer of security/cash to/from external source. | 
+| misc | <0 is outgoing; >0 is incoming | 1.0 (cash) | ignored | Neutral (non-income) cashflow to/from account. | 
+
 ### MRebalanceAllocation
 
-This is the ‘openalloc/rebalance/allocation’ schema.
+This is the `openalloc/rebalance/allocation` schema.
 
 Each row of the RebalanceAllocation table describes an allocation that drives a rebalance.
 
@@ -148,7 +160,7 @@ Each row of the RebalanceAllocation table describes an allocation that drives a 
 
 ### MRebalancePurchase
 
-This is the ‘openalloc/rebalance/purchase’ schema.
+This is the `openalloc/rebalance/purchase` schema.
 
 Each row of the RebalancePurchase table describes an acquisition of a position to satisfy a rebalance.
 
@@ -160,7 +172,7 @@ Each row of the RebalancePurchase table describes an acquisition of a position t
 
 ### MRebalanceSale
 
-This is the ‘openalloc/rebalance/sale’ schema.
+This is the `openalloc/rebalance/sale` schema.
 
 Each row of the RebalanceSale table describes a liquidation of a position to satisfy a rebalance.
 
@@ -173,35 +185,136 @@ Each row of the RebalanceSale table describes a liquidation of a position to sat
 | shareCount | double | false | false | Estimated number of shares to liquidate from this position. |
 | liquidateAll | bool | false | false | If true, the entire position can be liquidated. |
 
+### MValuationSnapshot **NEW**
+
+This is the `openalloc/valuation/snapshot` schema.
+
+Each row of the ValuationSnapshot table describes a valuation captured at a particular time.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| valuationSnapshotID | string | true | true | The unique valuation snapshot identifier. |
+| capturedAt | date | true | false | The timestamp when the snapshot was created. |
+
+### MValuationPosition **NEW**
+
+This is the `openalloc/valuation/position` schema.
+
+Each row of the valuation position table describes a position captured at a particular time for a valuation snapshot. It can represent multiple holdings of an account for an asset class.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| valuationPositionSnapshotID | string | true | true | The valuation snapshot ID for the position. |
+| valuationPositionAccountID | string | true | true | The account hosting the position. |
+| valuationPositionAssetID | string | true | true | The asset class of the position. |
+| totalBasis | double | true | false | The price paid to establish position. |
+| marketValue | double | true | false | The market value of the position. |
+
+### MValuationCashflow **NEW**
+
+This is the `openalloc/valuation/cashflow` schema.
+
+Each row of the valuation cashflow table describes a cash flow at a particular time. It is not explicitly bound to any valuation snapshot. Typically, multiple history items are rolled up into a cash flow item.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| valuationCashflowTransactedAt | date | true | true | The timestamp when this flow occurred. |
+| valuationCashflowAccountID | string | true | true | The account in which the flow occurred. |
+| valuationCashflowAssetID | string | true | true | The asset class flowed. |
+| amount | double | true | false | The amount of the flow (-Sale, +Purchase). |
+| reconciled | bool | true | false | If record was created to reconcile transactions. |
+
+### MValuationAccount **NEW**
+
+This is the `openalloc/valuation/account` schema.
+
+Provides a historical record of strategy associations for accounts.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| valuationAccountSnapshotID | string | true | true | The valuation snapshot ID for the account. |
+| valuationAccountAccountID | string | true | true | The account identifier. |
+| strategyID | double | true | false | The strategy assignment for the account at the time. |
+
+### MSourceMeta
+
+This is the `openalloc/meta/source` schema.
+
+Each row of the SourceMeta table describes an import or transformation of source data. It can also include extracted data, such as the published export date found within.
+
+| Name | Type | IsRequired | IsKey | Descript |
+| ---- | ---- | ---------- | ----- | -------- |
+| sourceMetaID | string | true | true | The unique ID of the source meta record. |
+| url | string | false | false | The source URL, if any. |
+| importerID | string | false | false | The id of the importer/transformer, if any. |
+| exportedAt | date | false | false | The published export date of the source data, if any. |
+
+## Data Formats
+
+### Dates
+
+In delimited text files, the dates should be in the ISO 8601 / RFC 3339 format (e.g., "2012-12-31T19:00:00Z").
+
 ## API
 
-Entities in the data model all conform to AllocBase protocol.
+Entities in the data model all conform to the following protocols:
+
+### Base
+
+Base functionality for all entities. Currently just a schema identifier.
 
 ```swift
-public protocol AllocBase: Codable {
+public protocol AllocBase {
+    static var schema: AllocSchema { get }
+}
+```
+
+### Keyed
+
+Used to retrieve and generate the entity's primary key.
+
+```swift
+public protocol AllocKeyed {
+    // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
+    var primaryKey: AllocKey { get }
+
+    static func keyify(_ component: String?) -> AllocKey
+    static func keyify(_ components: [String?]) -> AllocKey
+    static func makeAllocMap<T: AllocKeyed>(_ elements: [T]) -> [AllocKey: T]
+}
+```
+
+### Rowed
+
+Used to parse (decode) and generate (encode) delimited data for the entities.
+
+```swift
+public protocol AllocRowed {
     // pre-decoded row, without strong typing
     typealias RawRow = [String: String]
 
     // decoded row, with strong typing
-    typealias Row = [String: AnyHashable?]
-
-    static var schema: AllocSchema { get }
-    static var attributes: [AllocAttribute] { get }
-
-    // Note that key values should NOT be persisted. Their
-    // format and composition may vary across platforms and
-    // versions.
-    var primaryKey: AllocKey { get }
+    typealias DecodedRow = [String: AnyHashable?]
 
     // create object from row
-    init(from row: Row) throws
+    init(from row: DecodedRow) throws
+
+    static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow]
 
     // additive update from row
-    mutating func update(from row: Row) throws
+    mutating func update(from row: DecodedRow) throws
 
-    static func getPrimaryKey(_ row: Row) throws -> AllocKey
+    static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey
+}
+```
 
-    static func decode(_ rawRows: [RawRow], rejectedRows: inout [Row]) throws -> [Row]
+### Attributable
+
+Used to fetch a description of the entity's attributes.
+
+```swift
+public protocol AllocAttributable {
+    static var attributes: [AllocAttribute] { get }
 }
 ```
 

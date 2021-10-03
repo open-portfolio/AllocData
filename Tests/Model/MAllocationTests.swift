@@ -50,7 +50,7 @@ class MAllocationTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MAllocation(strategyID: "1", assetID: "Bond", targetPct: 0.77, isLocked: false)
-        let finRow: MAllocation.Row = [
+        let finRow: MAllocation.DecodedRow = [
             MAllocation.CodingKeys.strategyID.rawValue: "x", // IGNORED
             MAllocation.CodingKeys.assetID.rawValue: "xx", // IGNORED
             MAllocation.CodingKeys.targetPct.rawValue: 0.88,
@@ -69,7 +69,7 @@ class MAllocationTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MAllocation.Row = ["allocationStrategyID": " A-x?3 ", "allocationAssetID": " -3B ! "]
+        let finRow: MAllocation.DecodedRow = ["allocationStrategyID": " A-x?3 ", "allocationAssetID": " -3B ! "]
         let actual = try MAllocation.getPrimaryKey(finRow)
         let expected = "a-x?3,-3b !"
         XCTAssertEqual(expected, actual)
@@ -82,9 +82,9 @@ class MAllocationTests: XCTestCase {
             "targetPct": "0.77",
             "isLocked": "true",
         ]]
-        var rejected = [MAllocation.Row]()
+        var rejected = [MAllocation.RawRow]()
         let actual = try MAllocation.decode(rawRows, rejectedRows: &rejected)
-        let expected: MAllocation.Row = [
+        let expected: MAllocation.DecodedRow = [
             "allocationStrategyID": "1",
             "allocationAssetID": "Bond",
             "targetPct": 0.77,

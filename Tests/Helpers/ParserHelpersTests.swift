@@ -114,7 +114,7 @@ final class ParserHelpersTests: XCTestCase {
         let actual = MCap.parsePercent("-90.3")
         XCTAssertEqual(expected, actual)
     }
-    
+
     func testParseBoolBlank() throws {
         let actual = MCap.parseBool("   ")
         XCTAssertNil(actual)
@@ -129,7 +129,7 @@ final class ParserHelpersTests: XCTestCase {
         let actual = MCap.parseBool("false")!
         XCTAssertFalse(actual)
     }
-    
+
     func testParseFalseMixed() throws {
         let actual = MCap.parseBool("False")!
         XCTAssertFalse(actual)
@@ -144,7 +144,7 @@ final class ParserHelpersTests: XCTestCase {
         let actual = MCap.parseBool("true")!
         XCTAssertTrue(actual)
     }
-    
+
     func testParseTrueMixed() throws {
         let actual = MCap.parseBool("True")!
         XCTAssertTrue(actual)
@@ -155,5 +155,17 @@ final class ParserHelpersTests: XCTestCase {
         XCTAssertTrue(actual)
     }
 
-}
+    func testParseISOdate() throws {
+        let df = ISO8601DateFormatter()
+        let expected = df.date(from: "2012-12-31T19:00:00Z")
+        let actual = MTransaction.parseDate("2012-12-31T19:00:00Z")!
+        XCTAssertEqual(expected, actual)
+    }
 
+    func testParsePartialISOdate() throws {
+        let df = ISO8601DateFormatter()
+        let expected = df.date(from: "2012-12-31T00:00:00Z")
+        let actual = MTransaction.parseDate("2012-12-31")!
+        XCTAssertEqual(expected, actual)
+    }
+}

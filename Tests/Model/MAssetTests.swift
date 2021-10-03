@@ -50,7 +50,7 @@ class MAssetTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MAsset(assetID: "a", title: "b", colorCode: nil, parentAssetID: nil)
-        let finRow: MAsset.Row = [
+        let finRow: MAsset.DecodedRow = [
             MAsset.CodingKeys.assetID.rawValue: "c", // IGNORED
             MAsset.CodingKeys.title.rawValue: "e",
             MAsset.CodingKeys.colorCode.rawValue: 7,
@@ -69,7 +69,7 @@ class MAssetTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MAsset.Row = ["assetID": " A-x?3 "]
+        let finRow: MAsset.DecodedRow = ["assetID": " A-x?3 "]
         let actual = try MAsset.getPrimaryKey(finRow)
         let expected = "a-x?3"
         XCTAssertEqual(expected, actual)
@@ -82,9 +82,9 @@ class MAssetTests: XCTestCase {
             "colorCode": "7",
             "parentAssetID": "TM",
         ]]
-        var rejected = [MAsset.Row]()
+        var rejected = [MAsset.RawRow]()
         let actual = try MAsset.decode(rawRows, rejectedRows: &rejected)
-        let expected: MAsset.Row = [
+        let expected: MAsset.DecodedRow = [
             "assetID": "a",
             "title": "b",
             "colorCode": 7,

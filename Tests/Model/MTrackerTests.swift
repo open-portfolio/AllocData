@@ -44,7 +44,7 @@ class MTrackerTests: XCTestCase {
 
     func testUpdateFromFINrow() throws {
         var actual = MTracker(trackerID: "a", title: "b")
-        let finRow: MTracker.Row = [
+        let finRow: MTracker.DecodedRow = [
             MTracker.CodingKeys.trackerID.rawValue: "c", // IGNORED
             MTracker.CodingKeys.title.rawValue: "e",
         ]
@@ -61,7 +61,7 @@ class MTrackerTests: XCTestCase {
     }
 
     func testGetPrimaryKey() throws {
-        let finRow: MTracker.Row = ["trackerID": " A-x?3 "]
+        let finRow: MTracker.DecodedRow = ["trackerID": " A-x?3 "]
         let actual = try MTracker.getPrimaryKey(finRow)
         let expected = "a-x?3"
         XCTAssertEqual(expected, actual)
@@ -72,9 +72,9 @@ class MTrackerTests: XCTestCase {
             "trackerID": "a",
             "title": "b",
         ]]
-        var rejected = [MTracker.Row]()
+        var rejected = [MTracker.RawRow]()
         let actual = try MTracker.decode(rawRows, rejectedRows: &rejected)
-        let expected: MTracker.Row = [
+        let expected: MTracker.DecodedRow = [
             "trackerID": "a",
             "title": "b",
         ]
