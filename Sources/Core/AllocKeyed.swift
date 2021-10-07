@@ -17,6 +17,23 @@
 
 import Foundation
 
+public protocol AllocKeyed2: Hashable {
+    associatedtype Key
+    
+    var primaryKey2: Key { get }
+}
+
+public extension AllocKeyed2 {
+    static func makeAllocMap<T: AllocKeyed2>(_ elements: [T]) -> [T.Key: T] {
+        let keys: [T.Key] = elements.map(\.primaryKey2)
+        return Dictionary(zip(keys, elements), uniquingKeysWith: { old, _ in old })
+    }
+    
+    static func normalizeID(_ component: String?) -> String {
+        component?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
+    }
+}
+
 public protocol AllocKeyed {
     // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
     var primaryKey: AllocKey { get }

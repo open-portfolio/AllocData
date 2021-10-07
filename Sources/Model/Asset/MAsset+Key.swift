@@ -17,6 +17,26 @@
 
 import Foundation
 
+extension MAsset: AllocKeyed2 {
+    public struct Key: Hashable, Comparable, Equatable {
+        private let assetIDn: String
+        
+        init(_ element: MAsset) {
+            self.assetIDn = MAsset.normalizeID(element.assetID)
+        }
+        
+        public static func < (lhs: Key, rhs: Key) -> Bool {
+            if lhs.assetIDn < rhs.assetIDn { return true }
+            if lhs.assetIDn > rhs.assetIDn { return false }
+            return false
+        }
+    }
+    
+    public var primaryKey2: Key {
+        Key(self)
+    }
+}
+
 extension MAsset: AllocKeyed {
     public var primaryKey: AllocKey {
         MAsset.keyify(assetID)

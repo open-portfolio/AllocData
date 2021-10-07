@@ -17,6 +17,50 @@
 
 import Foundation
 
+extension MTransaction: AllocKeyed2 {
+    public struct Key: Hashable, Comparable, Equatable {
+        private let action: Action
+        private let transactedAt: Date
+        private let accountIDn: String
+        private let securityIDn: String
+        private let lotIDn: String
+        private let shareCount: Double
+        private let sharePrice: Double
+        
+        init(_ element: MTransaction) {
+            self.action = element.action
+            self.transactedAt = element.transactedAt
+            self.accountIDn = MTransaction.normalizeID(element.accountID)
+            self.securityIDn = MTransaction.normalizeID(element.securityID)
+            self.lotIDn = MTransaction.normalizeID(element.lotID)
+            self.shareCount = element.shareCount
+            self.sharePrice = element.sharePrice
+        }
+        
+        public static func < (lhs: Key, rhs: Key) -> Bool {
+            if lhs.transactedAt < rhs.transactedAt { return true }
+            if lhs.transactedAt > rhs.transactedAt { return false }
+
+            if lhs.accountIDn < rhs.accountIDn { return true }
+            if lhs.accountIDn > rhs.accountIDn { return false }
+
+            if lhs.securityIDn < rhs.securityIDn { return true }
+            if lhs.securityIDn > rhs.securityIDn { return false }
+
+            if lhs.shareCount < rhs.shareCount { return true }
+            if lhs.shareCount > rhs.shareCount { return false }
+
+            if lhs.sharePrice < rhs.sharePrice { return true }
+            if lhs.sharePrice > rhs.sharePrice { return false }
+            return false
+        }
+    }
+    
+    public var primaryKey2: Key {
+        Key(self)
+    }
+}
+
 extension MTransaction: AllocKeyed {
     public var primaryKey: AllocKey {
         MTransaction.makePrimaryKey(action: action,

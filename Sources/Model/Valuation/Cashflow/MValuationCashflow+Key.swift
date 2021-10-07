@@ -17,7 +17,64 @@
 
 import Foundation
 
+extension MValuationCashflow: AllocKeyed2 {
+    public struct Key: Hashable, Comparable, Equatable {
+        private let transactedAt: Date
+        private let accountIDn: String
+        private let assetIDn: String
+        
+        init(_ element: MValuationCashflow) {
+            self.transactedAt = element.transactedAt
+            self.accountIDn = MTracker.normalizeID(element.accountID)
+            self.assetIDn = MTracker.normalizeID(element.assetID)
+        }
+        
+        public static func < (lhs: Key, rhs: Key) -> Bool {
+            if lhs.transactedAt < rhs.transactedAt { return true }
+            if lhs.transactedAt > rhs.transactedAt { return false }
+
+            if lhs.accountIDn < rhs.accountIDn { return true }
+            if lhs.accountIDn > rhs.accountIDn { return false }
+
+            if lhs.assetIDn < rhs.assetIDn { return true }
+            if lhs.assetIDn > rhs.assetIDn { return false }
+
+            return false
+        }
+    }
+    
+    public var primaryKey2: Key {
+        Key(self)
+    }
+}
+
 extension MValuationCashflow: AllocKeyed {
+    
+//    internal struct Key: Hashable, Comparable, Equatable {
+//        var transactedAt: Date
+//        var accountID: String
+//        var assetID: String
+//        
+//        init(_ cashflow: MValuationCashflow) {
+//            self.transactedAt = cashflow.transactedAt
+//            self.accountID = cashflow.accountID.lowercased()
+//            self.assetID = cashflow.assetID.lowercased()
+//        }
+//        
+//        public static func < (lhs: Key, rhs: Key) -> Bool {
+//            if lhs.transactedAt < rhs.transactedAt { return true }
+//            if lhs.transactedAt > rhs.transactedAt { return false }
+//
+//            if lhs.accountID < rhs.accountID { return true }
+//            if lhs.accountID > rhs.accountID { return false }
+//
+//            if lhs.assetID < rhs.assetID { return true }
+//            if lhs.assetID > rhs.assetID { return false }
+//
+//            return false
+//        }
+//    }
+
     public var primaryKey: AllocKey {
         MValuationCashflow.makePrimaryKey(transactedAt: transactedAt, accountID: accountID, assetID: assetID)
     }

@@ -17,6 +17,37 @@
 
 import Foundation
 
+extension MValuationPosition: AllocKeyed2 {
+    public struct Key: Hashable, Comparable, Equatable {
+        private let snapshotIDn: String
+        private let accountIDn: String
+        private let assetIDn: String
+        
+        init(_ element: MValuationPosition) {
+            self.snapshotIDn = MValuationPosition.normalizeID(element.snapshotID)
+            self.accountIDn = MValuationPosition.normalizeID(element.accountID)
+            self.assetIDn = MValuationPosition.normalizeID(element.assetID)
+        }
+        
+        public static func < (lhs: Key, rhs: Key) -> Bool {
+            if lhs.snapshotIDn < rhs.snapshotIDn { return true }
+            if lhs.snapshotIDn > rhs.snapshotIDn { return false }
+
+            if lhs.accountIDn < rhs.accountIDn { return true }
+            if lhs.accountIDn > rhs.accountIDn { return false }
+
+            if lhs.assetIDn < rhs.assetIDn { return true }
+            if lhs.assetIDn > rhs.assetIDn { return false }
+
+            return false
+        }
+    }
+    
+    public var primaryKey2: Key {
+        Key(self)
+    }
+}
+
 extension MValuationPosition: AllocKeyed {
     public var primaryKey: AllocKey {
         MValuationPosition.makePrimaryKey(snapshotID: snapshotID, accountID: accountID, assetID: assetID)

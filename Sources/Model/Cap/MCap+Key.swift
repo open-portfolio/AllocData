@@ -17,6 +17,32 @@
 
 import Foundation
 
+extension MCap: AllocKeyed2 {
+    public struct Key: Hashable, Comparable, Equatable {
+        private let accountIDn: String
+        private let assetIDn: String
+        
+        init(_ element: MCap) {
+            self.accountIDn = MCap.normalizeID(element.accountID)
+            self.assetIDn = MCap.normalizeID(element.assetID)
+        }
+        
+        public static func < (lhs: Key, rhs: Key) -> Bool {
+            if lhs.accountIDn < rhs.accountIDn { return true }
+            if lhs.accountIDn > rhs.accountIDn { return false }
+
+            if lhs.assetIDn < rhs.assetIDn { return true }
+            if lhs.assetIDn > rhs.assetIDn { return false }
+            
+            return false
+        }
+    }
+    
+    public var primaryKey2: Key {
+        Key(self)
+    }
+}
+
 extension MCap: AllocKeyed {
     public var primaryKey: AllocKey {
         MCap.keyify([accountID, assetID])

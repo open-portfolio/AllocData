@@ -17,6 +17,26 @@
 
 import Foundation
 
+extension MValuationSnapshot: AllocKeyed2 {
+    public struct Key: Hashable, Comparable, Equatable {
+        private let snapshotIDn: String
+        
+        init(_ element: MValuationSnapshot) {
+            self.snapshotIDn = MValuationSnapshot.normalizeID(element.snapshotID)
+        }
+        
+        public static func < (lhs: Key, rhs: Key) -> Bool {
+            if lhs.snapshotIDn < rhs.snapshotIDn { return true }
+            if lhs.snapshotIDn > rhs.snapshotIDn { return false }
+
+            return false
+        }
+    }
+    
+    public var primaryKey2: Key {
+        Key(self)
+    }
+}
 extension MValuationSnapshot: AllocKeyed {
     public var primaryKey: AllocKey {
         MValuationSnapshot.makePrimaryKey(snapshotID: snapshotID)

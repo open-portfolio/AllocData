@@ -17,6 +17,24 @@
 
 import Foundation
 
+extension MAccount: AllocKeyed2 {
+    public struct Key: Hashable, Comparable, Equatable {
+        let accountKey: String
+        
+        init(_ element: MAccount) {
+            self.accountKey = MAccount.normalizeID(element.accountID)
+        }
+        
+        public static func < (lhs: Key, rhs: Key) -> Bool {
+            lhs.accountKey < rhs.accountKey
+        }
+    }
+    
+    public var primaryKey2: Key {
+        Key(self)
+    }
+}
+
 extension MAccount: AllocKeyed {
     public var primaryKey: AllocKey {
         MAccount.keyify(accountID)

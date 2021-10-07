@@ -17,6 +17,32 @@
 
 import Foundation
 
+extension MRebalanceAllocation: AllocKeyed2 {
+    public struct Key: Hashable, Comparable, Equatable {
+        private let accountIDn: String
+        private let assetIDn: String
+        
+        init(_ element: MRebalanceAllocation) {
+            self.accountIDn = MRebalanceAllocation.normalizeID(element.accountID)
+            self.assetIDn = MRebalanceAllocation.normalizeID(element.assetID)
+        }
+        
+        public static func < (lhs: Key, rhs: Key) -> Bool {
+            if lhs.accountIDn < rhs.accountIDn { return true }
+            if lhs.accountIDn > rhs.accountIDn { return false }
+
+            if lhs.assetIDn < rhs.assetIDn { return true }
+            if lhs.assetIDn > rhs.assetIDn { return false }
+            
+            return false
+        }
+    }
+    
+    public var primaryKey2: Key {
+        Key(self)
+    }
+}
+
 extension MRebalanceAllocation: AllocKeyed {
     public var primaryKey: AllocKey {
         MRebalanceAllocation.keyify([accountID, assetID])
