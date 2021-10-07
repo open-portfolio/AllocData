@@ -19,20 +19,20 @@ import Foundation
 
 extension MAllocation: AllocKeyed2 {
     public struct Key: Hashable, Comparable, Equatable {
-        let strategyKey: String
-        let assetKey: String
+        private let strategyIDn: String
+        private let assetIDn: String
         
         init(_ element: MAllocation) {
-            self.strategyKey = MAllocation.normalizeID(element.strategyID)
-            self.assetKey = MAllocation.normalizeID(element.assetID)
+            self.strategyIDn = MAllocation.normalizeID(element.strategyID)
+            self.assetIDn = MAllocation.normalizeID(element.assetID)
         }
         
         public static func < (lhs: Key, rhs: Key) -> Bool {
-            if lhs.strategyKey < rhs.strategyKey { return true }
-            if lhs.strategyKey > rhs.strategyKey { return false }
+            if lhs.strategyIDn < rhs.strategyIDn { return true }
+            if lhs.strategyIDn > rhs.strategyIDn { return false }
 
-            if lhs.assetKey < rhs.assetKey { return true }
-            if lhs.assetKey > rhs.assetKey { return false }
+            if lhs.assetIDn < rhs.assetIDn { return true }
+            if lhs.assetIDn > rhs.assetIDn { return false }
             
             return false
         }
