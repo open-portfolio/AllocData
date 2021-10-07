@@ -17,12 +17,16 @@
 
 import Foundation
 
-extension MValuationSnapshot: AllocKeyed2 {
+extension MValuationSnapshot: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let snapshotIDn: String
         
+        init(snapshotID: String) {
+            self.snapshotIDn = MValuationSnapshot.normalizeID(snapshotID)
+        }
+        
         init(_ element: MValuationSnapshot) {
-            self.snapshotIDn = MValuationSnapshot.normalizeID(element.snapshotID)
+            self.init(snapshotID: element.snapshotID)
         }
         
         public static func < (lhs: Key, rhs: Key) -> Bool {
@@ -33,16 +37,17 @@ extension MValuationSnapshot: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
-extension MValuationSnapshot: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MValuationSnapshot.makePrimaryKey(snapshotID: snapshotID)
-    }
 
-    public static func makePrimaryKey(snapshotID: String) -> AllocKey {
-        keyify(snapshotID)
-    }
-}
+//extension MValuationSnapshot: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MValuationSnapshot.makePrimaryKey(snapshotID: snapshotID)
+//    }
+//
+//    public static func makePrimaryKey(snapshotID: String) -> AllocKey {
+//        keyify(snapshotID)
+//    }
+//}

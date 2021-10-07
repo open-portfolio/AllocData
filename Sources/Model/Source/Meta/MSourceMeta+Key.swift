@@ -17,14 +17,18 @@
 
 import Foundation
 
-extension MSourceMeta: AllocKeyed2 {
+extension MSourceMeta: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let sourceMetaIDn: String
         
-        init(_ element: MSourceMeta) {
-            self.sourceMetaIDn = MSourceMeta.normalizeID(element.sourceMetaID)
+        init(sourceMetaID: String) {
+            self.sourceMetaIDn = MSourceMeta.normalizeID(sourceMetaID)
         }
         
+        init(_ element: MSourceMeta) {
+            self.init(sourceMetaID: element.sourceMetaID)
+        }
+
         public static func < (lhs: Key, rhs: Key) -> Bool {
             if lhs.sourceMetaIDn < rhs.sourceMetaIDn { return true }
             if lhs.sourceMetaIDn > rhs.sourceMetaIDn { return false }
@@ -32,13 +36,13 @@ extension MSourceMeta: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
 
-extension MSourceMeta: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MSourceMeta.keyify(sourceMetaID)
-    }
-}
+//extension MSourceMeta: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MSourceMeta.keyify(sourceMetaID)
+//    }
+//}

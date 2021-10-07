@@ -17,14 +17,19 @@
 
 import Foundation
 
-extension MRebalanceAllocation: AllocKeyed2 {
+extension MRebalanceAllocation: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let accountIDn: String
         private let assetIDn: String
         
+        internal init(accountID: String, assetID: String) {
+            self.accountIDn = MRebalanceAllocation.normalizeID(accountID)
+            self.assetIDn = MRebalanceAllocation.normalizeID(assetID)
+        }
+        
         init(_ element: MRebalanceAllocation) {
-            self.accountIDn = MRebalanceAllocation.normalizeID(element.accountID)
-            self.assetIDn = MRebalanceAllocation.normalizeID(element.assetID)
+            self.init(accountID: element.accountID,
+                      assetID: element.assetID)
         }
         
         public static func < (lhs: Key, rhs: Key) -> Bool {
@@ -38,13 +43,13 @@ extension MRebalanceAllocation: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
 
-extension MRebalanceAllocation: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MRebalanceAllocation.keyify([accountID, assetID])
-    }
-}
+//extension MRebalanceAllocation: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MRebalanceAllocation.keyify([accountID, assetID])
+//    }
+//}

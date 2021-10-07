@@ -17,14 +17,18 @@
 
 import Foundation
 
-extension MAllocation: AllocKeyed2 {
+extension MAllocation: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let strategyIDn: String
         private let assetIDn: String
         
+        init(strategyID: String, assetID: String) {
+            self.strategyIDn = MAllocation.normalizeID(strategyID)
+            self.assetIDn = MAllocation.normalizeID(assetID)
+        }
+        
         init(_ element: MAllocation) {
-            self.strategyIDn = MAllocation.normalizeID(element.strategyID)
-            self.assetIDn = MAllocation.normalizeID(element.assetID)
+            self.init(strategyID: element.strategyID, assetID: element.assetID)
         }
         
         public static func < (lhs: Key, rhs: Key) -> Bool {
@@ -38,13 +42,13 @@ extension MAllocation: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
 
-extension MAllocation: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MAllocation.keyify([strategyID, assetID])
-    }
-}
+//extension MAllocation: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MAllocation.keyify([strategyID, assetID])
+//    }
+//}

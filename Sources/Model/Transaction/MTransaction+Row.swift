@@ -53,13 +53,13 @@ extension MTransaction: AllocRowed {
         let _accountID = getStr(row, CodingKeys.accountID.rawValue) ?? ""
         let _securityID = getStr(row, CodingKeys.securityID.rawValue) ?? ""
         let _lotID = getStr(row, CodingKeys.lotID.rawValue) ?? ""
-        return makePrimaryKey(action: _action,
-                              transactedAt: _transactedAt,
-                              accountID: _accountID,
-                              securityID: _securityID,
-                              lotID: _lotID,
-                              shareCount: _shareCount,
-                              sharePrice: _sharePrice)
+        return Key(action: _action,
+                   transactedAt: _transactedAt,
+                   accountID: _accountID,
+                   securityID: _securityID,
+                   lotID: _lotID,
+                   shareCount: _shareCount,
+                   sharePrice: _sharePrice)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

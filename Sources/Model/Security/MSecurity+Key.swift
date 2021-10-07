@@ -17,14 +17,18 @@
 
 import Foundation
 
-extension MSecurity: AllocKeyed2 {
+extension MSecurity: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let securityIDn: String
         
-        init(_ element: MSecurity) {
-            self.securityIDn = MSecurity.normalizeID(element.securityID)
+        init(securityID: String) {
+            self.securityIDn = MSecurity.normalizeID(securityID)
         }
         
+        init(_ element: MSecurity) {
+            self.init(securityID: element.securityID)
+        }
+
         public static func < (lhs: Key, rhs: Key) -> Bool {
             if lhs.securityIDn < rhs.securityIDn { return true }
             if lhs.securityIDn > rhs.securityIDn { return false }
@@ -32,13 +36,13 @@ extension MSecurity: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
 
-extension MSecurity: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MSecurity.keyify(securityID)
-    }
-}
+//extension MSecurity: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MSecurity.keyify(securityID)
+//    }
+//}

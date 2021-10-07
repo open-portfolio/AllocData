@@ -41,7 +41,7 @@ extension MAccount: AllocRowed {
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         guard let _accountID = getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Account") }
-        return keyify(_accountID)
+        return Key(accountID: _accountID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

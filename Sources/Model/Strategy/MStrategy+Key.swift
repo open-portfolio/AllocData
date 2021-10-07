@@ -17,14 +17,18 @@
 
 import Foundation
 
-extension MStrategy: AllocKeyed2 {
+extension MStrategy: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let strategyIDn: String
         
-        init(_ element: MStrategy) {
-            self.strategyIDn = MStrategy.normalizeID(element.strategyID)
+        init(strategyID: String) {
+            self.strategyIDn = MStrategy.normalizeID(strategyID)
         }
         
+        init(_ element: MStrategy) {
+            self.init(strategyID: element.strategyID)
+        }
+
         public static func < (lhs: Key, rhs: Key) -> Bool {
             if lhs.strategyIDn < rhs.strategyIDn { return true }
             if lhs.strategyIDn > rhs.strategyIDn { return false }
@@ -32,13 +36,13 @@ extension MStrategy: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
 
-extension MStrategy: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MStrategy.keyify(strategyID)
-    }
-}
+//extension MStrategy: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MStrategy.keyify(strategyID)
+//    }
+//}

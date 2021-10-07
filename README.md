@@ -274,13 +274,13 @@ public protocol AllocBase {
 Used to retrieve and generate the entity's primary key.
 
 ```swift
-public protocol AllocKeyed {
+public protocol AllocKeyed1 {
     // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
-    var primaryKey: AllocKey { get }
+    var primaryKey1: AllocKey { get }
 
     static func keyify(_ component: String?) -> AllocKey
     static func keyify(_ components: [String?]) -> AllocKey
-    static func makeAllocMap<T: AllocKeyed>(_ elements: [T]) -> [AllocKey: T]
+    static func makeAllocMap<T: AllocKeyed1>(_ elements: [T]) -> [AllocKey: T]
 }
 ```
 

@@ -37,7 +37,7 @@ extension MAsset: AllocRowed {
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         guard let _assetID = getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Asset") }
-        return keyify(_assetID)
+        return Key(assetID: _assetID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

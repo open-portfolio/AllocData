@@ -17,14 +17,19 @@
 
 import Foundation
 
-extension MCap: AllocKeyed2 {
+extension MCap: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let accountIDn: String
         private let assetIDn: String
         
+        internal init(accountID: String, assetID: String) {
+            self.accountIDn = MCap.normalizeID(accountID)
+            self.assetIDn = MCap.normalizeID(assetID)
+        }
+        
         init(_ element: MCap) {
-            self.accountIDn = MCap.normalizeID(element.accountID)
-            self.assetIDn = MCap.normalizeID(element.assetID)
+            self.init(accountID: element.accountID,
+                      assetID: element.assetID)
         }
         
         public static func < (lhs: Key, rhs: Key) -> Bool {
@@ -38,13 +43,13 @@ extension MCap: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
 
-extension MCap: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MCap.keyify([accountID, assetID])
-    }
-}
+//extension MCap: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MCap.keyify([accountID, assetID])
+//    }
+//}

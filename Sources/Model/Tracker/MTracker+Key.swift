@@ -17,14 +17,18 @@
 
 import Foundation
 
-extension MTracker: AllocKeyed2 {
+extension MTracker: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let trackerIDn: String
         
-        init(_ element: MTracker) {
-            self.trackerIDn = MTracker.normalizeID(element.trackerID)
+        init(trackerID: String) {
+            self.trackerIDn = MTracker.normalizeID(trackerID)
         }
         
+        init(_ element: MTracker) {
+            self.init(trackerID: element.trackerID)
+        }
+
         public static func < (lhs: Key, rhs: Key) -> Bool {
             if lhs.trackerIDn < rhs.trackerIDn { return true }
             if lhs.trackerIDn > rhs.trackerIDn { return false }
@@ -32,13 +36,13 @@ extension MTracker: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
 
-extension MTracker: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MTracker.keyify(trackerID)
-    }
-}
+//extension MTracker: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MTracker.keyify(trackerID)
+//    }
+//}

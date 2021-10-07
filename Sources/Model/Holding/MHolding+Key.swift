@@ -17,16 +17,22 @@
 
 import Foundation
 
-extension MHolding: AllocKeyed2 {
+extension MHolding: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let accountIDn: String
         private let securityIDn: String
         private let lotIDn: String
         
+        internal init(accountID: String, securityID: String, lotID: String) {
+            self.accountIDn = MHolding.normalizeID(accountID)
+            self.securityIDn = MHolding.normalizeID(securityID)
+            self.lotIDn = MHolding.normalizeID(lotID)
+        }
+        
         init(_ element: MHolding) {
-            self.accountIDn = MHolding.normalizeID(element.accountID)
-            self.securityIDn = MHolding.normalizeID(element.securityID)
-            self.lotIDn = MHolding.normalizeID(element.lotID)
+            self.init(accountID: element.accountID,
+                      securityID: element.securityID,
+                      lotID: element.lotID)
         }
         
         public static func < (lhs: Key, rhs: Key) -> Bool {
@@ -43,13 +49,13 @@ extension MHolding: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
 
-extension MHolding: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MHolding.keyify([accountID, securityID, lotID])
-    }
-}
+//extension MHolding: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MHolding.keyify([accountID, securityID, lotID])
+//    }
+//}

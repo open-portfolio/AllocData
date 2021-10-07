@@ -17,7 +17,7 @@
 
 import Foundation
 
-extension MTransaction: AllocKeyed2 {
+extension MTransaction: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let action: Action
         private let transactedAt: Date
@@ -27,14 +27,30 @@ extension MTransaction: AllocKeyed2 {
         private let shareCount: Double
         private let sharePrice: Double
         
+        init(action: Action,
+             transactedAt: Date,
+             accountID: String,
+             securityID: String,
+             lotID: String,
+             shareCount: Double,
+             sharePrice: Double) {
+            self.action = action
+            self.transactedAt = transactedAt
+            self.accountIDn = MTransaction.normalizeID(accountID)
+            self.securityIDn = MTransaction.normalizeID(securityID)
+            self.lotIDn = MTransaction.normalizeID(lotID)
+            self.shareCount = shareCount
+            self.sharePrice = sharePrice
+        }
+
         init(_ element: MTransaction) {
-            self.action = element.action
-            self.transactedAt = element.transactedAt
-            self.accountIDn = MTransaction.normalizeID(element.accountID)
-            self.securityIDn = MTransaction.normalizeID(element.securityID)
-            self.lotIDn = MTransaction.normalizeID(element.lotID)
-            self.shareCount = element.shareCount
-            self.sharePrice = element.sharePrice
+            self.init(action: element.action,
+                      transactedAt: element.transactedAt,
+                      accountID: element.accountID,
+                      securityID: element.securityID,
+                      lotID: element.lotID,
+                      shareCount: element.shareCount,
+                      sharePrice: element.sharePrice)
         }
         
         public static func < (lhs: Key, rhs: Key) -> Bool {
@@ -56,41 +72,41 @@ extension MTransaction: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
 
-extension MTransaction: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MTransaction.makePrimaryKey(action: action,
-                                    transactedAt: transactedAt,
-                                    accountID: accountID,
-                                    securityID: securityID,
-                                    lotID: lotID,
-                                    shareCount: shareCount,
-                                    sharePrice: sharePrice)
-    }
-
-    public static func makePrimaryKey(action: Action,
-                                      transactedAt: Date,
-                                      accountID: String,
-                                      securityID: String,
-                                      lotID: String,
-                                      shareCount: Double,
-                                      sharePrice: Double) -> AllocKey
-    {
-        // NOTE: using time interval in composite key as ISO dates will vary.
-
-        // This implementation can change at ANY time and may differ per platform.
-        // Because of that AllocData keys should NOT be persisted in data files
-        // or across executions. If you need to store a date, use the ISO format.
-
-        let formattedAction = action.rawValue
-        let refEpoch = transactedAt.timeIntervalSinceReferenceDate
-        let formattedDate = String(format: "%010.0f", refEpoch)
-        let formattedShareCount = String(format: "%.4f", shareCount)
-        let formattedSharePrice = String(format: "%.2f", sharePrice) // BUGFIX: Schwab gain/loss exports rounding to nearest penny
-        return keyify([formattedAction, formattedDate, accountID, securityID, lotID, formattedShareCount, formattedSharePrice])
-    }
-}
+//extension MTransaction: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MTransaction.makePrimaryKey(action: action,
+//                                    transactedAt: transactedAt,
+//                                    accountID: accountID,
+//                                    securityID: securityID,
+//                                    lotID: lotID,
+//                                    shareCount: shareCount,
+//                                    sharePrice: sharePrice)
+//    }
+//
+//    public static func makePrimaryKey(action: Action,
+//                                      transactedAt: Date,
+//                                      accountID: String,
+//                                      securityID: String,
+//                                      lotID: String,
+//                                      shareCount: Double,
+//                                      sharePrice: Double) -> AllocKey
+//    {
+//        // NOTE: using time interval in composite key as ISO dates will vary.
+//
+//        // This implementation can change at ANY time and may differ per platform.
+//        // Because of that AllocData keys should NOT be persisted in data files
+//        // or across executions. If you need to store a date, use the ISO format.
+//
+//        let formattedAction = action.rawValue
+//        let refEpoch = transactedAt.timeIntervalSinceReferenceDate
+//        let formattedDate = String(format: "%010.0f", refEpoch)
+//        let formattedShareCount = String(format: "%.4f", shareCount)
+//        let formattedSharePrice = String(format: "%.2f", sharePrice) // BUGFIX: Schwab gain/loss exports rounding to nearest penny
+//        return keyify([formattedAction, formattedDate, accountID, securityID, lotID, formattedShareCount, formattedSharePrice])
+//    }
+//}

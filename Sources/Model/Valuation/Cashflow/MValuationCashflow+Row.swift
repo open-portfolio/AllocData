@@ -45,7 +45,8 @@ extension MValuationCashflow: AllocRowed {
               let _accountID = getStr(row, CodingKeys.accountID.rawValue),
               let _assetID = getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Valuation Cashflow") }
-        return makePrimaryKey(transactedAt: _transactedAt, accountID: _accountID, assetID: _assetID)
+//        return makePrimaryKey(transactedAt: _transactedAt, accountID: _accountID, assetID: _assetID)
+        return Key(transactedAt: _transactedAt, accountID: _accountID, assetID: _assetID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

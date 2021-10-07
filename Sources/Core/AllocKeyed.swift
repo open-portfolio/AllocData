@@ -1,5 +1,5 @@
 //
-//  AllocKeyed.swift
+//  AllocKeyed1.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -17,15 +17,17 @@
 
 import Foundation
 
-public protocol AllocKeyed2: Hashable {
+public protocol AllocKeyed: Hashable {
     associatedtype Key
     
-    var primaryKey2: Key { get }
+    typealias AllocKey = AnyHashable
+    
+    var primaryKey: Key { get }
 }
 
-public extension AllocKeyed2 {
-    static func makeAllocMap<T: AllocKeyed2>(_ elements: [T]) -> [T.Key: T] {
-        let keys: [T.Key] = elements.map(\.primaryKey2)
+public extension AllocKeyed {
+    static func makeAllocMap<T: AllocKeyed>(_ elements: [T]) -> [T.Key: T] {
+        let keys: [T.Key] = elements.map(\.primaryKey)
         return Dictionary(zip(keys, elements), uniquingKeysWith: { old, _ in old })
     }
     
@@ -34,33 +36,33 @@ public extension AllocKeyed2 {
     }
 }
 
-public protocol AllocKeyed {
-    // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
-    var primaryKey: AllocKey { get }
-
-    static func keyify(_ component: String?) -> AllocKey
-    static func keyify(_ components: [String?]) -> AllocKey
-    static func makeAllocMap<T: AllocKeyed>(_ elements: [T]) -> [AllocKey: T]
-}
-
-public extension AllocKeyed {
-    // an AllocKey is a normalized 'ID', trimmed and lowercased.
-    typealias AllocKey = String
-
-    static func keyify(_ component: String?) -> AllocKey {
-        component?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
-    }
-
-    static func keyify(_ components: [String?]) -> AllocKey {
-        let separator = ","
-        return
-            components
-                .map { $0?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "" }
-                .joined(separator: separator).lowercased()
-    }
-
-    static func makeAllocMap<T: AllocKeyed>(_ elements: [T]) -> [AllocKey: T] {
-        let keys: [AllocKey] = elements.map(\.primaryKey)
-        return Dictionary(zip(keys, elements), uniquingKeysWith: { old, _ in old })
-    }
-}
+//public protocol AllocKeyed1 {
+//    // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
+//    var primaryKey1: AllocKey { get }
+//
+//    static func keyify(_ component: String?) -> AllocKey
+//    static func keyify(_ components: [String?]) -> AllocKey
+//    static func makeAllocMap<T: AllocKeyed1>(_ elements: [T]) -> [AllocKey: T]
+//}
+//
+//public extension AllocKeyed1 {
+//    // an AllocKey is a normalized 'ID', trimmed and lowercased.
+//    typealias AllocKey = String
+//
+//    static func keyify(_ component: String?) -> AllocKey {
+//        component?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
+//    }
+//
+//    static func keyify(_ components: [String?]) -> AllocKey {
+//        let separator = ","
+//        return
+//            components
+//                .map { $0?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "" }
+//                .joined(separator: separator).lowercased()
+//    }
+//
+//    static func makeAllocMap<T: AllocKeyed1>(_ elements: [T]) -> [AllocKey: T] {
+//        let keys: [AllocKey] = elements.map(\.primaryKey1)
+//        return Dictionary(zip(keys, elements), uniquingKeysWith: { old, _ in old })
+//    }
+//}

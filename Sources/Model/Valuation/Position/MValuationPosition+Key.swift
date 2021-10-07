@@ -17,16 +17,22 @@
 
 import Foundation
 
-extension MValuationPosition: AllocKeyed2 {
+extension MValuationPosition: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let snapshotIDn: String
         private let accountIDn: String
         private let assetIDn: String
         
+        internal init(snapshotID: String, accountID: String, assetID: String) {
+            self.snapshotIDn = MValuationPosition.normalizeID(snapshotID)
+            self.accountIDn = MValuationPosition.normalizeID(accountID)
+            self.assetIDn = MValuationPosition.normalizeID(assetID)
+        }
+        
         init(_ element: MValuationPosition) {
-            self.snapshotIDn = MValuationPosition.normalizeID(element.snapshotID)
-            self.accountIDn = MValuationPosition.normalizeID(element.accountID)
-            self.assetIDn = MValuationPosition.normalizeID(element.assetID)
+            self.init(snapshotID: element.snapshotID,
+                      accountID: element.accountID,
+                      assetID: element.assetID)
         }
         
         public static func < (lhs: Key, rhs: Key) -> Bool {
@@ -43,17 +49,17 @@ extension MValuationPosition: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
 
-extension MValuationPosition: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MValuationPosition.makePrimaryKey(snapshotID: snapshotID, accountID: accountID, assetID: assetID)
-    }
-
-    public static func makePrimaryKey(snapshotID: String, accountID: String, assetID: String) -> AllocKey {
-        keyify([snapshotID, accountID, assetID])
-    }
-}
+//extension MValuationPosition: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MValuationPosition.makePrimaryKey(snapshotID: snapshotID, accountID: accountID, assetID: assetID)
+//    }
+//
+//    public static func makePrimaryKey(snapshotID: String, accountID: String, assetID: String) -> AllocKey {
+//        keyify([snapshotID, accountID, assetID])
+//    }
+//}

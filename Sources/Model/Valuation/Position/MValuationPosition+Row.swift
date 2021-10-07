@@ -45,7 +45,7 @@ extension MValuationPosition: AllocRowed {
               let _accountID = getStr(row, CodingKeys.accountID.rawValue),
               let _assetID = getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Valuation Position") }
-        return makePrimaryKey(snapshotID: _snapshotID, accountID: _accountID, assetID: _assetID)
+        return Key(snapshotID: _snapshotID, accountID: _accountID, assetID: _assetID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

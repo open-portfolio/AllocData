@@ -38,7 +38,7 @@ extension MValuationAccount: AllocRowed {
         guard let _snapshotID = getStr(row, CodingKeys.snapshotID.rawValue),
               let _accountID = getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Valuation Account") }
-        return makePrimaryKey(snapshotID: _snapshotID, accountID: _accountID)
+        return Key(snapshotID: _snapshotID, accountID: _accountID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

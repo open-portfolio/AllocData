@@ -17,12 +17,16 @@
 
 import Foundation
 
-extension MAsset: AllocKeyed2 {
+extension MAsset: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let assetIDn: String
         
+        init(assetID: String) {
+            self.assetIDn = MAsset.normalizeID(assetID)
+        }
+        
         init(_ element: MAsset) {
-            self.assetIDn = MAsset.normalizeID(element.assetID)
+            self.init(assetID: element.assetID)
         }
         
         public static func < (lhs: Key, rhs: Key) -> Bool {
@@ -32,13 +36,13 @@ extension MAsset: AllocKeyed2 {
         }
     }
     
-    public var primaryKey2: Key {
+    public var primaryKey: Key {
         Key(self)
     }
 }
 
-extension MAsset: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MAsset.keyify(assetID)
-    }
-}
+//extension MAsset: AllocKeyed1 {
+//    public var primaryKey1: AllocKey {
+//        MAsset.keyify(assetID)
+//    }
+//}

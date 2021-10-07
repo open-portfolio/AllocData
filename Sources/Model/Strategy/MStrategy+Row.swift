@@ -33,7 +33,7 @@ extension MStrategy: AllocRowed {
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         guard let _strategyID = getStr(row, CodingKeys.strategyID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Strategy") }
-        return keyify(_strategyID)
+        return Key(strategyID: _strategyID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

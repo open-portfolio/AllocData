@@ -37,7 +37,7 @@ extension MSourceMeta: AllocRowed {
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         guard let _sourceMetaID = getStr(row, CodingKeys.sourceMetaID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Source Meta") }
-        return keyify(_sourceMetaID)
+        return Key(sourceMetaID: _sourceMetaID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

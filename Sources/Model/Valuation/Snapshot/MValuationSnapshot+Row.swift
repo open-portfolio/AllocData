@@ -35,7 +35,8 @@ extension MValuationSnapshot: AllocRowed {
     public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
         guard let _snapshotID = getStr(row, CodingKeys.snapshotID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Valuation Snapshot") }
-        return makePrimaryKey(snapshotID: _snapshotID)
+        //return makePrimaryKey(snapshotID: _snapshotID)
+        return Key(snapshotID: _snapshotID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
