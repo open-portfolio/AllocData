@@ -29,7 +29,7 @@ extension MValuationPosition: AllocKeyed {
             self.assetIDn = MValuationPosition.normalizeID(assetID)
         }
         
-        init(_ element: MValuationPosition) {
+        public init(_ element: MValuationPosition) {
             self.init(snapshotID: element.snapshotID,
                       accountID: element.accountID,
                       assetID: element.assetID)

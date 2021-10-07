@@ -21,11 +21,11 @@ extension MTracker: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let trackerIDn: String
         
-        init(trackerID: String) {
+        public init(trackerID: String) {
             self.trackerIDn = MTracker.normalizeID(trackerID)
         }
         
-        init(_ element: MTracker) {
+        public init(_ element: MTracker) {
             self.init(trackerID: element.trackerID)
         }
 

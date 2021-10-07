@@ -23,13 +23,13 @@ extension MValuationCashflow: AllocKeyed {
         private let accountIDn: String
         private let assetIDn: String
         
-        init(transactedAt: Date, accountID: String, assetID: String) {
+        public init(transactedAt: Date, accountID: String, assetID: String) {
             self.transactedAt = transactedAt
             self.accountIDn = MTracker.normalizeID(accountID)
             self.assetIDn = MTracker.normalizeID(assetID)
         }
         
-        init(_ element: MValuationCashflow) {
+        public init(_ element: MValuationCashflow) {
             self.init(transactedAt: element.transactedAt,
                       accountID: element.accountID,
                       assetID: element.assetID)
@@ -61,7 +61,7 @@ extension MValuationCashflow: AllocKeyed {
 ////        var accountID: String
 ////        var assetID: String
 ////        
-////        init(_ cashflow: MValuationCashflow) {
+////        public init(_ cashflow: MValuationCashflow) {
 ////            self.transactedAt = cashflow.transactedAt
 ////            self.accountID = cashflow.accountID.lowercased()
 ////            self.assetID = cashflow.assetID.lowercased()

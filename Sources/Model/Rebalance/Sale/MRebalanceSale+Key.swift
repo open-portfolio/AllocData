@@ -29,7 +29,7 @@ extension MRebalanceSale: AllocKeyed {
             self.lotIDn = MRebalanceSale.normalizeID(lotID)
         }
         
-        init(_ element: MRebalanceSale) {
+        public init(_ element: MRebalanceSale) {
             self.init(accountID: element.accountID,
                       securityID: element.securityID,
                       lotID: element.lotID)

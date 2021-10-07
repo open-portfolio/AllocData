@@ -21,11 +21,11 @@ extension MSecurity: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let securityIDn: String
         
-        init(securityID: String) {
+        public init(securityID: String) {
             self.securityIDn = MSecurity.normalizeID(securityID)
         }
         
-        init(_ element: MSecurity) {
+        public init(_ element: MSecurity) {
             self.init(securityID: element.securityID)
         }
 

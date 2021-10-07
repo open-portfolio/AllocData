@@ -21,11 +21,11 @@ extension MAccount: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let accountIDn: String
         
-        init(accountID: String) {
+        public init(accountID: String) {
             self.accountIDn = MAccount.normalizeID(accountID)
         }
         
-        init(_ element: MAccount) {
+        public init(_ element: MAccount) {
             self.init(accountID: element.accountID)
         }
         

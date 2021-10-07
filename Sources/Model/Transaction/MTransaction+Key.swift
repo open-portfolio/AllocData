@@ -27,7 +27,7 @@ extension MTransaction: AllocKeyed {
         private let shareCount: Double
         private let sharePrice: Double
         
-        init(action: Action,
+        public init(action: Action,
              transactedAt: Date,
              accountID: String,
              securityID: String,
@@ -43,7 +43,7 @@ extension MTransaction: AllocKeyed {
             self.sharePrice = sharePrice
         }
 
-        init(_ element: MTransaction) {
+        public init(_ element: MTransaction) {
             self.init(action: element.action,
                       transactedAt: element.transactedAt,
                       accountID: element.accountID,

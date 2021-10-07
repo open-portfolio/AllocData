@@ -29,7 +29,7 @@ extension MHolding: AllocKeyed {
             self.lotIDn = MHolding.normalizeID(lotID)
         }
         
-        init(_ element: MHolding) {
+        public init(_ element: MHolding) {
             self.init(accountID: element.accountID,
                       securityID: element.securityID,
                       lotID: element.lotID)

@@ -21,11 +21,11 @@ extension MAsset: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let assetIDn: String
         
-        init(assetID: String) {
+        public init(assetID: String) {
             self.assetIDn = MAsset.normalizeID(assetID)
         }
         
-        init(_ element: MAsset) {
+        public init(_ element: MAsset) {
             self.init(assetID: element.assetID)
         }
         

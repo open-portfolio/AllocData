@@ -21,11 +21,11 @@ extension MSourceMeta: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let sourceMetaIDn: String
         
-        init(sourceMetaID: String) {
+        public init(sourceMetaID: String) {
             self.sourceMetaIDn = MSourceMeta.normalizeID(sourceMetaID)
         }
         
-        init(_ element: MSourceMeta) {
+        public init(_ element: MSourceMeta) {
             self.init(sourceMetaID: element.sourceMetaID)
         }
 

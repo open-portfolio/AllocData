@@ -22,12 +22,12 @@ extension MAllocation: AllocKeyed {
         private let strategyIDn: String
         private let assetIDn: String
         
-        init(strategyID: String, assetID: String) {
+        public init(strategyID: String, assetID: String) {
             self.strategyIDn = MAllocation.normalizeID(strategyID)
             self.assetIDn = MAllocation.normalizeID(assetID)
         }
         
-        init(_ element: MAllocation) {
+        public init(_ element: MAllocation) {
             self.init(strategyID: element.strategyID, assetID: element.assetID)
         }
         

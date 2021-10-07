@@ -21,11 +21,11 @@ extension MValuationSnapshot: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let snapshotIDn: String
         
-        init(snapshotID: String) {
+        public init(snapshotID: String) {
             self.snapshotIDn = MValuationSnapshot.normalizeID(snapshotID)
         }
         
-        init(_ element: MValuationSnapshot) {
+        public init(_ element: MValuationSnapshot) {
             self.init(snapshotID: element.snapshotID)
         }
         

@@ -21,11 +21,11 @@ extension MStrategy: AllocKeyed {
     public struct Key: Hashable, Comparable, Equatable {
         private let strategyIDn: String
         
-        init(strategyID: String) {
+        public init(strategyID: String) {
             self.strategyIDn = MStrategy.normalizeID(strategyID)
         }
         
-        init(_ element: MStrategy) {
+        public init(_ element: MStrategy) {
             self.init(strategyID: element.strategyID)
         }
 

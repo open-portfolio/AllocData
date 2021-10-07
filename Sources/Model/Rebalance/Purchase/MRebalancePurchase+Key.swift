@@ -27,7 +27,7 @@ extension MRebalancePurchase: AllocKeyed {
             self.assetIDn = MRebalancePurchase.normalizeID(assetID)
         }
         
-        init(_ element: MRebalancePurchase) {
+        public init(_ element: MRebalancePurchase) {
             self.init(accountID: element.accountID,
                       assetID: element.assetID)
         }

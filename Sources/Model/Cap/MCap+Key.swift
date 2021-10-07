@@ -27,7 +27,7 @@ extension MCap: AllocKeyed {
             self.assetIDn = MCap.normalizeID(assetID)
         }
         
-        init(_ element: MCap) {
+        public init(_ element: MCap) {
             self.init(accountID: element.accountID,
                       assetID: element.assetID)
         }

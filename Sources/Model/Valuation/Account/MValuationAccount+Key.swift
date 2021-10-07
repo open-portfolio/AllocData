@@ -22,12 +22,12 @@ extension MValuationAccount: AllocKeyed {
         private let snapshotIDn: String
         private let accountIDn: String
         
-        init(snapshotID: String, accountID: String) {
+        public init(snapshotID: String, accountID: String) {
             self.snapshotIDn = MValuationAccount.normalizeID(snapshotID)
             self.accountIDn = MValuationAccount.normalizeID(accountID)
         }
         
-        init(_ element: MValuationAccount) {
+        public init(_ element: MValuationAccount) {
             self.init(snapshotID: element.snapshotID, accountID: element.accountID)
         }
         
