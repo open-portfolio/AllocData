@@ -27,10 +27,6 @@ extension MValuationAccount: AllocRowed {
         else { throw AllocDataError.invalidPrimaryKey(CodingKeys.accountID.rawValue) }
         accountID = _accountID
 
-        guard let _strategyID = MValuationAccount.getStr(row, CodingKeys.strategyID.rawValue)
-        else { throw AllocDataError.invalidPrimaryKey(CodingKeys.strategyID.rawValue) }
-        strategyID = _strategyID
-
         strategyID = MValuationAccount.getStr(row, CodingKeys.strategyID.rawValue) ?? ""
     }
 
