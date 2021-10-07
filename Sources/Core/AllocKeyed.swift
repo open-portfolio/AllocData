@@ -21,6 +21,7 @@ public protocol AllocKeyed: Hashable {
     associatedtype Key
     
     typealias AllocKey = AnyHashable
+    typealias NormalizedID = String
     
     var primaryKey: Key { get }
 }
@@ -31,7 +32,7 @@ public extension AllocKeyed {
         return Dictionary(zip(keys, elements), uniquingKeysWith: { old, _ in old })
     }
     
-    static func normalizeID(_ component: String?) -> String {
+    static func normalizeID(_ component: String?) -> NormalizedID {
         component?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
     }
 }
