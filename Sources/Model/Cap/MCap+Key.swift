@@ -22,7 +22,7 @@ extension MCap: AllocKeyed {
         public let accountNormID: String
         public let assetNormID: String
         
-        internal init(accountID: String, assetID: String) {
+        public init(accountID: String, assetID: String) {
             self.accountNormID = MCap.normalizeID(accountID)
             self.assetNormID = MCap.normalizeID(assetID)
         }

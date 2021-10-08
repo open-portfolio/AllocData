@@ -34,7 +34,7 @@ extension MSourceMeta: AllocRowed {
         if let val = MSourceMeta.getDate(row, CodingKeys.exportedAt.rawValue) { exportedAt = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _sourceMetaID = getStr(row, CodingKeys.sourceMetaID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Source Meta") }
         return Key(sourceMetaID: _sourceMetaID)

@@ -39,7 +39,7 @@ extension MHolding: AllocRowed {
         if let val = MHolding.getDate(row, CodingKeys.acquiredAt.rawValue) { acquiredAt = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _accountID = getStr(row, CodingKeys.accountID.rawValue),
               let _securityID = getStr(row, CodingKeys.securityID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Holding") }

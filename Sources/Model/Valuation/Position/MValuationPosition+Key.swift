@@ -23,7 +23,7 @@ extension MValuationPosition: AllocKeyed {
         public let accountNormID: String
         public let assetNormID: String
         
-        internal init(snapshotID: String, accountID: String, assetID: String) {
+        public init(snapshotID: String, accountID: String, assetID: String) {
             self.snapshotNormID = MValuationPosition.normalizeID(snapshotID)
             self.accountNormID = MValuationPosition.normalizeID(accountID)
             self.assetNormID = MValuationPosition.normalizeID(assetID)

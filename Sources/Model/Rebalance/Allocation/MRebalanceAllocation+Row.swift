@@ -34,7 +34,7 @@ extension MRebalanceAllocation: AllocRowed {
         if let val = MRebalanceAllocation.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _accountID = getStr(row, CodingKeys.accountID.rawValue),
               let _assetID = getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Rebalance Allocation") }

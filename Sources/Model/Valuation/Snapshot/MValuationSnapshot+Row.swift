@@ -32,7 +32,7 @@ extension MValuationSnapshot: AllocRowed {
         if let val = MValuationSnapshot.getDate(row, CodingKeys.capturedAt.rawValue) { capturedAt = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _snapshotID = getStr(row, CodingKeys.snapshotID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Valuation Snapshot") }
         //return makePrimaryKey(snapshotID: _snapshotID)

@@ -20,7 +20,6 @@ import Foundation
 public protocol AllocKeyed: Hashable {
     associatedtype Key
     
-    typealias AllocKey = AnyHashable
     typealias NormalizedID = String
     
     var primaryKey: Key { get }

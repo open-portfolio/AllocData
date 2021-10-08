@@ -30,7 +30,7 @@ extension MStrategy: AllocRowed {
         if let val = MStrategy.getStr(row, CodingKeys.title.rawValue) { title = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _strategyID = getStr(row, CodingKeys.strategyID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Strategy") }
         return Key(strategyID: _strategyID)

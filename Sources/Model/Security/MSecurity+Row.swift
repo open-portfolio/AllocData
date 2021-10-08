@@ -36,7 +36,7 @@ extension MSecurity: AllocRowed {
         if let val = MSecurity.getStr(row, CodingKeys.trackerID.rawValue) { trackerID = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _securityID = getStr(row, CodingKeys.securityID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Security") }
         return Key(securityID: _securityID)

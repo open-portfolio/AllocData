@@ -44,7 +44,7 @@ extension MTransaction: AllocRowed {
         if let val = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue) { realizedGainLong = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _action = row[CodingKeys.action.rawValue] as? MTransaction.Action,
               let _transactedAt = getDate(row, CodingKeys.transactedAt.rawValue),
               let _shareCount = getDouble(row, CodingKeys.shareCount.rawValue),

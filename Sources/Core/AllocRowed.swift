@@ -32,7 +32,7 @@ public protocol AllocRowed: AllocKeyed {
     // additive update from row
     mutating func update(from row: DecodedRow) throws
 
-    static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey
+    static func getPrimaryKey(_ row: DecodedRow) throws -> Key
 }
 
 public extension AllocRowed {

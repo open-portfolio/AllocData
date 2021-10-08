@@ -23,7 +23,7 @@ extension MHolding: AllocKeyed {
         public let securityNormID: String
         public let lotNormID: String
         
-        internal init(accountID: String, securityID: String, lotID: String) {
+        public init(accountID: String, securityID: String, lotID: String) {
             self.accountNormID = MHolding.normalizeID(accountID)
             self.securityNormID = MHolding.normalizeID(securityID)
             self.lotNormID = MHolding.normalizeID(lotID)

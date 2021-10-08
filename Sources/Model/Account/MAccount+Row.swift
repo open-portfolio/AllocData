@@ -38,7 +38,7 @@ extension MAccount: AllocRowed {
         if let val = MAccount.getStr(row, CodingKeys.strategyID.rawValue) { strategyID = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _accountID = getStr(row, CodingKeys.accountID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Account") }
         return Key(accountID: _accountID)

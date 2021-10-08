@@ -22,7 +22,7 @@ extension MRebalancePurchase: AllocKeyed {
         public let accountNormID: String
         public let assetNormID: String
         
-        internal init(accountID: String, assetID: String) {
+        public init(accountID: String, assetID: String) {
             self.accountNormID = MRebalancePurchase.normalizeID(accountID)
             self.assetNormID = MRebalancePurchase.normalizeID(assetID)
         }

@@ -40,7 +40,7 @@ extension MValuationCashflow: AllocRowed {
         if let val = MValuationPosition.getBool(row, CodingKeys.reconciled.rawValue) { reconciled = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _transactedAt = getDate(row, CodingKeys.transactedAt.rawValue),
               let _accountID = getStr(row, CodingKeys.accountID.rawValue),
               let _assetID = getStr(row, CodingKeys.assetID.rawValue)
