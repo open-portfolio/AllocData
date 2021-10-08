@@ -18,7 +18,7 @@
 import Foundation
 
 public protocol AllocKeyed: Hashable {
-    associatedtype Key: Equatable, Codable
+    associatedtype Key: Hashable, Codable
     
     typealias NormalizedID = String
     
