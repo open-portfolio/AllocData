@@ -18,7 +18,7 @@
 import Foundation
 
 extension MAsset: AllocKeyed {
-    public struct Key: Hashable, Equatable {
+    public struct Key: Hashable, Equatable, Codable {
         public let assetNormID: String
         
         public init(assetID: String) {

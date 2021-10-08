@@ -18,7 +18,7 @@
 import Foundation
 
 extension MTransaction: AllocKeyed {
-    public struct Key: Hashable, Equatable {
+    public struct Key: Hashable, Equatable, Codable {
         public let action: Action
         public let transactedAt: Date
         public let accountNormID: String

@@ -18,7 +18,7 @@
 import Foundation
 
 extension MCap: AllocKeyed {
-    public struct Key: Hashable, Equatable {
+    public struct Key: Hashable, Equatable, Codable {
         public let accountNormID: String
         public let assetNormID: String
         

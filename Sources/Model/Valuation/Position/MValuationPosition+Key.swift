@@ -18,7 +18,7 @@
 import Foundation
 
 extension MValuationPosition: AllocKeyed {
-    public struct Key: Hashable, Equatable {
+    public struct Key: Hashable, Equatable, Codable {
         public let snapshotNormID: String
         public let accountNormID: String
         public let assetNormID: String

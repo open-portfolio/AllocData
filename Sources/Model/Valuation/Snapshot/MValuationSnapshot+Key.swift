@@ -18,7 +18,7 @@
 import Foundation
 
 extension MValuationSnapshot: AllocKeyed {
-    public struct Key: Hashable, Equatable {
+    public struct Key: Hashable, Equatable, Codable {
         public let snapshotNormID: String
         
         public init(snapshotID: String) {

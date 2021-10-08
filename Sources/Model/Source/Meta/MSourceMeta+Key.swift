@@ -18,7 +18,7 @@
 import Foundation
 
 extension MSourceMeta: AllocKeyed {
-    public struct Key: Hashable, Equatable {
+    public struct Key: Hashable, Equatable, Codable {
         public let sourceMetaNormID: String
         
         public init(sourceMetaID: String) {

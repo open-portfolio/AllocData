@@ -18,7 +18,7 @@
 import Foundation
 
 extension MValuationCashflow: AllocKeyed {
-    public struct Key: Hashable, Equatable {
+    public struct Key: Hashable, Equatable, Codable {
         public let transactedAt: Date
         public let accountNormID: String
         public let assetNormID: String
@@ -43,7 +43,7 @@ extension MValuationCashflow: AllocKeyed {
 
 //extension MValuationCashflow: AllocKeyed1 {
 //    
-////    internal struct Key: Hashable, Equatable {
+////    internal struct Key: Hashable, Equatable, Codable {
 ////        var transactedAt: Date
 ////        var accountID: String
 ////        var assetID: String

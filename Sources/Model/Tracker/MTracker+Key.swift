@@ -18,7 +18,7 @@
 import Foundation
 
 extension MTracker: AllocKeyed {
-    public struct Key: Hashable, Equatable {
+    public struct Key: Hashable, Equatable, Codable {
         public let trackerNormID: String
         
         public init(trackerID: String) {

@@ -18,7 +18,7 @@
 import Foundation
 
 extension MSecurity: AllocKeyed {
-    public struct Key: Hashable, Equatable {
+    public struct Key: Hashable, Equatable, Codable {
         public let securityNormID: String
         
         public init(securityID: String) {

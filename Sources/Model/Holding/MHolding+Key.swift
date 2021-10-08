@@ -18,7 +18,7 @@
 import Foundation
 
 extension MHolding: AllocKeyed {
-    public struct Key: Hashable, Equatable {
+    public struct Key: Hashable, Equatable, Codable {
         public let accountNormID: String
         public let securityNormID: String
         public let lotNormID: String

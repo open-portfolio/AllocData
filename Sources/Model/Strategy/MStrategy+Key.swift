@@ -18,7 +18,7 @@
 import Foundation
 
 extension MStrategy: AllocKeyed {
-    public struct Key: Hashable, Equatable {
+    public struct Key: Hashable, Equatable, Codable {
         public let strategyNormID: String
         
         public init(strategyID: String) {
