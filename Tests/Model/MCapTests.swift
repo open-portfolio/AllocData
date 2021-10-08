@@ -60,14 +60,14 @@ class MCapTests: XCTestCase {
     func testPrimaryKey() throws {
         let element = MCap(accountID: " A-x?3 ", assetID: " -3B ! ")
         let actual = element.primaryKey
-        let expected = "a-x?3,-3b !"
+        let expected = MCap.Key(accountID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
         let finRow: MCap.DecodedRow = ["capAccountID": " A-x?3 ", "capAssetID": " -3B ! "]
         let actual = try MCap.getPrimaryKey(finRow)
-        let expected = "a-x?3,-3b !"
+        let expected = MCap.Key(accountID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 

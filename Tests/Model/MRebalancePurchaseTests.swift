@@ -60,14 +60,14 @@ class MRebalancePurchaseTests: XCTestCase {
     func testPrimaryKey() throws {
         let element = MRebalancePurchase(accountID: " A-x?3 ", assetID: " -3B ! ", amount: 10)
         let actual = element.primaryKey
-        let expected = "a-x?3,-3b !"
+        let expected = MRebalancePurchase.Key(accountID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
         let finRow: MRebalancePurchase.DecodedRow = ["purchaseAccountID": " A-x?3 ", "purchaseAssetID": " -3B ! "]
         let actual = try MRebalancePurchase.getPrimaryKey(finRow)
-        let expected = "a-x?3,-3b !"
+        let expected = MRebalancePurchase.Key(accountID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 

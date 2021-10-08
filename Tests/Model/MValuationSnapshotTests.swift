@@ -61,7 +61,7 @@ class MValuationSnapshotTests: XCTestCase {
     func testPrimaryKey() throws {
         let element = MValuationSnapshot(snapshotID: "  XYZ  ", capturedAt: timestamp)
         let actual = element.primaryKey
-        let expected = "xyz"
+        let expected = MValuationSnapshot.Key(snapshotID: "  XYZ  ")
         XCTAssertEqual(expected, actual)
     }
 
@@ -71,7 +71,7 @@ class MValuationSnapshotTests: XCTestCase {
             MValuationSnapshot.CodingKeys.capturedAt.rawValue: timestamp,
         ]
         let actual = try MValuationSnapshot.getPrimaryKey(finRow)
-        let expected = "abc"
+        let expected = MValuationSnapshot.Key(snapshotID: "  ABC  ")
         XCTAssertEqual(expected, actual)
     }
 

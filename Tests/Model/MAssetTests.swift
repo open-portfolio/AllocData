@@ -64,14 +64,14 @@ class MAssetTests: XCTestCase {
     func testPrimaryKey() throws {
         let asset = MAsset(assetID: " A-x?3 ")
         let actual = asset.primaryKey
-        let expected = "a-x?3"
+        let expected = MAsset.Key(assetID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
         let finRow: MAsset.DecodedRow = ["assetID": " A-x?3 "]
         let actual = try MAsset.getPrimaryKey(finRow)
-        let expected = "a-x?3"
+        let expected = MAsset.Key(assetID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 

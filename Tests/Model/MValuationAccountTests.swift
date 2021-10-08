@@ -65,7 +65,7 @@ class MValuationAccountTests: XCTestCase {
         let beg = MValuationSnapshot(snapshotID: "B", capturedAt: timestamp)
         let element = MValuationAccount(snapshotID: beg.snapshotID, accountID: " A-x?3 ", strategyID: "333")
         let actual = element.primaryKey
-        let expected = "b,a-x?3"
+        let expected = MValuationAccount.Key(snapshotID: "B", accountID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 
@@ -76,7 +76,7 @@ class MValuationAccountTests: XCTestCase {
             "strategyID": "333",
         ]
         let actual = try MValuationAccount.getPrimaryKey(finRow)
-        let expected = "b,a-x?3"
+        let expected = MValuationAccount.Key(snapshotID: "B", accountID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 

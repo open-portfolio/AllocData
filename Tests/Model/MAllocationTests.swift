@@ -64,14 +64,14 @@ class MAllocationTests: XCTestCase {
     func testPrimaryKey() throws {
         let element = MAllocation(strategyID: " A-x?3 ", assetID: " -3B ! ")
         let actual = element.primaryKey
-        let expected = "a-x?3,-3b !"
+        let expected = MAllocation.Key(strategyID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
         let finRow: MAllocation.DecodedRow = ["allocationStrategyID": " A-x?3 ", "allocationAssetID": " -3B ! "]
         let actual = try MAllocation.getPrimaryKey(finRow)
-        let expected = "a-x?3,-3b !"
+        let expected = MAllocation.Key(strategyID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 

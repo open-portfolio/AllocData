@@ -73,7 +73,7 @@ class MValuationPositionTests: XCTestCase {
         let beg = MValuationSnapshot(snapshotID: "B", capturedAt: timestamp)
         let element = MValuationPosition(snapshotID: beg.snapshotID, accountID: " A-x?3 ", assetID: " -3B ! ", totalBasis: 4, marketValue: 3)
         let actual = element.primaryKey
-        let expected = "b,a-x?3,-3b !"
+        let expected = MValuationPosition.Key(snapshotID: beg.snapshotID, accountID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 
@@ -84,7 +84,7 @@ class MValuationPositionTests: XCTestCase {
             "valuationPositionAssetID": " -3B ! ",
         ]
         let actual = try MValuationPosition.getPrimaryKey(finRow)
-        let expected = "b,a-x?3,-3b !"
+        let expected = MValuationPosition.Key(snapshotID: "B", accountID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 

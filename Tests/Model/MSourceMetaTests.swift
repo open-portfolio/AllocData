@@ -68,14 +68,14 @@ class MSourceMetaTests: XCTestCase {
     func testPrimaryKey() throws {
         let element = MSourceMeta(sourceMetaID: " A-x?3 ")
         let actual = element.primaryKey
-        let expected = "a-x?3"
+        let expected = MSourceMeta.Key(sourceMetaID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
         let finRow: MSourceMeta.DecodedRow = ["sourceMetaID": " A-x?3 "]
         let actual = try MSourceMeta.getPrimaryKey(finRow)
-        let expected = "a-x?3"
+        let expected = MSourceMeta.Key(sourceMetaID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 

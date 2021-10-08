@@ -72,14 +72,14 @@ class MAccountTests: XCTestCase {
     func testPrimaryKey() throws {
         let account = MAccount(accountID: " A-x?3 ")
         let actual = account.primaryKey
-        let expected = "a-x?3"
+        let expected = MAccount.Key(accountID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
         let finRow: MAccount.DecodedRow = ["accountID": " A-x?3 "]
         let actual = try MAccount.getPrimaryKey(finRow)
-        let expected = "a-x?3"
+        let expected = MAccount.Key(accountID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 

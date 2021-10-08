@@ -85,17 +85,12 @@ class MTransactionTests: XCTestCase {
 
     func testPrimaryKey() throws {
         let element = MTransaction(action: .buysell, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
-        let refEpoch = timestamp.timeIntervalSinceReferenceDate
-        let formattedDate = String(format: "%010.0f", refEpoch)
-
         let actual = element.primaryKey
-        let expected = "buysell,\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.00"
+        let expected = MTransaction.Key(action: .buysell, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
-        let refEpoch = timestamp.timeIntervalSinceReferenceDate
-        let formattedDate = String(format: "%010.0f", refEpoch)
         let finRow: MTransaction.DecodedRow = [
             "txnAction": MTransaction.Action.misc,
             "txnTransactedAt": timestamp,
@@ -106,7 +101,7 @@ class MTransactionTests: XCTestCase {
             "txnSharePrice": 4,
         ]
         let actual = try MTransaction.getPrimaryKey(finRow)
-        let expected = "misc,\(formattedDate),a-x?3,-3b !,fo/,3.0000,4.00"
+        let expected = MTransaction.Key(action: .misc, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
         XCTAssertEqual(expected, actual)
     }
 

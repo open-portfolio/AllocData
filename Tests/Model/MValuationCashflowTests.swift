@@ -67,24 +67,19 @@ class MValuationCashflowTests: XCTestCase {
 
     func testPrimaryKey() throws {
         let element = MValuationCashflow(transactedAt: timestamp, accountID: " A-x?3 ", assetID: " -3B ! ", amount: 3, reconciled: true)
-        let refEpoch = timestamp.timeIntervalSinceReferenceDate
-        let formattedDate = String(format: "%010.0f", refEpoch)
-
         let actual = element.primaryKey
-        let expected = "\(formattedDate),a-x?3,-3b !"
+        let expected = MValuationCashflow.Key(transactedAt: timestamp, accountID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
-        let refEpoch = timestamp.timeIntervalSinceReferenceDate
-        let formattedDate = String(format: "%010.0f", refEpoch)
         let finRow: MValuationCashflow.DecodedRow = [
             "valuationCashflowTransactedAt": timestamp,
             "valuationCashflowAccountID": " A-x?3 ",
             "valuationCashflowAssetID": " -3B ! ",
         ]
         let actual = try MValuationCashflow.getPrimaryKey(finRow)
-        let expected = "\(formattedDate),a-x?3,-3b !"
+        let expected = MValuationCashflow.Key(transactedAt: timestamp, accountID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 
