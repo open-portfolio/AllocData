@@ -19,8 +19,8 @@ import Foundation
 
 extension MValuationAccount: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
-        public let snapshotNormID: String
-        public let accountNormID: String
+        public let snapshotNormID: NormalizedID
+        public let accountNormID: NormalizedID
         
         public init(snapshotID: String, accountID: String) {
             self.snapshotNormID = MValuationAccount.normalizeID(snapshotID)
@@ -36,13 +36,3 @@ extension MValuationAccount: AllocKeyed {
         Key(self)
     }
 }
-
-//extension MValuationAccount: AllocKeyed1 {
-//    public var primaryKey1: AllocKey {
-//        MValuationAccount.makePrimaryKey(snapshotID: snapshotID, accountID: accountID)
-//    }
-//
-//    public static func makePrimaryKey(snapshotID: String, accountID: String) -> AllocKey {
-//        keyify([snapshotID, accountID])
-//    }
-//}

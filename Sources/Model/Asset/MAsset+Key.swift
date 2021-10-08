@@ -19,7 +19,7 @@ import Foundation
 
 extension MAsset: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
-        public let assetNormID: String
+        public let assetNormID: NormalizedID
         
         public init(assetID: String) {
             self.assetNormID = MAsset.normalizeID(assetID)
@@ -34,9 +34,3 @@ extension MAsset: AllocKeyed {
         Key(self)
     }
 }
-
-//extension MAsset: AllocKeyed1 {
-//    public var primaryKey1: AllocKey {
-//        MAsset.keyify(assetID)
-//    }
-//}

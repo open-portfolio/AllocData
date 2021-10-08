@@ -19,8 +19,8 @@ import Foundation
 
 extension MAllocation: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
-        public let strategyNormID: String
-        public let assetNormID: String
+        public let strategyNormID: NormalizedID
+        public let assetNormID: NormalizedID
         
         public init(strategyID: String, assetID: String) {
             self.strategyNormID = MAllocation.normalizeID(strategyID)
@@ -36,9 +36,3 @@ extension MAllocation: AllocKeyed {
         Key(self)
     }
 }
-
-//extension MAllocation: AllocKeyed1 {
-//    public var primaryKey1: AllocKey {
-//        MAllocation.keyify([strategyID, assetID])
-//    }
-//}

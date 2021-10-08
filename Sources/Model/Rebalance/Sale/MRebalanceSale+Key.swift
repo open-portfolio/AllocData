@@ -19,9 +19,9 @@ import Foundation
 
 extension MRebalanceSale: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
-        public let accountNormID: String
-        public let securityNormID: String
-        public let lotNormID: String
+        public let accountNormID: NormalizedID
+        public let securityNormID: NormalizedID
+        public let lotNormID: NormalizedID
         
         public init(accountID: String, securityID: String, lotID: String) {
             self.accountNormID = MRebalanceSale.normalizeID(accountID)
@@ -40,9 +40,3 @@ extension MRebalanceSale: AllocKeyed {
         Key(self)
     }
 }
-
-//extension MRebalanceSale: AllocKeyed1 {
-//    public var primaryKey1: AllocKey {
-//        MRebalanceSale.keyify([accountID, securityID, lotID])
-//    }
-//}

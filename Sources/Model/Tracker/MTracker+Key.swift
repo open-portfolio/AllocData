@@ -19,7 +19,7 @@ import Foundation
 
 extension MTracker: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
-        public let trackerNormID: String
+        public let trackerNormID: NormalizedID
         
         public init(trackerID: String) {
             self.trackerNormID = MTracker.normalizeID(trackerID)
@@ -34,9 +34,3 @@ extension MTracker: AllocKeyed {
         Key(self)
     }
 }
-
-//extension MTracker: AllocKeyed1 {
-//    public var primaryKey1: AllocKey {
-//        MTracker.keyify(trackerID)
-//    }
-//}

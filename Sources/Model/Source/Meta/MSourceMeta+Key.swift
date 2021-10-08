@@ -19,7 +19,7 @@ import Foundation
 
 extension MSourceMeta: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
-        public let sourceMetaNormID: String
+        public let sourceMetaNormID: NormalizedID
         
         public init(sourceMetaID: String) {
             self.sourceMetaNormID = MSourceMeta.normalizeID(sourceMetaID)
@@ -34,9 +34,3 @@ extension MSourceMeta: AllocKeyed {
         Key(self)
     }
 }
-
-//extension MSourceMeta: AllocKeyed1 {
-//    public var primaryKey1: AllocKey {
-//        MSourceMeta.keyify(sourceMetaID)
-//    }
-//}

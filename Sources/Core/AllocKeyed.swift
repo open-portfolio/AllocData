@@ -19,10 +19,16 @@ import Foundation
 
 public protocol AllocKeyed: Hashable {
     associatedtype Key: Hashable, Codable
-    
-    typealias NormalizedID = String
-    
+
     var primaryKey: Key { get }
+}
+
+public extension AllocKeyed {
+    typealias NormalizedID = String
+
+    static func normalizeID(_ component: String?) -> NormalizedID {
+        component?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
+    }
 }
 
 public extension AllocKeyed {
@@ -30,39 +36,4 @@ public extension AllocKeyed {
         let keys: [T.Key] = elements.map(\.primaryKey)
         return Dictionary(zip(keys, elements), uniquingKeysWith: { old, _ in old })
     }
-    
-    static func normalizeID(_ component: String?) -> NormalizedID {
-        component?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
-    }
 }
-
-//public protocol AllocKeyed1 {
-//    // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
-//    var primaryKey1: AllocKey { get }
-//
-//    static func keyify(_ component: String?) -> AllocKey
-//    static func keyify(_ components: [String?]) -> AllocKey
-//    static func makeAllocMap<T: AllocKeyed1>(_ elements: [T]) -> [AllocKey: T]
-//}
-//
-//public extension AllocKeyed1 {
-//    // an AllocKey is a normalized 'ID', trimmed and lowercased.
-//    typealias AllocKey = String
-//
-//    static func keyify(_ component: String?) -> AllocKey {
-//        component?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
-//    }
-//
-//    static func keyify(_ components: [String?]) -> AllocKey {
-//        let separator = ","
-//        return
-//            components
-//                .map { $0?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "" }
-//                .joined(separator: separator).lowercased()
-//    }
-//
-//    static func makeAllocMap<T: AllocKeyed1>(_ elements: [T]) -> [AllocKey: T] {
-//        let keys: [AllocKey] = elements.map(\.primaryKey1)
-//        return Dictionary(zip(keys, elements), uniquingKeysWith: { old, _ in old })
-//    }
-//}

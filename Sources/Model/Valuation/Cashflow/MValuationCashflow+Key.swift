@@ -20,8 +20,8 @@ import Foundation
 extension MValuationCashflow: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
         public let transactedAt: Date
-        public let accountNormID: String
-        public let assetNormID: String
+        public let accountNormID: NormalizedID
+        public let assetNormID: NormalizedID
         
         public init(transactedAt: Date, accountID: String, assetID: String) {
             self.transactedAt = transactedAt
@@ -40,46 +40,3 @@ extension MValuationCashflow: AllocKeyed {
         Key(self)
     }
 }
-
-//extension MValuationCashflow: AllocKeyed1 {
-//    
-////    internal struct Key: Hashable, Equatable, Codable {
-////        var transactedAt: Date
-////        var accountID: String
-////        var assetID: String
-////        
-////        public init(_ cashflow: MValuationCashflow) {
-////            self.transactedAt = cashflow.transactedAt
-////            self.accountID = cashflow.accountID.lowercased()
-////            self.assetID = cashflow.assetID.lowercased()
-////        }
-////        
-////        public static func < (lhs: Key, rhs: Key) -> Bool {
-////            if lhs.transactedAt < rhs.transactedAt { return true }
-////            if lhs.transactedAt > rhs.transactedAt { return false }
-////
-////            if lhs.accountID < rhs.accountID { return true }
-////            if lhs.accountID > rhs.accountID { return false }
-////
-////            if lhs.assetID < rhs.assetID { return true }
-////            if lhs.assetID > rhs.assetID { return false }
-////
-////            return false
-////        }
-////    }
-//
-//    public var primaryKey1: AllocKey {
-//        MValuationCashflow.makePrimaryKey(transactedAt: transactedAt, accountID: accountID, assetID: assetID)
-//    }
-//
-//    public static func makePrimaryKey(transactedAt: Date, accountID: String, assetID: String) -> AllocKey {
-//        // NOTE: using time interval in composite key as ISO dates will vary.
-//        // This implementation can change at ANY time and may differ per platform.
-//        // Because of that AllocData keys should NOT be persisted in data files
-//        // or across executions. If you need to store a date, use the ISO format.
-//
-//        let refEpoch = transactedAt.timeIntervalSinceReferenceDate
-//        let formattedDate = String(format: "%010.0f", refEpoch)
-//        return keyify([formattedDate, accountID, assetID])
-//    }
-//}

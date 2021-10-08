@@ -273,14 +273,13 @@ public protocol AllocBase {
 
 Used to retrieve and generate the entity's primary key.
 
-```swift
-public protocol AllocKeyed1 {
-    // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
-    var primaryKey1: AllocKey { get }
+This new struct-based implementation replaces the old string-based one.
 
-    static func keyify(_ component: String?) -> AllocKey
-    static func keyify(_ components: [String?]) -> AllocKey
-    static func makeAllocMap<T: AllocKeyed1>(_ elements: [T]) -> [AllocKey: T]
+```swift
+public protocol AllocKeyed: Hashable {
+    associatedtype Key: Hashable, Codable
+
+    var primaryKey: Key { get }
 }
 ```
 
@@ -289,12 +288,12 @@ public protocol AllocKeyed1 {
 Used to parse (decode) and generate (encode) delimited data for the entities.
 
 ```swift
-public protocol AllocRowed {
+public protocol AllocRowed: AllocKeyed {
     // pre-decoded row, without strong typing
     typealias RawRow = [String: String]
 
-    // decoded row, with strong typing
-    typealias DecodedRow = [String: AnyHashable?]
+    // decoded row, with stronger typing
+    typealias DecodedRow = [String: AnyHashable]
 
     // create object from row
     init(from row: DecodedRow) throws
@@ -304,7 +303,7 @@ public protocol AllocRowed {
     // additive update from row
     mutating func update(from row: DecodedRow) throws
 
-    static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey
+    static func getPrimaryKey(_ row: DecodedRow) throws -> Key
 }
 ```
 

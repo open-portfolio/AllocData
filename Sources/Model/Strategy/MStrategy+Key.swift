@@ -19,7 +19,7 @@ import Foundation
 
 extension MStrategy: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
-        public let strategyNormID: String
+        public let strategyNormID: NormalizedID
         
         public init(strategyID: String) {
             self.strategyNormID = MStrategy.normalizeID(strategyID)
@@ -34,9 +34,3 @@ extension MStrategy: AllocKeyed {
         Key(self)
     }
 }
-
-//extension MStrategy: AllocKeyed1 {
-//    public var primaryKey1: AllocKey {
-//        MStrategy.keyify(strategyID)
-//    }
-//}

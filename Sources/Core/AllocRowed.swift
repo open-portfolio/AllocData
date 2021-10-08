@@ -21,7 +21,7 @@ public protocol AllocRowed: AllocKeyed {
     // pre-decoded row, without strong typing
     typealias RawRow = [String: String]
 
-    // decoded row, with strong typing
+    // decoded row, with stronger typing
     typealias DecodedRow = [String: AnyHashable]
 
     // create object from row

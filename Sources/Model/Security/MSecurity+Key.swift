@@ -19,7 +19,7 @@ import Foundation
 
 extension MSecurity: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
-        public let securityNormID: String
+        public let securityNormID: NormalizedID
         
         public init(securityID: String) {
             self.securityNormID = MSecurity.normalizeID(securityID)
@@ -34,9 +34,3 @@ extension MSecurity: AllocKeyed {
         Key(self)
     }
 }
-
-//extension MSecurity: AllocKeyed1 {
-//    public var primaryKey1: AllocKey {
-//        MSecurity.keyify(securityID)
-//    }
-//}

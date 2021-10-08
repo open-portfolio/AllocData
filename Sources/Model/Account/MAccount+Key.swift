@@ -19,7 +19,7 @@ import Foundation
 
 extension MAccount: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
-        public let accountNormID: String
+        public let accountNormID: NormalizedID
         
         public init(accountID: String) {
             self.accountNormID = MAccount.normalizeID(accountID)
@@ -34,9 +34,3 @@ extension MAccount: AllocKeyed {
         Key(self)
     }
 }
-
-//extension MAccount: AllocKeyed1 {
-//    public var primaryKey1: AllocKey {
-//        MAccount.keyify(accountID)
-//    }
-//}
