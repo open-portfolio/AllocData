@@ -32,12 +32,12 @@ let package = Package(
             ],
             path: "Sources"
         ),
-        .testTarget(
-            name: "AllocDataTests",
-            dependencies: [
-                "AllocData",
-            ],
-            path: "Tests"
-        ),
+//        .testTarget(
+//            name: "AllocDataTests",
+//            dependencies: [
+//                "AllocData",
+//            ],
+//            path: "Tests"
+//        ),
     ]
 )

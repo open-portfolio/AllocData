@@ -18,34 +18,21 @@
 import Foundation
 
 extension MValuationCashflow: AllocKeyed {
-    public struct Key: Hashable, Comparable, Equatable {
-        private let transactedAt: Date
-        private let accountIDn: String
-        private let assetIDn: String
+    public struct Key: Hashable, Equatable {
+        public let transactedAt: Date
+        public let accountNormID: String
+        public let assetNormID: String
         
         public init(transactedAt: Date, accountID: String, assetID: String) {
             self.transactedAt = transactedAt
-            self.accountIDn = MTracker.normalizeID(accountID)
-            self.assetIDn = MTracker.normalizeID(assetID)
+            self.accountNormID = MTracker.normalizeID(accountID)
+            self.assetNormID = MTracker.normalizeID(assetID)
         }
         
         public init(_ element: MValuationCashflow) {
             self.init(transactedAt: element.transactedAt,
                       accountID: element.accountID,
                       assetID: element.assetID)
-        }
-        
-        public static func < (lhs: Key, rhs: Key) -> Bool {
-            if lhs.transactedAt < rhs.transactedAt { return true }
-            if lhs.transactedAt > rhs.transactedAt { return false }
-
-            if lhs.accountIDn < rhs.accountIDn { return true }
-            if lhs.accountIDn > rhs.accountIDn { return false }
-
-            if lhs.assetIDn < rhs.assetIDn { return true }
-            if lhs.assetIDn > rhs.assetIDn { return false }
-
-            return false
         }
     }
     
@@ -56,7 +43,7 @@ extension MValuationCashflow: AllocKeyed {
 
 //extension MValuationCashflow: AllocKeyed1 {
 //    
-////    internal struct Key: Hashable, Comparable, Equatable {
+////    internal struct Key: Hashable, Equatable {
 ////        var transactedAt: Date
 ////        var accountID: String
 ////        var assetID: String

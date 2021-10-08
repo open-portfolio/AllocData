@@ -18,19 +18,15 @@
 import Foundation
 
 extension MAccount: AllocKeyed {
-    public struct Key: Hashable, Comparable, Equatable {
-        private let accountIDn: String
+    public struct Key: Hashable, Equatable {
+        public let accountNormID: String
         
         public init(accountID: String) {
-            self.accountIDn = MAccount.normalizeID(accountID)
+            self.accountNormID = MAccount.normalizeID(accountID)
         }
         
         public init(_ element: MAccount) {
             self.init(accountID: element.accountID)
-        }
-        
-        public static func < (lhs: Key, rhs: Key) -> Bool {
-            lhs.accountIDn < rhs.accountIDn
         }
     }
     

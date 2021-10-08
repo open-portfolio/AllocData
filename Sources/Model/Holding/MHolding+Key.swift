@@ -18,34 +18,21 @@
 import Foundation
 
 extension MHolding: AllocKeyed {
-    public struct Key: Hashable, Comparable, Equatable {
-        private let accountIDn: String
-        private let securityIDn: String
-        private let lotIDn: String
+    public struct Key: Hashable, Equatable {
+        public let accountNormID: String
+        public let securityNormID: String
+        public let lotNormID: String
         
         internal init(accountID: String, securityID: String, lotID: String) {
-            self.accountIDn = MHolding.normalizeID(accountID)
-            self.securityIDn = MHolding.normalizeID(securityID)
-            self.lotIDn = MHolding.normalizeID(lotID)
+            self.accountNormID = MHolding.normalizeID(accountID)
+            self.securityNormID = MHolding.normalizeID(securityID)
+            self.lotNormID = MHolding.normalizeID(lotID)
         }
         
         public init(_ element: MHolding) {
             self.init(accountID: element.accountID,
                       securityID: element.securityID,
                       lotID: element.lotID)
-        }
-        
-        public static func < (lhs: Key, rhs: Key) -> Bool {
-            if lhs.accountIDn < rhs.accountIDn { return true }
-            if lhs.accountIDn > rhs.accountIDn { return false }
-
-            if lhs.securityIDn < rhs.securityIDn { return true }
-            if lhs.securityIDn > rhs.securityIDn { return false }
-            
-            if lhs.lotIDn < rhs.lotIDn { return true }
-            if lhs.lotIDn > rhs.lotIDn { return false }
-
-            return false
         }
     }
     

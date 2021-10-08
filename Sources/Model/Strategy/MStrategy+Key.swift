@@ -18,21 +18,15 @@
 import Foundation
 
 extension MStrategy: AllocKeyed {
-    public struct Key: Hashable, Comparable, Equatable {
-        private let strategyIDn: String
+    public struct Key: Hashable, Equatable {
+        public let strategyNormID: String
         
         public init(strategyID: String) {
-            self.strategyIDn = MStrategy.normalizeID(strategyID)
+            self.strategyNormID = MStrategy.normalizeID(strategyID)
         }
         
         public init(_ element: MStrategy) {
             self.init(strategyID: element.strategyID)
-        }
-
-        public static func < (lhs: Key, rhs: Key) -> Bool {
-            if lhs.strategyIDn < rhs.strategyIDn { return true }
-            if lhs.strategyIDn > rhs.strategyIDn { return false }
-            return false
         }
     }
     

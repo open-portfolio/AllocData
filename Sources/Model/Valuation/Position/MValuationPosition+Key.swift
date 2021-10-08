@@ -18,34 +18,21 @@
 import Foundation
 
 extension MValuationPosition: AllocKeyed {
-    public struct Key: Hashable, Comparable, Equatable {
-        private let snapshotIDn: String
-        private let accountIDn: String
-        private let assetIDn: String
+    public struct Key: Hashable, Equatable {
+        public let snapshotNormID: String
+        public let accountNormID: String
+        public let assetNormID: String
         
         internal init(snapshotID: String, accountID: String, assetID: String) {
-            self.snapshotIDn = MValuationPosition.normalizeID(snapshotID)
-            self.accountIDn = MValuationPosition.normalizeID(accountID)
-            self.assetIDn = MValuationPosition.normalizeID(assetID)
+            self.snapshotNormID = MValuationPosition.normalizeID(snapshotID)
+            self.accountNormID = MValuationPosition.normalizeID(accountID)
+            self.assetNormID = MValuationPosition.normalizeID(assetID)
         }
         
         public init(_ element: MValuationPosition) {
             self.init(snapshotID: element.snapshotID,
                       accountID: element.accountID,
                       assetID: element.assetID)
-        }
-        
-        public static func < (lhs: Key, rhs: Key) -> Bool {
-            if lhs.snapshotIDn < rhs.snapshotIDn { return true }
-            if lhs.snapshotIDn > rhs.snapshotIDn { return false }
-
-            if lhs.accountIDn < rhs.accountIDn { return true }
-            if lhs.accountIDn > rhs.accountIDn { return false }
-
-            if lhs.assetIDn < rhs.assetIDn { return true }
-            if lhs.assetIDn > rhs.assetIDn { return false }
-
-            return false
         }
     }
     

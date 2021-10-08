@@ -18,13 +18,13 @@
 import Foundation
 
 extension MRebalancePurchase: AllocKeyed {
-    public struct Key: Hashable, Comparable, Equatable {
-        private let accountIDn: String
-        private let assetIDn: String
+    public struct Key: Hashable, Equatable {
+        public let accountNormID: String
+        public let assetNormID: String
         
         internal init(accountID: String, assetID: String) {
-            self.accountIDn = MRebalancePurchase.normalizeID(accountID)
-            self.assetIDn = MRebalancePurchase.normalizeID(assetID)
+            self.accountNormID = MRebalancePurchase.normalizeID(accountID)
+            self.assetNormID = MRebalancePurchase.normalizeID(assetID)
         }
         
         public init(_ element: MRebalancePurchase) {
@@ -32,15 +32,6 @@ extension MRebalancePurchase: AllocKeyed {
                       assetID: element.assetID)
         }
         
-        public static func < (lhs: Key, rhs: Key) -> Bool {
-            if lhs.accountIDn < rhs.accountIDn { return true }
-            if lhs.accountIDn > rhs.accountIDn { return false }
-
-            if lhs.assetIDn < rhs.assetIDn { return true }
-            if lhs.assetIDn > rhs.assetIDn { return false }
-            
-            return false
-        }
     }
     
     public var primaryKey: Key {

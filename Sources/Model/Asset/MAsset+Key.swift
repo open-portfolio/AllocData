@@ -18,21 +18,15 @@
 import Foundation
 
 extension MAsset: AllocKeyed {
-    public struct Key: Hashable, Comparable, Equatable {
-        private let assetIDn: String
+    public struct Key: Hashable, Equatable {
+        public let assetNormID: String
         
         public init(assetID: String) {
-            self.assetIDn = MAsset.normalizeID(assetID)
+            self.assetNormID = MAsset.normalizeID(assetID)
         }
         
         public init(_ element: MAsset) {
             self.init(assetID: element.assetID)
-        }
-        
-        public static func < (lhs: Key, rhs: Key) -> Bool {
-            if lhs.assetIDn < rhs.assetIDn { return true }
-            if lhs.assetIDn > rhs.assetIDn { return false }
-            return false
         }
     }
     
