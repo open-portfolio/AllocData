@@ -68,7 +68,7 @@ class MTransactionTests: XCTestCase {
     func testUpdateFromFINrow() throws {
         var actual = MTransaction(action: .buysell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 5, realizedGainLong: 6)
         let finRow: MTransaction.DecodedRow = [
-            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.misc, // IGNORED
+            MTransaction.CodingKeys.action.rawValue: MTransaction.Action.miscflow, // IGNORED
             MTransaction.CodingKeys.transactedAt.rawValue: timestamp + 200, // IGNORED
             MTransaction.CodingKeys.accountID.rawValue: "bx", // IGNORED
             MTransaction.CodingKeys.securityID.rawValue: "cx", // IGNORED
@@ -92,7 +92,7 @@ class MTransactionTests: XCTestCase {
 
     func testGetPrimaryKey() throws {
         let finRow: MTransaction.DecodedRow = [
-            "txnAction": MTransaction.Action.misc,
+            "txnAction": MTransaction.Action.miscflow,
             "txnTransactedAt": timestamp,
             "txnAccountID": " A-x?3 ",
             "txnSecurityID": " -3B ! ",
@@ -101,7 +101,7 @@ class MTransactionTests: XCTestCase {
             "txnSharePrice": 4,
         ]
         let actual = try MTransaction.getPrimaryKey(finRow)
-        let expected = MTransaction.Key(action: .misc, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
+        let expected = MTransaction.Key(action: .miscflow, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
         XCTAssertEqual(expected, actual)
     }
 

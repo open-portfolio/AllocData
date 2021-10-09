@@ -23,6 +23,6 @@ public extension MTransaction {
         case buysell
         case income
         case transfer
-        case misc
+        case miscflow
     }
 }
