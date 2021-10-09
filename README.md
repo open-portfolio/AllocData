@@ -144,7 +144,7 @@ The action types:
 | buysell | <0 if sale; >0 if purchase | >0, price/share | required | Purchase/sale of security to/from cash. | 
 | income | amount of income | 1.0 (cash) | if dividend | Income from interest, or the dividend of a stock/ETF/etc.. | 
 | transfer | <0 is outgoing; >0 is incoming | 1.0 if cash; >0 for security | if not cash | Transfer of security/cash to/from external source. | 
-| misc | <0 is outgoing; >0 is incoming | 1.0 (cash) | ignored | Neutral (non-income) cashflow to/from account. | 
+| miscflow | <0 is outgoing; >0 is incoming | 1.0 (cash) | ignored | Neutral (non-income) cashflow to/from account. | 
 
 ### MRebalanceAllocation
 
