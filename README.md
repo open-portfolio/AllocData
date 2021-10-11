@@ -224,18 +224,6 @@ Each row of the valuation cashflow table describes a cash flow at a particular t
 | amount | double | true | false | The amount of the flow (-Sale, +Purchase). |
 | reconciled | bool | true | false | If record was created to reconcile transactions. |
 
-### MValuationAccount **NEW**
-
-This is the `openalloc/valuation/account` schema.
-
-Provides a historical record of strategy associations for accounts.
-
-| Name | Type | IsRequired | IsKey | Descript |
-| ---- | ---- | ---------- | ----- | -------- |
-| valuationAccountSnapshotID | string | true | true | The valuation snapshot ID for the account. |
-| valuationAccountAccountID | string | true | true | The account identifier. |
-| strategyID | double | true | false | The strategy assignment for the account at the time. |
-
 ### MSourceMeta
 
 This is the `openalloc/meta/source` schema.
