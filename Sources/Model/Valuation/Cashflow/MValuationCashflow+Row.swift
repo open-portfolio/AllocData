@@ -32,10 +32,12 @@ extension MValuationCashflow: AllocRowed {
         assetID = _assetID
 
         amount = MValuationPosition.getDouble(row, CodingKeys.amount.rawValue) ?? 0
+        reconciled = MValuationPosition.getBool(row, CodingKeys.reconciled.rawValue) ?? false
     }
 
     public mutating func update(from row: DecodedRow) throws {
         if let val = MValuationPosition.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
+        if let val = MValuationPosition.getBool(row, CodingKeys.reconciled.rawValue) { reconciled = val }
     }
 
     public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
@@ -69,6 +71,9 @@ extension MValuationCashflow: AllocRowed {
 
             if let amount = parseDouble(rawRow[ck.amount.rawValue]) {
                 decodedRow[ck.amount.rawValue] = amount
+            }
+            if let reconciled = parseBool(rawRow[ck.reconciled.rawValue]) {
+                decodedRow[ck.reconciled.rawValue] = reconciled
             }
 
             array.append(decodedRow)
