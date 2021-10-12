@@ -222,7 +222,6 @@ Each row of the valuation cashflow table describes a cash flow at a particular t
 | valuationCashflowAccountID | string | true | true | The account in which the flow occurred. |
 | valuationCashflowAssetID | string | true | true | The asset class flowed. |
 | amount | double | true | false | The amount of the flow (-Sale, +Purchase). |
-| reconciled | bool | true | false | If record was created to reconcile transactions. |
 
 ### MSourceMeta
 
