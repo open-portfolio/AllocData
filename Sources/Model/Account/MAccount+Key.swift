@@ -18,7 +18,19 @@
 import Foundation
 
 extension MAccount: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MAccount.keyify(accountID)
+    public struct Key: Hashable, Equatable, Codable {
+        public let accountNormID: NormalizedID
+        
+        public init(accountID: String) {
+            self.accountNormID = MAccount.normalizeID(accountID)
+        }
+        
+        public init(_ element: MAccount) {
+            self.init(accountID: element.accountID)
+        }
+    }
+    
+    public var primaryKey: Key {
+        Key(self)
     }
 }

@@ -74,14 +74,14 @@ class MHoldingTests: XCTestCase {
     func testPrimaryKey() throws {
         let element = MHolding(accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ")
         let actual = element.primaryKey
-        let expected = "a-x?3,-3b !,"
+        let expected = MHolding.Key(accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
         let finRow: MHolding.DecodedRow = ["holdingAccountID": " A-x?3 ", "holdingSecurityID": " -3B ! ", "holdingLotID": "   "]
         let actual = try MHolding.getPrimaryKey(finRow)
-        let expected = "a-x?3,-3b !,"
+        let expected = MHolding.Key(accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ")
         XCTAssertEqual(expected, actual)
     }
 

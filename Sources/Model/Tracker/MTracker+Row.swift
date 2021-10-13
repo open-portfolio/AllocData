@@ -30,10 +30,10 @@ extension MTracker: AllocRowed {
         if let val = MTracker.getStr(row, CodingKeys.title.rawValue) { title = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _trackerID = getStr(row, CodingKeys.trackerID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Index Tracker") }
-        return keyify(_trackerID)
+        return Key(trackerID: _trackerID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

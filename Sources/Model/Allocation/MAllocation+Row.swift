@@ -36,11 +36,11 @@ extension MAllocation: AllocRowed {
         if let val = MAllocation.getBool(row, CodingKeys.isLocked.rawValue) { isLocked = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _strategyID = getStr(row, CodingKeys.strategyID.rawValue),
               let _assetID = getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Allocation") }
-        return keyify([_strategyID, _assetID])
+        return Key(strategyID: _strategyID, assetID: _assetID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

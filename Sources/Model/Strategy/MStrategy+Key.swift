@@ -18,7 +18,19 @@
 import Foundation
 
 extension MStrategy: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MStrategy.keyify(strategyID)
+    public struct Key: Hashable, Equatable, Codable {
+        public let strategyNormID: NormalizedID
+        
+        public init(strategyID: String) {
+            self.strategyNormID = MStrategy.normalizeID(strategyID)
+        }
+        
+        public init(_ element: MStrategy) {
+            self.init(strategyID: element.strategyID)
+        }
+    }
+    
+    public var primaryKey: Key {
+        Key(self)
     }
 }

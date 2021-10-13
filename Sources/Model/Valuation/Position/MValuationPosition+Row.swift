@@ -40,12 +40,12 @@ extension MValuationPosition: AllocRowed {
         if let val = MValuationPosition.getDouble(row, CodingKeys.marketValue.rawValue) { marketValue = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _snapshotID = getStr(row, CodingKeys.snapshotID.rawValue),
               let _accountID = getStr(row, CodingKeys.accountID.rawValue),
               let _assetID = getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Valuation Position") }
-        return makePrimaryKey(snapshotID: _snapshotID, accountID: _accountID, assetID: _assetID)
+        return Key(snapshotID: _snapshotID, accountID: _accountID, assetID: _assetID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

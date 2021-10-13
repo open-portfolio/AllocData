@@ -39,12 +39,12 @@ extension MHolding: AllocRowed {
         if let val = MHolding.getDate(row, CodingKeys.acquiredAt.rawValue) { acquiredAt = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _accountID = getStr(row, CodingKeys.accountID.rawValue),
               let _securityID = getStr(row, CodingKeys.securityID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Holding") }
         let _lotID = getStr(row, CodingKeys.lotID.rawValue) ?? ""
-        return keyify([_accountID, _securityID, _lotID])
+        return Key(accountID: _accountID, securityID: _securityID, lotID: _lotID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

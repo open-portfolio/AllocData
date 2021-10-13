@@ -71,14 +71,14 @@ class MSecurityTests: XCTestCase {
     func testPrimaryKey() throws {
         let element = MSecurity(securityID: " A-x?3 ", assetID: " -3B ! ")
         let actual = element.primaryKey
-        let expected = "a-x?3"
+        let expected = MSecurity.Key(securityID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
         let finRow: MSecurity.DecodedRow = ["securityID": " A-x?3 ", "securityAssetID": " -3B ! "]
         let actual = try MSecurity.getPrimaryKey(finRow)
-        let expected = "a-x?3"
+        let expected = MSecurity.Key(securityID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 

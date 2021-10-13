@@ -18,7 +18,25 @@
 import Foundation
 
 extension MHolding: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MHolding.keyify([accountID, securityID, lotID])
+    public struct Key: Hashable, Equatable, Codable {
+        public let accountNormID: NormalizedID
+        public let securityNormID: NormalizedID
+        public let lotNormID: NormalizedID
+        
+        public init(accountID: String, securityID: String, lotID: String) {
+            self.accountNormID = MHolding.normalizeID(accountID)
+            self.securityNormID = MHolding.normalizeID(securityID)
+            self.lotNormID = MHolding.normalizeID(lotID)
+        }
+        
+        public init(_ element: MHolding) {
+            self.init(accountID: element.accountID,
+                      securityID: element.securityID,
+                      lotID: element.lotID)
+        }
+    }
+    
+    public var primaryKey: Key {
+        Key(self)
     }
 }

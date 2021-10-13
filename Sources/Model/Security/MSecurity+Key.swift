@@ -18,7 +18,19 @@
 import Foundation
 
 extension MSecurity: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MSecurity.keyify(securityID)
+    public struct Key: Hashable, Equatable, Codable {
+        public let securityNormID: NormalizedID
+        
+        public init(securityID: String) {
+            self.securityNormID = MSecurity.normalizeID(securityID)
+        }
+        
+        public init(_ element: MSecurity) {
+            self.init(securityID: element.securityID)
+        }
+    }
+    
+    public var primaryKey: Key {
+        Key(self)
     }
 }

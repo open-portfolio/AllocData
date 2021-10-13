@@ -60,14 +60,14 @@ class MRebalanceAllocationTests: XCTestCase {
     func testPrimaryKey() throws {
         let element = MRebalanceAllocation(accountID: " A-x?3 ", assetID: " -3B ! ", amount: 10)
         let actual = element.primaryKey
-        let expected = "a-x?3,-3b !"
+        let expected = MRebalanceAllocation.Key(accountID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
         let finRow: MRebalanceAllocation.DecodedRow = ["allocationAccountID": " A-x?3 ", "allocationAssetID": " -3B ! "]
         let actual = try MRebalanceAllocation.getPrimaryKey(finRow)
-        let expected = "a-x?3,-3b !"
+        let expected = MRebalanceAllocation.Key(accountID: " A-x?3 ", assetID: " -3B ! ")
         XCTAssertEqual(expected, actual)
     }
 

@@ -18,7 +18,25 @@
 import Foundation
 
 extension MRebalanceSale: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MRebalanceSale.keyify([accountID, securityID, lotID])
+    public struct Key: Hashable, Equatable, Codable {
+        public let accountNormID: NormalizedID
+        public let securityNormID: NormalizedID
+        public let lotNormID: NormalizedID
+        
+        public init(accountID: String, securityID: String, lotID: String) {
+            self.accountNormID = MRebalanceSale.normalizeID(accountID)
+            self.securityNormID = MRebalanceSale.normalizeID(securityID)
+            self.lotNormID = MRebalanceSale.normalizeID(lotID)
+        }
+        
+        public init(_ element: MRebalanceSale) {
+            self.init(accountID: element.accountID,
+                      securityID: element.securityID,
+                      lotID: element.lotID)
+        }
+    }
+    
+    public var primaryKey: Key {
+        Key(self)
     }
 }

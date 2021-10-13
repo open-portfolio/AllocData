@@ -44,7 +44,7 @@ extension MTransaction: AllocRowed {
         if let val = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue) { realizedGainLong = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _action = row[CodingKeys.action.rawValue] as? MTransaction.Action,
               let _transactedAt = getDate(row, CodingKeys.transactedAt.rawValue),
               let _shareCount = getDouble(row, CodingKeys.shareCount.rawValue),
@@ -53,13 +53,13 @@ extension MTransaction: AllocRowed {
         let _accountID = getStr(row, CodingKeys.accountID.rawValue) ?? ""
         let _securityID = getStr(row, CodingKeys.securityID.rawValue) ?? ""
         let _lotID = getStr(row, CodingKeys.lotID.rawValue) ?? ""
-        return makePrimaryKey(action: _action,
-                              transactedAt: _transactedAt,
-                              accountID: _accountID,
-                              securityID: _securityID,
-                              lotID: _lotID,
-                              shareCount: _shareCount,
-                              sharePrice: _sharePrice)
+        return Key(action: _action,
+                   transactedAt: _transactedAt,
+                   accountID: _accountID,
+                   securityID: _securityID,
+                   lotID: _lotID,
+                   shareCount: _shareCount,
+                   sharePrice: _sharePrice)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

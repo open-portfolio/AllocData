@@ -56,14 +56,14 @@ class MStrategyTests: XCTestCase {
     func testPrimaryKey() throws {
         let account = MStrategy(strategyID: " A-x?3 ")
         let actual = account.primaryKey
-        let expected = "a-x?3"
+        let expected = MStrategy.Key(strategyID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
         let finRow: MStrategy.DecodedRow = ["strategyID": " A-x?3 "]
         let actual = try MStrategy.getPrimaryKey(finRow)
-        let expected = "a-x?3"
+        let expected = MStrategy.Key(strategyID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 

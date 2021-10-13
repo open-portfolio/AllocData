@@ -18,11 +18,19 @@
 import Foundation
 
 extension MValuationSnapshot: AllocKeyed {
-    public var primaryKey: AllocKey {
-        MValuationSnapshot.makePrimaryKey(snapshotID: snapshotID)
+    public struct Key: Hashable, Equatable, Codable {
+        public let snapshotNormID: NormalizedID
+        
+        public init(snapshotID: String) {
+            self.snapshotNormID = MValuationSnapshot.normalizeID(snapshotID)
+        }
+        
+        public init(_ element: MValuationSnapshot) {
+            self.init(snapshotID: element.snapshotID)
+        }        
     }
-
-    public static func makePrimaryKey(snapshotID: String) -> AllocKey {
-        keyify(snapshotID)
+    
+    public var primaryKey: Key {
+        Key(self)
     }
 }

@@ -144,7 +144,7 @@ The action types:
 | buysell | <0 if sale; >0 if purchase | >0, price/share | required | Purchase/sale of security to/from cash. | 
 | income | amount of income | 1.0 (cash) | if dividend | Income from interest, or the dividend of a stock/ETF/etc.. | 
 | transfer | <0 is outgoing; >0 is incoming | 1.0 if cash; >0 for security | if not cash | Transfer of security/cash to/from external source. | 
-| misc | <0 is outgoing; >0 is incoming | 1.0 (cash) | ignored | Neutral (non-income) cashflow to/from account. | 
+| miscflow | <0 is outgoing; >0 is incoming | 1.0 (cash) | ignored | Neutral (non-income) cashflow to/from account. | 
 
 ### MRebalanceAllocation
 
@@ -224,18 +224,6 @@ Each row of the valuation cashflow table describes a cash flow at a particular t
 | amount | double | true | false | The amount of the flow (-Sale, +Purchase). |
 | reconciled | bool | true | false | If record was created to reconcile transactions. |
 
-### MValuationAccount **NEW**
-
-This is the `openalloc/valuation/account` schema.
-
-Provides a historical record of strategy associations for accounts.
-
-| Name | Type | IsRequired | IsKey | Descript |
-| ---- | ---- | ---------- | ----- | -------- |
-| valuationAccountSnapshotID | string | true | true | The valuation snapshot ID for the account. |
-| valuationAccountAccountID | string | true | true | The account identifier. |
-| strategyID | double | true | false | The strategy assignment for the account at the time. |
-
 ### MSourceMeta
 
 This is the `openalloc/meta/source` schema.
@@ -273,14 +261,13 @@ public protocol AllocBase {
 
 Used to retrieve and generate the entity's primary key.
 
-```swift
-public protocol AllocKeyed {
-    // Note that key values should NOT be persisted. Their format and composition may vary across platforms and versions.
-    var primaryKey: AllocKey { get }
+This new struct-based implementation replaces the old string-based one.
 
-    static func keyify(_ component: String?) -> AllocKey
-    static func keyify(_ components: [String?]) -> AllocKey
-    static func makeAllocMap<T: AllocKeyed>(_ elements: [T]) -> [AllocKey: T]
+```swift
+public protocol AllocKeyed: Hashable {
+    associatedtype Key: Hashable, Codable
+
+    var primaryKey: Key { get }
 }
 ```
 
@@ -289,12 +276,12 @@ public protocol AllocKeyed {
 Used to parse (decode) and generate (encode) delimited data for the entities.
 
 ```swift
-public protocol AllocRowed {
+public protocol AllocRowed: AllocKeyed {
     // pre-decoded row, without strong typing
     typealias RawRow = [String: String]
 
-    // decoded row, with strong typing
-    typealias DecodedRow = [String: AnyHashable?]
+    // decoded row, with stronger typing
+    typealias DecodedRow = [String: AnyHashable]
 
     // create object from row
     init(from row: DecodedRow) throws
@@ -304,7 +291,7 @@ public protocol AllocRowed {
     // additive update from row
     mutating func update(from row: DecodedRow) throws
 
-    static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey
+    static func getPrimaryKey(_ row: DecodedRow) throws -> Key
 }
 ```
 

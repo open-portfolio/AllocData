@@ -34,11 +34,11 @@ extension MRebalancePurchase: AllocRowed {
         if let val = MRebalancePurchase.getDouble(row, CodingKeys.amount.rawValue) { amount = val }
     }
 
-    public static func getPrimaryKey(_ row: DecodedRow) throws -> AllocKey {
+    public static func getPrimaryKey(_ row: DecodedRow) throws -> Key {
         guard let _accountID = getStr(row, CodingKeys.accountID.rawValue),
               let _assetID = getStr(row, CodingKeys.assetID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Rebalance Purchase") }
-        return keyify([_accountID, _assetID])
+        return Key(accountID: _accountID, assetID: _assetID)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {

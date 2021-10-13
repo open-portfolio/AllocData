@@ -31,7 +31,6 @@ public enum AllocSchema: String, CaseIterable {
     case allocRebalancePurchase = "openalloc/rebalance/purchase"
     case allocRebalanceAllocation = "openalloc/rebalance/allocation"
     case allocValuationSnapshot = "openalloc/valuation/snapshot"
-    case allocValuationAccount = "openalloc/valuation/account"
     case allocValuationPosition = "openalloc/valuation/position"
     case allocValuationCashflow = "openalloc/valuation/cashflow"
     case allocMetaSource = "openalloc/meta/source"
@@ -65,8 +64,6 @@ public enum AllocSchema: String, CaseIterable {
             return MRebalanceAllocation.attributes
         case .allocValuationSnapshot:
             return MValuationSnapshot.attributes
-        case .allocValuationAccount:
-            return MValuationAccount.attributes
         case .allocValuationPosition:
             return MValuationPosition.attributes
         case .allocValuationCashflow:

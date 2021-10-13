@@ -56,14 +56,14 @@ class MTrackerTests: XCTestCase {
     func testPrimaryKey() throws {
         let account = MTracker(trackerID: " A-x?3 ")
         let actual = account.primaryKey
-        let expected = "a-x?3"
+        let expected = MTracker.Key(trackerID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 
     func testGetPrimaryKey() throws {
         let finRow: MTracker.DecodedRow = ["trackerID": " A-x?3 "]
         let actual = try MTracker.getPrimaryKey(finRow)
-        let expected = "a-x?3"
+        let expected = MTracker.Key(trackerID: " A-x?3 ")
         XCTAssertEqual(expected, actual)
     }
 
