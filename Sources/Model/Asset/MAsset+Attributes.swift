@@ -19,7 +19,7 @@ import Foundation
 
 extension MAsset: AllocAttributable {
     public static var attributes: [AllocAttribute] = [
-        AllocAttribute(CodingKeys.assetID, .string, isRequired: true, isKey: true, "The id of the asset."),
+        AllocAttribute(CodingKeys.assetID, .string, isRequired: true, isKey: true, "The identifier of the asset. (e.g., 'Bond')"),
         AllocAttribute(CodingKeys.title, .string, isRequired: false, isKey: false, "The title of the asset."),
         AllocAttribute(CodingKeys.colorCode, .int, isRequired: false, isKey: false, "The code for the asset's color palette."),
         AllocAttribute(CodingKeys.parentAssetID, .string, isRequired: false, isKey: false, "The id of the parent of the asset."),
