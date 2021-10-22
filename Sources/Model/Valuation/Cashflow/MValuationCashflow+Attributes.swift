@@ -22,7 +22,6 @@ extension MValuationCashflow: AllocAttributable {
         AllocAttribute(CodingKeys.transactedAt, .date, isRequired: true, isKey: true, "The timestamp when this flow occurred."),
         AllocAttribute(CodingKeys.accountID, .string, isRequired: true, isKey: true, "The account in which the flow occurred."),
         AllocAttribute(CodingKeys.assetID, .string, isRequired: true, isKey: true, "The asset class flowed."),
-        AllocAttribute(CodingKeys.amount, .double, isRequired: true, isKey: false, "The amount of the flow (-Sale, +Purchase)."),
-        AllocAttribute(CodingKeys.reconciled, .bool, isRequired: true, isKey: false, "If record was created to reconcile transactions."),
+        AllocAttribute(CodingKeys.amount, .double, isRequired: true, isKey: false, "The amount of the flow (-outgoing, +incoming)."),
     ]
 }

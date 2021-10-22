@@ -19,7 +19,7 @@ import Foundation
 
 extension MStrategy: AllocAttributable {
     public static var attributes: [AllocAttribute] = [
-        AllocAttribute(CodingKeys.strategyID, .string, isRequired: true, isKey: true, "The name of the strategy."),
+        AllocAttribute(CodingKeys.strategyID, .string, isRequired: true, isKey: true, "The identifier of the strategy."),
         AllocAttribute(CodingKeys.title, .string, isRequired: false, isKey: false, "The title of the strategy."),
     ]
 }

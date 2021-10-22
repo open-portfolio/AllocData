@@ -19,7 +19,7 @@ import Foundation
 
 extension MTracker: AllocAttributable {
     public static var attributes: [AllocAttribute] = [
-        AllocAttribute(CodingKeys.trackerID, .string, isRequired: true, isKey: true, "The name of the tracking index."),
+        AllocAttribute(CodingKeys.trackerID, .string, isRequired: true, isKey: true, "The identifier of the tracking index."),
         AllocAttribute(CodingKeys.title, .string, isRequired: false, isKey: false, "The title of the tracking index."),
     ]
 }

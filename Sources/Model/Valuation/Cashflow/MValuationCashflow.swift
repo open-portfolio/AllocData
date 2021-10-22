@@ -23,7 +23,6 @@ public struct MValuationCashflow: Hashable & AllocBase {
     public var assetID: String // key
 
     public var amount: Double
-    public var reconciled: Bool
 
     public static var schema: AllocSchema { .allocValuationCashflow }
 
@@ -31,14 +30,12 @@ public struct MValuationCashflow: Hashable & AllocBase {
         transactedAt: Date,
         accountID: String,
         assetID: String,
-        amount: Double = 0,
-        reconciled: Bool = false
+        amount: Double = 0
     ) {
         self.transactedAt = transactedAt
         self.accountID = accountID
         self.assetID = assetID
         self.amount = amount
-        self.reconciled = reconciled
     }
 }
 
@@ -48,7 +45,6 @@ extension MValuationCashflow: Codable {
         case accountID = "valuationCashflowAccountID"
         case assetID = "valuationCashflowAssetID"
         case amount
-        case reconciled
     }
 
     public init(from decoder: Decoder) throws {
@@ -57,13 +53,12 @@ extension MValuationCashflow: Codable {
         accountID = try c.decode(String.self, forKey: .accountID)
         assetID = try c.decode(String.self, forKey: .assetID)
         amount = try c.decode(Double.self, forKey: .amount)
-        reconciled = try c.decode(Bool.self, forKey: .reconciled)
     }
 }
 
 extension MValuationCashflow: CustomStringConvertible {
     public var description: String {
         let formattedDate = MValuationSnapshot.unparseDate(transactedAt)
-        return "transactedAt=\(formattedDate) accountID=\(accountID) assetID=\(assetID) amount=\(amount) reconciled=\(reconciled)"
+        return "transactedAt=\(formattedDate) accountID=\(accountID) assetID=\(assetID) amount=\(amount)"
     }
 }

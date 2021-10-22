@@ -45,7 +45,7 @@ It also establishes relations between assets.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
-| assetID | string | true | true | The id of the asset. |
+| assetID | string | true | true | The identifier of the asset. (e.g., 'Bond') |
 | title | string | false | false | The title of the asset. |
 | colorCode | int | false | false | The code for the asset's color palette. |
 | parentAssetID | string | false | false | The id of the parent of the asset. |
@@ -102,7 +102,7 @@ Each row of the Strategies table describes a single allocation strategy.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
-| strategyID | string | true | true | The name of the strategy. |
+| strategyID | string | true | true | The identifier of the strategy. |
 | title | string | false | false | The title of the strategy. |
 
 ### MTracker
@@ -114,7 +114,7 @@ relationship between Securities.
 
 | Name | Type | IsRequired | IsKey | Descript |
 | ---- | ---- | ---------- | ----- | -------- |
-| trackerID | string | true | true | The name of the tracking index. |
+| trackerID | string | true | true | The identifier of the tracking index. |
 | title | string | false | false | The title of the tracking index. |
 
 ### MTransaction **NEW**
@@ -221,8 +221,7 @@ Each row of the valuation cashflow table describes a cash flow at a particular t
 | valuationCashflowTransactedAt | date | true | true | The timestamp when this flow occurred. |
 | valuationCashflowAccountID | string | true | true | The account in which the flow occurred. |
 | valuationCashflowAssetID | string | true | true | The asset class flowed. |
-| amount | double | true | false | The amount of the flow (-Sale, +Purchase). |
-| reconciled | bool | true | false | If record was created to reconcile transactions. |
+| amount | double | true | false | The amount of the flow (-outgoing, +incoming). |
 
 ### MSourceMeta
 
