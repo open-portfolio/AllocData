@@ -21,6 +21,7 @@ public protocol AllocKeyed: Hashable {
     associatedtype Key: Hashable, Codable
 
     var primaryKey: Key { get }
+    static var emptyKey: Key { get }
 }
 
 public extension AllocKeyed {

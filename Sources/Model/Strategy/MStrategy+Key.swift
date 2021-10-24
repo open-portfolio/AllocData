@@ -33,4 +33,8 @@ extension MStrategy: AllocKeyed {
     public var primaryKey: Key {
         Key(self)
     }
+    
+    public static var emptyKey: Key {
+        Key(strategyID: "")
+    }
 }

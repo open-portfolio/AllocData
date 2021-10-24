@@ -262,11 +262,14 @@ Used to retrieve and generate the entity's primary key.
 
 This new struct-based implementation replaces the old string-based one.
 
+The `emptyKey` property can be used for picker tag values, as an example.
+
 ```swift
 public protocol AllocKeyed: Hashable {
     associatedtype Key: Hashable, Codable
 
     var primaryKey: Key { get }
+    static var emptyKey: Key { get }
 }
 ```
 
