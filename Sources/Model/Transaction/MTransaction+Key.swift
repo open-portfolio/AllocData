@@ -57,4 +57,8 @@ extension MTransaction: AllocKeyed {
     public var primaryKey: Key {
         Key(self)
     }
+    
+    public static var emptyKey: Key {
+        Key(action: .miscflow, transactedAt: Date.init(timeIntervalSinceReferenceDate: 0), accountID: "", securityID: "", lotID: "", shareCount: 0, sharePrice: 0)
+    }
 }
