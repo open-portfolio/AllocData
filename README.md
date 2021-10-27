@@ -16,7 +16,6 @@ Each row of the Accounts table describes a unique account.
 | ---- | ---- | ---------- | ----- | -------- |
 | accountID | string | true | true | The account number of the account. |
 | title | string | false | false | The title of the account. |
-| isActive | bool | false | false | Is the account active? (NOTE: no longer used by FlowAllocator) |
 | isTaxable | bool | false | false | Is the account taxable? (default: false) |
 | canTrade | bool | false | false | Can you trade securities in the account? (default: false) |
 | accountStrategyID | string | false | false | The strategy associated with this account, if any. |
@@ -141,10 +140,10 @@ The action types:
 
 | Type | ShareCount | SharePrice | SecurityID | Descript |
 | ---- | ---------- | ---------- | ---------- | -------- |
-| buysell | <0 if sale; >0 if purchase | >0, price/share | required | Purchase/sale of security to/from cash. | 
+| buysell | \<0 if sale; \>0 if purchase | \>0, price/share | required | Purchase/sale of security to/from cash. | 
 | income | amount of income | 1.0 (cash) | if dividend | Income from interest, or the dividend of a stock/ETF/etc.. | 
-| transfer | <0 is outgoing; >0 is incoming | 1.0 if cash; >0 for security | if not cash | Transfer of security/cash to/from external source. | 
-| miscflow | <0 is outgoing; >0 is incoming | 1.0 (cash) | ignored | Neutral (non-income) cashflow to/from account. | 
+| transfer | \<0 is outgoing; \>0 is incoming | 1.0 if cash; \>0 for security | if not cash | Transfer of security/cash to/from external source. | 
+| miscflow | \<0 is outgoing; \>0 is incoming | 1.0 (cash) | ignored | Neutral (non-income) cashflow to/from account. | 
 
 ### MRebalanceAllocation
 
