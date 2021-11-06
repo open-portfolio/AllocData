@@ -310,7 +310,9 @@ public protocol AllocAttributable {
 
 * [FINporter](https://github.com/openalloc/FINporter)  - a library and command-line tool to transform various specialized formats to the standardized schema of AllocData
 
-* [FlowAllocator](https://flowallocator.app) - a new portfolio rebalancing tool for macOS
+* [FlowAllocator](https://flowallocator.app/FlowAllocator/index.html) - portfolio rebalancing tool for macOS
+
+* [FlowWorth](https://flowallocator.app/FlowWorth/index.html) - a new portfolio performance and valuation tracking tool for macOS
 
 ## License
 
