@@ -2,6 +2,10 @@
 
 <img align="right" src="https://github.com/openalloc/AllocData/blob/main/Images/logo.png" width="100" height="100"/>An open data model for financial applications, typically those used by the do-it-yourself investor.
 
+Available as an open source Swift library to be incorporated in other apps.
+
+_AllocData_ is part of the [OpenAlloc](https://github.com/openalloc) family of open source Swift software tools.
+
 ## Entities
 
 The following entities are defined in the _AllocData_ data model.
@@ -306,13 +310,21 @@ public protocol AllocAttributable {
 }
 ```
 
-## Applications using AllocData
+## See Also
 
-* [FINporter](https://github.com/openalloc/FINporter)  - a library and command-line tool to transform various specialized formats to the standardized schema of AllocData
+Swift open-source libraries (by the same author):
+
+* [FINporter](https://github.com/openalloc/FINporter) - library and command-line tool to transform various specialized finance-related formats to the standardized schema of AllocData
+* [SwiftCompactor](https://github.com/openalloc/SwiftCompactor) - formatters for the concise display of Numbers, Currency, and Time Intervals
+* [SwiftModifiedDietz](https://github.com/openalloc/SwiftModifiedDietz) - A tool for calculating portfolio performance using the Modified Dietz method
+* [SwiftRegressor](https://github.com/openalloc/SwiftRegressor) - a linear regression tool that’s flexible and easy to use
+* [SwiftSimpleTree](https://github.com/openalloc/SwiftSimpleTree) - a nested data structure that’s flexible and easy to use
+
+And commercial apps using this library (by the same author):
 
 * [FlowAllocator](https://flowallocator.app/FlowAllocator/index.html) - portfolio rebalancing tool for macOS
-
 * [FlowWorth](https://flowallocator.app/FlowWorth/index.html) - a new portfolio performance and valuation tracking tool for macOS
+
 
 ## License
 
