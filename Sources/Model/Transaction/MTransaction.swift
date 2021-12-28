@@ -89,9 +89,17 @@ extension MTransaction: Codable {
         try c.encode(shareCount, forKey: .shareCount)
         try c.encode(sharePrice, forKey: .sharePrice)
         
-        // NOTE: omit gains from output if nil
-        if realizedGainShort != nil { try c.encode(realizedGainShort, forKey: .realizedGainShort) }
-        if realizedGainLong != nil { try c.encode(realizedGainLong, forKey: .realizedGainLong) }
+        // NOTE: if nil, encode gains as blank (rather than 'nil')
+        if realizedGainShort != nil {
+            try c.encode(realizedGainShort, forKey: .realizedGainShort)
+        } else {
+            try c.encode("", forKey: .realizedGainShort)
+        }
+        if realizedGainLong != nil {
+            try c.encode(realizedGainLong, forKey: .realizedGainLong)
+        } else {
+            try c.encode("", forKey: .realizedGainLong)
+        }
     }
 }
 
