@@ -135,4 +135,15 @@ class MTransactionTests: XCTestCase {
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)
     }
+    
+    // ensure gains are omitted from encoding if nil
+    func testEncodeWithoutGains() throws {
+        let datetime1 = df.date(from: "2021-03-01T17:00:00Z")!
+        let element = MTransaction(action: .buysell, transactedAt: datetime1, accountID: "1", securityID: "2", lotID: "", shareCount: 3, sharePrice: 4)
+        let encoder = JSONEncoder()
+        let jsonData = try encoder.encode(element)
+        let actual = String(data: jsonData, encoding: .utf8)
+        let expected = "{\"txnAction\":\"buysell\",\"txnShareCount\":3,\"txnSecurityID\":\"2\",\"txnAccountID\":\"1\",\"txnSharePrice\":4,\"txnTransactedAt\":636310800,\"txnLotID\":\"\"}"
+        XCTAssertEqual(expected, actual)
+    }
 }

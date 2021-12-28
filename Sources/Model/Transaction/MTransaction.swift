@@ -88,8 +88,10 @@ extension MTransaction: Codable {
         try c.encode(lotID, forKey: .lotID)
         try c.encode(shareCount, forKey: .shareCount)
         try c.encode(sharePrice, forKey: .sharePrice)
-        try c.encode(realizedGainShort, forKey: .realizedGainShort)
-        try c.encode(realizedGainLong, forKey: .realizedGainLong)
+        
+        // NOTE: omit gains from output if nil
+        if realizedGainShort != nil { try c.encode(realizedGainShort, forKey: .realizedGainShort) }
+        if realizedGainLong != nil { try c.encode(realizedGainLong, forKey: .realizedGainLong) }
     }
 }
 
