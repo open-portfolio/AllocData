@@ -143,7 +143,7 @@ class MTransactionTests: XCTestCase {
         let encoder = JSONEncoder()
         let jsonData = try encoder.encode(element)
         let actual = String(data: jsonData, encoding: .utf8)
-        let expected = "{\"txnAction\":\"buysell\",\"realizedGainShort\":\"\",\"txnShareCount\":3,\"txnSecurityID\":\"2\",\"realizedGainLong\":\"\",\"txnAccountID\":\"1\",\"txnSharePrice\":4,\"txnTransactedAt\":636310800,\"txnLotID\":\"\"}"
+        let expected = "{\"txnAction\":\"buysell\",\"realizedGainShort\":null,\"txnShareCount\":3,\"txnSecurityID\":\"2\",\"realizedGainLong\":null,\"txnAccountID\":\"1\",\"txnSharePrice\":4,\"txnTransactedAt\":636310800,\"txnLotID\":\"\"}"
         XCTAssertEqual(expected, actual)
     }
 }
