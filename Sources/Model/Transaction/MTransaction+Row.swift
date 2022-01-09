@@ -32,7 +32,10 @@ extension MTransaction: AllocRowed {
         lotID = MTransaction.getStr(row, CodingKeys.lotID.rawValue) ?? ""
 
         shareCount = MTransaction.getDouble(row, CodingKeys.shareCount.rawValue) ?? 0
-        sharePrice = MTransaction.getDouble(row, CodingKeys.sharePrice.rawValue) ?? 0
+        
+        // non-key attributes
+        
+        sharePrice = MTransaction.getDouble(row, CodingKeys.sharePrice.rawValue)
 
         realizedGainShort = MTransaction.getDouble(row, CodingKeys.realizedGainShort.rawValue)
         realizedGainLong = MTransaction.getDouble(row, CodingKeys.realizedGainLong.rawValue)
