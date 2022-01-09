@@ -24,7 +24,7 @@ public struct MTransaction: Hashable & AllocBase {
     public var securityID: String // key
     public var lotID: String // key
     public var shareCount: Double // key
-    public var sharePrice: Double // key
+    public var sharePrice: Double?
     public var realizedGainShort: Double?
     public var realizedGainLong: Double?
 
@@ -36,7 +36,7 @@ public struct MTransaction: Hashable & AllocBase {
                 securityID: String,
                 lotID: String = "",
                 shareCount: Double = 0,
-                sharePrice: Double = 0,
+                sharePrice: Double? = nil,
                 realizedGainShort: Double? = nil,
                 realizedGainLong: Double? = nil)
     {
@@ -73,7 +73,7 @@ extension MTransaction: Codable {
         securityID = try c.decodeIfPresent(String.self, forKey: .securityID) ?? ""
         lotID = try c.decodeIfPresent(String.self, forKey: .lotID) ?? ""
         shareCount = try c.decodeIfPresent(Double.self, forKey: .shareCount) ?? 0
-        sharePrice = try c.decodeIfPresent(Double.self, forKey: .sharePrice) ?? 0
+        sharePrice = try c.decodeIfPresent(Double.self, forKey: .sharePrice)
         realizedGainShort = try c.decodeIfPresent(Double.self, forKey: .realizedGainShort)
         realizedGainLong = try c.decodeIfPresent(Double.self, forKey: .realizedGainLong)
     }

@@ -37,7 +37,7 @@ class MTransactionTests: XCTestCase {
         XCTAssertEqual("s", actual.securityID)
         XCTAssertEqual("x", actual.lotID)
         XCTAssertEqual(0.0, actual.shareCount)
-        XCTAssertEqual(0.0, actual.sharePrice)
+        XCTAssertNil(actual.sharePrice)
         XCTAssertNil(actual.realizedGainShort)
         XCTAssertNil(actual.realizedGainLong)
         actual.action = .income
