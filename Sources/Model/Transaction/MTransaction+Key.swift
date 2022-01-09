@@ -25,22 +25,19 @@ extension MTransaction: AllocKeyed {
         public let securityNormID: NormalizedID
         public let lotNormID: NormalizedID
         public let shareCount: Double
-        public let sharePrice: Double
         
         public init(action: Action,
              transactedAt: Date,
              accountID: String,
              securityID: String,
              lotID: String,
-             shareCount: Double,
-             sharePrice: Double) {
+             shareCount: Double) {
             self.action = action
             self.transactedAt = transactedAt
             self.accountNormID = MTransaction.normalizeID(accountID)
             self.securityNormID = MTransaction.normalizeID(securityID)
             self.lotNormID = MTransaction.normalizeID(lotID)
             self.shareCount = shareCount
-            self.sharePrice = sharePrice
         }
 
         public init(_ element: MTransaction) {
@@ -49,8 +46,7 @@ extension MTransaction: AllocKeyed {
                       accountID: element.accountID,
                       securityID: element.securityID,
                       lotID: element.lotID,
-                      shareCount: element.shareCount,
-                      sharePrice: element.sharePrice)
+                      shareCount: element.shareCount)
         }
     }
     
@@ -59,6 +55,6 @@ extension MTransaction: AllocKeyed {
     }
     
     public static var emptyKey: Key {
-        Key(action: .miscflow, transactedAt: Date.init(timeIntervalSinceReferenceDate: 0), accountID: "", securityID: "", lotID: "", shareCount: 0, sharePrice: 0)
+        Key(action: .miscflow, transactedAt: Date.init(timeIntervalSinceReferenceDate: 0), accountID: "", securityID: "", lotID: "", shareCount: 0)
     }
 }

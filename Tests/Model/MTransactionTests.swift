@@ -74,19 +74,19 @@ class MTransactionTests: XCTestCase {
             MTransaction.CodingKeys.securityID.rawValue: "cx", // IGNORED
             MTransaction.CodingKeys.lotID.rawValue: "zx", // IGNORED
             MTransaction.CodingKeys.shareCount.rawValue: 7, // IGNORED
-            MTransaction.CodingKeys.sharePrice.rawValue: 8, // IGNORED
+            MTransaction.CodingKeys.sharePrice.rawValue: 8,
             MTransaction.CodingKeys.realizedGainShort.rawValue: 9,
             MTransaction.CodingKeys.realizedGainLong.rawValue: 10,
         ]
         try actual.update(from: finRow)
-        let expected = MTransaction(action: .buysell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 4, realizedGainShort: 9, realizedGainLong: 10)
+        let expected = MTransaction(action: .buysell, transactedAt: timestamp, accountID: "b", securityID: "c", lotID: "z", shareCount: 3, sharePrice: 8, realizedGainShort: 9, realizedGainLong: 10)
         XCTAssertEqual(expected, actual)
     }
 
     func testPrimaryKey() throws {
         let element = MTransaction(action: .buysell, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
         let actual = element.primaryKey
-        let expected = MTransaction.Key(action: .buysell, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
+        let expected = MTransaction.Key(action: .buysell, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3)
         XCTAssertEqual(expected, actual)
     }
 
@@ -98,10 +98,9 @@ class MTransactionTests: XCTestCase {
             "txnSecurityID": " -3B ! ",
             "txnLotID": " fo/ ",
             "txnShareCount": 3,
-            "txnSharePrice": 4,
         ]
         let actual = try MTransaction.getPrimaryKey(finRow)
-        let expected = MTransaction.Key(action: .miscflow, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3, sharePrice: 4)
+        let expected = MTransaction.Key(action: .miscflow, transactedAt: timestamp, accountID: " A-x?3 ", securityID: " -3B ! ", lotID: " fo/ ", shareCount: 3)
         XCTAssertEqual(expected, actual)
     }
 
@@ -115,7 +114,6 @@ class MTransactionTests: XCTestCase {
             "txnSecurityID": "s",
             "txnLotID": "x",
             "txnShareCount": "3",
-            "txnSharePrice": "4",
             "realizedGainShort": "5",
             "realizedGainLong": "6",
         ]]
@@ -128,7 +126,6 @@ class MTransactionTests: XCTestCase {
             "txnSecurityID": "s",
             "txnLotID": "x",
             "txnShareCount": 3,
-            "txnSharePrice": 4,
             "realizedGainShort": 5,
             "realizedGainLong": 6,
         ]

@@ -120,7 +120,7 @@ relationship between Securities.
 | trackerID | string | true | true | The identifier of the tracking index. |
 | title | string | false | false | The title of the tracking index. |
 
-### MTransaction **NEW**
+### MTransaction
 
 This is the `openalloc/transaction` schema.
 
@@ -136,9 +136,11 @@ NOTE: this replaces the deprecated 'MHistory' entity.
 | txnSecurityID | string | true | true | The security involved in the transaction. |
 | txnLotID | string | true | true | The lot of the position involved in the transaction (blank if none). |
 | txnShareCount | double | true | true | The number of shares transacted. |
-| txnSharePrice | double | true | true | The price at which the share(s) transacted. |
+| txnSharePrice | double | false | false | The price at which the share(s) transacted. (0 if none provided). |
 | realizedGainShort | double | false | false | The total short-term realized gain (or loss) from a sale. |
 | realizedGainLong | double | false | false | The total long-term realized gain (or loss) from a sale. |
+
+Note that brokerage exports may omit share price on security transfers.
 
 The action types:
 
@@ -146,7 +148,7 @@ The action types:
 | ---- | ---------- | ---------- | ---------- | -------- |
 | buysell | \<0 if sale; \>0 if purchase | \>0, price/share | required | Purchase/sale of security to/from cash. | 
 | income | amount of income | 1.0 (cash) | if dividend | Income from interest, or the dividend of a stock/ETF/etc.. | 
-| transfer | \<0 is outgoing; \>0 is incoming | 1.0 if cash; \>0 for security | if not cash | Transfer of security/cash to/from external source. | 
+| transfer | \<0 is outgoing; \>0 is incoming | 1.0 if cash; \>0 for security; 0 if none provided | if not cash | Transfer of security/cash to/from external source. | 
 | miscflow | \<0 is outgoing; \>0 is incoming | 1.0 (cash) | ignored | Neutral (non-income) cashflow to/from account. | 
 
 ### MRebalanceAllocation
@@ -188,7 +190,7 @@ Each row of the RebalanceSale table describes a liquidation of a position to sat
 | shareCount | double | false | false | Estimated number of shares to liquidate from this position. |
 | liquidateAll | bool | false | false | If true, the entire position can be liquidated. |
 
-### MValuationSnapshot **NEW**
+### MValuationSnapshot
 
 This is the `openalloc/valuation/snapshot` schema.
 
@@ -199,7 +201,7 @@ Each row of the ValuationSnapshot table describes a valuation captured at a part
 | valuationSnapshotID | string | true | true | The unique valuation snapshot identifier. |
 | capturedAt | date | true | false | The timestamp when the snapshot was created. |
 
-### MValuationPosition **NEW**
+### MValuationPosition
 
 This is the `openalloc/valuation/position` schema.
 
@@ -213,7 +215,7 @@ Each row of the valuation position table describes a position captured at a part
 | totalBasis | double | true | false | The price paid to establish position. |
 | marketValue | double | true | false | The market value of the position. |
 
-### MValuationCashflow **NEW**
+### MValuationCashflow
 
 This is the `openalloc/valuation/cashflow` schema.
 
