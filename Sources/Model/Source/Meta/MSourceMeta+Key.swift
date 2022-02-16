@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MSourceMeta+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MSourceMeta: Identifiable {
+    public var id: MSourceMeta.Key { self.primaryKey }
+}
 
 extension MSourceMeta: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

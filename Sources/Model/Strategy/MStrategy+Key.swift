@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MStrategy+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MStrategy: Identifiable {
+    public var id: MStrategy.Key { self.primaryKey }
+}
 
 extension MStrategy: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

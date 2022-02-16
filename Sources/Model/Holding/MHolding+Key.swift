@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MHolding+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MHolding: Identifiable {
+    public var id: MHolding.Key { self.primaryKey }
+}
 
 extension MHolding: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MAsset+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MAsset: Identifiable {
+    public var id: MAsset.Key { self.primaryKey }
+}
 
 extension MAsset: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

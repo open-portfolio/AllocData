@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MAllocation+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MAllocation: Identifiable {
+    public var id: MAllocation.Key { self.primaryKey }
+}
 
 extension MAllocation: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MValuationPosition+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MValuationPosition: Identifiable {
+    public var id: MValuationPosition.Key { self.primaryKey }
+}
 
 extension MValuationPosition: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

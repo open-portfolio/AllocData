@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MValuationSnapshot+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MValuationSnapshot: Identifiable {
+    public var id: MValuationSnapshot.Key { self.primaryKey }
+}
 
 extension MValuationSnapshot: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

@@ -278,6 +278,8 @@ public protocol AllocKeyed: Hashable {
 }
 ```
 
+The entities also conform to the `Identifiable` protocol where the id is the primary key.
+
 ### Rowed
 
 Used to parse (decode) and generate (encode) delimited data for the entities.

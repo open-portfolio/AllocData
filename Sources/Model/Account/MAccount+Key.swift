@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MAccount+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MAccount: Identifiable {
+    public var id: MAccount.Key { self.primaryKey }
+}
 
 extension MAccount: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

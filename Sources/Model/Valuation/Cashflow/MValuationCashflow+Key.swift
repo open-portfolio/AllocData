@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MValuationCashflow+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MValuationCashflow: Identifiable {
+    public var id: MValuationCashflow.Key { self.primaryKey }
+}
 
 extension MValuationCashflow: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

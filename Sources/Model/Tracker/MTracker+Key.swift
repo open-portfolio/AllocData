@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MTracker+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MTracker: Identifiable {
+    public var id: MTracker.Key { self.primaryKey }
+}
 
 extension MTracker: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

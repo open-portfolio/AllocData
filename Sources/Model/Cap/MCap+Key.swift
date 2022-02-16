@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MCap+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MCap: Identifiable {
+    public var id: MCap.Key { self.primaryKey }
+}
 
 extension MCap: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

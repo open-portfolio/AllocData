@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MRebalancePurchase+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MRebalancePurchase: Identifiable {
+    public var id: MRebalancePurchase.Key { self.primaryKey }
+}
 
 extension MRebalancePurchase: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

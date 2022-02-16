@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MSecurity+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MSecurity: Identifiable {
+    public var id: MSecurity.Key { self.primaryKey }
+}
 
 extension MSecurity: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {

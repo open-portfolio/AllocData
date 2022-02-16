@@ -1,5 +1,5 @@
 //
-//  M+Key.swift
+//  MTransaction+Key.swift
 //
 // Copyright 2021 FlowAllocator LLC
 //
@@ -16,6 +16,10 @@
 // limitations under the License.
 
 import Foundation
+
+extension MTransaction: Identifiable {
+    public var id: MTransaction.Key { self.primaryKey }
+}
 
 extension MTransaction: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
