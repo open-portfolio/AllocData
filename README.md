@@ -78,9 +78,9 @@ ticker, share count, share basis, etc.
 | holdingAccountID | string | true | true | The account hosting the position. |
 | holdingSecurityID | string | true | true | The security of the position. |
 | holdingLotID | string | true | true | The lot of the position, if any. |
-| shareCount | double | false | false | The number of shares held in the position. |
-| shareBasis | double | false | false | The price paid per share of the security. |
-| acquiredAt | date | false | false | The date of the acquisition. |
+| shareCount | double | false | true | The number of shares held in the position. |
+| shareBasis | double | false | true | The price paid per share of the security. |
+| acquiredAt | date | false | true | The date of the acquisition. |
 
 ### MSecurity
 
@@ -319,6 +319,8 @@ public protocol AllocAttributable {
 Swift open-source libraries (by the same author):
 
 * [FINporter](https://github.com/openalloc/FINporter) - library and command-line tool to transform various specialized finance-related formats to the standardized schema of AllocData
+* [SwiftTabler](https://github.com/openalloc/SwiftTabler) - multi-platform SwiftUI component for displaying (and interacting with) tabular data
+* [SwiftDetailer](https://github.com/openalloc/SwiftDetailer) - multi-platform SwiftUI component for editing fielded data
 * [SwiftCompactor](https://github.com/openalloc/SwiftCompactor) - formatters for the concise display of Numbers, Currency, and Time Intervals
 * [SwiftModifiedDietz](https://github.com/openalloc/SwiftModifiedDietz) - A tool for calculating portfolio performance using the Modified Dietz method
 * [SwiftNiceScale](https://github.com/openalloc/SwiftNiceScale) - generate 'nice' numbers for label ticks over a range, such as for y-axis on a chart

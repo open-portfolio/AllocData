@@ -26,17 +26,31 @@ extension MHolding: AllocKeyed {
         public let accountNormID: NormalizedID
         public let securityNormID: NormalizedID
         public let lotNormID: NormalizedID
+        public var shareCount: Double?
+        public var shareBasis: Double?
+        public var acquiredAt: Date?
         
-        public init(accountID: String, securityID: String, lotID: String) {
+        public init(accountID: String,
+                    securityID: String,
+                    lotID: String,
+                    shareCount: Double? = nil,
+                    shareBasis: Double? = nil,
+                    acquiredAt: Date? = nil) {
             self.accountNormID = MHolding.normalizeID(accountID)
             self.securityNormID = MHolding.normalizeID(securityID)
             self.lotNormID = MHolding.normalizeID(lotID)
+            self.shareCount = shareCount
+            self.shareBasis = shareBasis
+            self.acquiredAt = acquiredAt
         }
         
         public init(_ element: MHolding) {
             self.init(accountID: element.accountID,
                       securityID: element.securityID,
-                      lotID: element.lotID)
+                      lotID: element.lotID,
+                      shareCount: element.shareCount,
+                      shareBasis: element.shareBasis,
+                      acquiredAt: element.acquiredAt)
         }
     }
     
@@ -45,6 +59,6 @@ extension MHolding: AllocKeyed {
     }
     
     public static var emptyKey: Key {
-        Key(accountID: "", securityID: "", lotID: "")
+        Key(accountID: "", securityID: "", lotID: "", shareCount: nil, shareBasis: nil, acquiredAt: Date.init(timeIntervalSinceReferenceDate: 0))
     }
 }

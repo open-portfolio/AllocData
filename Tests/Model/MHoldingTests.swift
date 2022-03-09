@@ -72,16 +72,30 @@ class MHoldingTests: XCTestCase {
     }
 
     func testPrimaryKey() throws {
-        let element = MHolding(accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ")
+        let element = MHolding(accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ", shareCount: 5, shareBasis: 6, acquiredAt: timestamp)
         let actual = element.primaryKey
-        let expected = MHolding.Key(accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ")
+        let expected = MHolding.Key(accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ", shareCount: 5, shareBasis: 6, acquiredAt: timestamp)
         XCTAssertEqual(expected, actual)
     }
 
-    func testGetPrimaryKey() throws {
-        let finRow: MHolding.DecodedRow = ["holdingAccountID": " A-x?3 ", "holdingSecurityID": " -3B ! ", "holdingLotID": "   "]
+    func testGetPrimaryKeyWithOptionals() throws {
+        let finRow: MHolding.DecodedRow = ["holdingAccountID": " A-x?3 ",
+                                           "holdingSecurityID": " -3B ! ",
+                                           "holdingLotID": "   ",
+                                           "shareCount": 5,
+                                           "shareBasis": 6,
+                                           "acquiredAt": timestamp]
         let actual = try MHolding.getPrimaryKey(finRow)
-        let expected = MHolding.Key(accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ")
+        let expected = MHolding.Key(accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ", shareCount: 5, shareBasis: 6, acquiredAt: timestamp)
+        XCTAssertEqual(expected, actual)
+    }
+    
+    func testGetPrimaryKeyWithoutOptionals() throws {
+        let finRow: MHolding.DecodedRow = ["holdingAccountID": " A-x?3 ",
+                                           "holdingSecurityID": " -3B ! ",
+                                           "holdingLotID": "   "]
+        let actual = try MHolding.getPrimaryKey(finRow)
+        let expected = MHolding.Key(accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ", shareCount: nil, shareBasis: nil, acquiredAt: nil)
         XCTAssertEqual(expected, actual)
     }
 

@@ -44,7 +44,15 @@ extension MHolding: AllocRowed {
               let _securityID = getStr(row, CodingKeys.securityID.rawValue)
         else { throw AllocDataError.invalidPrimaryKey("Holding") }
         let _lotID = getStr(row, CodingKeys.lotID.rawValue) ?? ""
-        return Key(accountID: _accountID, securityID: _securityID, lotID: _lotID)
+        let _shareCount = getDouble(row, CodingKeys.shareCount.rawValue)
+        let _shareBasis = getDouble(row, CodingKeys.shareBasis.rawValue)
+        let _acquiredAt = getDate(row, CodingKeys.acquiredAt.rawValue)
+        return Key(accountID: _accountID,
+                   securityID: _securityID,
+                   lotID: _lotID,
+                   shareCount: _shareCount,
+                   shareBasis: _shareBasis,
+                   acquiredAt: _acquiredAt)
     }
 
     public static func decode(_ rawRows: [RawRow], rejectedRows: inout [RawRow]) throws -> [DecodedRow] {
