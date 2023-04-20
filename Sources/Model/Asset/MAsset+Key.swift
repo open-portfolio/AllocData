@@ -18,26 +18,26 @@
 import Foundation
 
 extension MAsset: Identifiable {
-    public var id: MAsset.Key { self.primaryKey }
+    public var id: MAsset.Key { primaryKey }
 }
 
 extension MAsset: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
         public let assetNormID: NormalizedID
-        
+
         public init(assetID: String) {
-            self.assetNormID = MAsset.normalizeID(assetID)
+            assetNormID = MAsset.normalizeID(assetID)
         }
-        
+
         public init(_ element: MAsset) {
             self.init(assetID: element.assetID)
         }
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
         Key(assetID: "")
     }

@@ -18,28 +18,28 @@
 import Foundation
 
 extension MAllocation: Identifiable {
-    public var id: MAllocation.Key { self.primaryKey }
+    public var id: MAllocation.Key { primaryKey }
 }
 
 extension MAllocation: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
         public let strategyNormID: NormalizedID
         public let assetNormID: NormalizedID
-        
+
         public init(strategyID: String, assetID: String) {
-            self.strategyNormID = MAllocation.normalizeID(strategyID)
-            self.assetNormID = MAllocation.normalizeID(assetID)
+            strategyNormID = MAllocation.normalizeID(strategyID)
+            assetNormID = MAllocation.normalizeID(assetID)
         }
-        
+
         public init(_ element: MAllocation) {
             self.init(strategyID: element.strategyID, assetID: element.assetID)
-        }        
+        }
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
         Key(strategyID: "", assetID: "")
     }

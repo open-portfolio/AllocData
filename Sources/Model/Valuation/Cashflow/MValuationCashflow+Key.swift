@@ -18,7 +18,7 @@
 import Foundation
 
 extension MValuationCashflow: Identifiable {
-    public var id: MValuationCashflow.Key { self.primaryKey }
+    public var id: MValuationCashflow.Key { primaryKey }
 }
 
 extension MValuationCashflow: AllocKeyed {
@@ -26,25 +26,25 @@ extension MValuationCashflow: AllocKeyed {
         public let transactedAt: Date
         public let accountNormID: NormalizedID
         public let assetNormID: NormalizedID
-        
+
         public init(transactedAt: Date, accountID: String, assetID: String) {
             self.transactedAt = transactedAt
-            self.accountNormID = MTracker.normalizeID(accountID)
-            self.assetNormID = MTracker.normalizeID(assetID)
+            accountNormID = MTracker.normalizeID(accountID)
+            assetNormID = MTracker.normalizeID(assetID)
         }
-        
+
         public init(_ element: MValuationCashflow) {
             self.init(transactedAt: element.transactedAt,
                       accountID: element.accountID,
                       assetID: element.assetID)
         }
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
-        Key(transactedAt: Date.init(timeIntervalSinceReferenceDate: 0), accountID: "", assetID: "")
+        Key(transactedAt: Date(timeIntervalSinceReferenceDate: 0), accountID: "", assetID: "")
     }
 }

@@ -18,26 +18,26 @@
 import Foundation
 
 extension MStrategy: Identifiable {
-    public var id: MStrategy.Key { self.primaryKey }
+    public var id: MStrategy.Key { primaryKey }
 }
 
 extension MStrategy: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
         public let strategyNormID: NormalizedID
-        
+
         public init(strategyID: String) {
-            self.strategyNormID = MStrategy.normalizeID(strategyID)
+            strategyNormID = MStrategy.normalizeID(strategyID)
         }
-        
+
         public init(_ element: MStrategy) {
             self.init(strategyID: element.strategyID)
         }
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
         Key(strategyID: "")
     }

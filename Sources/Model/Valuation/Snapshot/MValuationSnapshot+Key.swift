@@ -18,26 +18,26 @@
 import Foundation
 
 extension MValuationSnapshot: Identifiable {
-    public var id: MValuationSnapshot.Key { self.primaryKey }
+    public var id: MValuationSnapshot.Key { primaryKey }
 }
 
 extension MValuationSnapshot: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
         public let snapshotNormID: NormalizedID
-        
+
         public init(snapshotID: String) {
-            self.snapshotNormID = MValuationSnapshot.normalizeID(snapshotID)
+            snapshotNormID = MValuationSnapshot.normalizeID(snapshotID)
         }
-        
+
         public init(_ element: MValuationSnapshot) {
             self.init(snapshotID: element.snapshotID)
-        }        
+        }
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
         Key(snapshotID: "")
     }

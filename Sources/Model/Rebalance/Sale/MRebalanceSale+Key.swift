@@ -18,7 +18,7 @@
 import Foundation
 
 extension MRebalanceSale: Identifiable {
-    public var id: MRebalanceSale.Key { self.primaryKey }
+    public var id: MRebalanceSale.Key { primaryKey }
 }
 
 extension MRebalanceSale: AllocKeyed {
@@ -26,24 +26,24 @@ extension MRebalanceSale: AllocKeyed {
         public let accountNormID: NormalizedID
         public let securityNormID: NormalizedID
         public let lotNormID: NormalizedID
-        
+
         public init(accountID: String, securityID: String, lotID: String) {
-            self.accountNormID = MRebalanceSale.normalizeID(accountID)
-            self.securityNormID = MRebalanceSale.normalizeID(securityID)
-            self.lotNormID = MRebalanceSale.normalizeID(lotID)
+            accountNormID = MRebalanceSale.normalizeID(accountID)
+            securityNormID = MRebalanceSale.normalizeID(securityID)
+            lotNormID = MRebalanceSale.normalizeID(lotID)
         }
-        
+
         public init(_ element: MRebalanceSale) {
             self.init(accountID: element.accountID,
                       securityID: element.securityID,
                       lotID: element.lotID)
         }
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
         Key(accountID: "", securityID: "", lotID: "")
     }

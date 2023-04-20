@@ -18,7 +18,7 @@
 import Foundation
 
 extension MTransaction: Identifiable {
-    public var id: MTransaction.Key { self.primaryKey }
+    public var id: MTransaction.Key { primaryKey }
 }
 
 extension MTransaction: AllocKeyed {
@@ -29,18 +29,19 @@ extension MTransaction: AllocKeyed {
         public let securityNormID: NormalizedID
         public let lotNormID: NormalizedID
         public let shareCount: Double
-        
+
         public init(action: Action,
-             transactedAt: Date,
-             accountID: String,
-             securityID: String,
-             lotID: String,
-             shareCount: Double) {
+                    transactedAt: Date,
+                    accountID: String,
+                    securityID: String,
+                    lotID: String,
+                    shareCount: Double)
+        {
             self.action = action
             self.transactedAt = transactedAt
-            self.accountNormID = MTransaction.normalizeID(accountID)
-            self.securityNormID = MTransaction.normalizeID(securityID)
-            self.lotNormID = MTransaction.normalizeID(lotID)
+            accountNormID = MTransaction.normalizeID(accountID)
+            securityNormID = MTransaction.normalizeID(securityID)
+            lotNormID = MTransaction.normalizeID(lotID)
             self.shareCount = shareCount
         }
 
@@ -53,12 +54,12 @@ extension MTransaction: AllocKeyed {
                       shareCount: element.shareCount)
         }
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
-        Key(action: .miscflow, transactedAt: Date.init(timeIntervalSinceReferenceDate: 0), accountID: "", securityID: "", lotID: "", shareCount: 0)
+        Key(action: .miscflow, transactedAt: Date(timeIntervalSinceReferenceDate: 0), accountID: "", securityID: "", lotID: "", shareCount: 0)
     }
 }

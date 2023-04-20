@@ -89,7 +89,7 @@ class MHoldingTests: XCTestCase {
         let expected = MHolding.Key(accountID: " A-x?3 ", securityID: " -3B ! ", lotID: "   ", shareCount: 5, shareBasis: 6, acquiredAt: timestamp)
         XCTAssertEqual(expected, actual)
     }
-    
+
     func testGetPrimaryKeyWithoutOptionals() throws {
         let finRow: MHolding.DecodedRow = ["holdingAccountID": " A-x?3 ",
                                            "holdingSecurityID": " -3B ! ",

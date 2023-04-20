@@ -32,9 +32,9 @@ extension MTransaction: AllocRowed {
         lotID = MTransaction.getStr(row, CodingKeys.lotID.rawValue) ?? ""
 
         shareCount = MTransaction.getDouble(row, CodingKeys.shareCount.rawValue) ?? 0
-        
+
         // non-key attributes
-        
+
         sharePrice = MTransaction.getDouble(row, CodingKeys.sharePrice.rawValue)
 
         realizedGainShort = MTransaction.getDouble(row, CodingKeys.realizedGainShort.rawValue)
@@ -56,7 +56,7 @@ extension MTransaction: AllocRowed {
         let _accountID = getStr(row, CodingKeys.accountID.rawValue) ?? ""
         let _securityID = getStr(row, CodingKeys.securityID.rawValue) ?? ""
         let _lotID = getStr(row, CodingKeys.lotID.rawValue) ?? ""
-        
+
         return Key(action: _action,
                    transactedAt: _transactedAt,
                    accountID: _accountID,

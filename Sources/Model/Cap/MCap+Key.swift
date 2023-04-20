@@ -18,29 +18,29 @@
 import Foundation
 
 extension MCap: Identifiable {
-    public var id: MCap.Key { self.primaryKey }
+    public var id: MCap.Key { primaryKey }
 }
 
 extension MCap: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
         public let accountNormID: NormalizedID
         public let assetNormID: NormalizedID
-        
+
         public init(accountID: String, assetID: String) {
-            self.accountNormID = MCap.normalizeID(accountID)
-            self.assetNormID = MCap.normalizeID(assetID)
+            accountNormID = MCap.normalizeID(accountID)
+            assetNormID = MCap.normalizeID(assetID)
         }
-        
+
         public init(_ element: MCap) {
             self.init(accountID: element.accountID,
                       assetID: element.assetID)
         }
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
         Key(accountID: "", assetID: "")
     }

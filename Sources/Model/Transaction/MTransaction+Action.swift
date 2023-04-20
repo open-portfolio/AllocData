@@ -30,6 +30,6 @@ public extension MTransaction {
 // render as the rawValue to support encoders that render as description, like SwiftCSV
 extension MTransaction.Action: CustomStringConvertible {
     public var description: String {
-        self.rawValue
+        rawValue
     }
 }

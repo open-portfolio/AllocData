@@ -18,30 +18,29 @@
 import Foundation
 
 extension MRebalancePurchase: Identifiable {
-    public var id: MRebalancePurchase.Key { self.primaryKey }
+    public var id: MRebalancePurchase.Key { primaryKey }
 }
 
 extension MRebalancePurchase: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
         public let accountNormID: NormalizedID
         public let assetNormID: NormalizedID
-        
+
         public init(accountID: String, assetID: String) {
-            self.accountNormID = MRebalancePurchase.normalizeID(accountID)
-            self.assetNormID = MRebalancePurchase.normalizeID(assetID)
+            accountNormID = MRebalancePurchase.normalizeID(accountID)
+            assetNormID = MRebalancePurchase.normalizeID(assetID)
         }
-        
+
         public init(_ element: MRebalancePurchase) {
             self.init(accountID: element.accountID,
                       assetID: element.assetID)
         }
-        
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
         Key(accountID: "", assetID: "")
     }

@@ -18,26 +18,26 @@
 import Foundation
 
 extension MSecurity: Identifiable {
-    public var id: MSecurity.Key { self.primaryKey }
+    public var id: MSecurity.Key { primaryKey }
 }
 
 extension MSecurity: AllocKeyed {
     public struct Key: Hashable, Equatable, Codable {
         public let securityNormID: NormalizedID
-        
+
         public init(securityID: String) {
-            self.securityNormID = MSecurity.normalizeID(securityID)
+            securityNormID = MSecurity.normalizeID(securityID)
         }
-        
+
         public init(_ element: MSecurity) {
             self.init(securityID: element.securityID)
         }
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
         Key(securityID: "")
     }

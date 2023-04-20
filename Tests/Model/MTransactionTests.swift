@@ -132,7 +132,7 @@ class MTransactionTests: XCTestCase {
         XCTAssertTrue(rejected.isEmpty)
         XCTAssertEqual([expected], actual)
     }
-    
+
     // ensure gains are omitted from encoding if nil
     func testEncodeWithoutGains() throws {
         let datetime1 = df.date(from: "2021-03-01T17:00:00Z")!

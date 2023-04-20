@@ -18,7 +18,7 @@
 import Foundation
 
 extension MValuationPosition: Identifiable {
-    public var id: MValuationPosition.Key { self.primaryKey }
+    public var id: MValuationPosition.Key { primaryKey }
 }
 
 extension MValuationPosition: AllocKeyed {
@@ -26,24 +26,24 @@ extension MValuationPosition: AllocKeyed {
         public let snapshotNormID: NormalizedID
         public let accountNormID: NormalizedID
         public let assetNormID: NormalizedID
-        
+
         public init(snapshotID: String, accountID: String, assetID: String) {
-            self.snapshotNormID = MValuationPosition.normalizeID(snapshotID)
-            self.accountNormID = MValuationPosition.normalizeID(accountID)
-            self.assetNormID = MValuationPosition.normalizeID(assetID)
+            snapshotNormID = MValuationPosition.normalizeID(snapshotID)
+            accountNormID = MValuationPosition.normalizeID(accountID)
+            assetNormID = MValuationPosition.normalizeID(assetID)
         }
-        
+
         public init(_ element: MValuationPosition) {
             self.init(snapshotID: element.snapshotID,
                       accountID: element.accountID,
                       assetID: element.assetID)
         }
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
         Key(snapshotID: "", accountID: "", assetID: "")
     }

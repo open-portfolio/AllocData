@@ -18,7 +18,7 @@
 import Foundation
 
 extension MHolding: Identifiable {
-    public var id: MHolding.Key { self.primaryKey }
+    public var id: MHolding.Key { primaryKey }
 }
 
 extension MHolding: AllocKeyed {
@@ -29,21 +29,22 @@ extension MHolding: AllocKeyed {
         public var shareCount: Double?
         public var shareBasis: Double?
         public var acquiredAt: Date?
-        
+
         public init(accountID: String,
                     securityID: String,
                     lotID: String,
                     shareCount: Double? = nil,
                     shareBasis: Double? = nil,
-                    acquiredAt: Date? = nil) {
-            self.accountNormID = MHolding.normalizeID(accountID)
-            self.securityNormID = MHolding.normalizeID(securityID)
-            self.lotNormID = MHolding.normalizeID(lotID)
+                    acquiredAt: Date? = nil)
+        {
+            accountNormID = MHolding.normalizeID(accountID)
+            securityNormID = MHolding.normalizeID(securityID)
+            lotNormID = MHolding.normalizeID(lotID)
             self.shareCount = shareCount
             self.shareBasis = shareBasis
             self.acquiredAt = acquiredAt
         }
-        
+
         public init(_ element: MHolding) {
             self.init(accountID: element.accountID,
                       securityID: element.securityID,
@@ -53,12 +54,12 @@ extension MHolding: AllocKeyed {
                       acquiredAt: element.acquiredAt)
         }
     }
-    
+
     public var primaryKey: Key {
         Key(self)
     }
-    
+
     public static var emptyKey: Key {
-        Key(accountID: "", securityID: "", lotID: "", shareCount: nil, shareBasis: nil, acquiredAt: Date.init(timeIntervalSinceReferenceDate: 0))
+        Key(accountID: "", securityID: "", lotID: "", shareCount: nil, shareBasis: nil, acquiredAt: Date(timeIntervalSinceReferenceDate: 0))
     }
 }
